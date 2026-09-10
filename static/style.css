@@ -1,0 +1,110 @@
+/* static/style.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+}
+
+.card {
+    border-radius: 12px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0a58ca, #084298);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #198754, #146c43);
+    border: none;
+}
+
+/* Script output styling */
+#scriptOutput {
+    font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    border: 2px solid #198754;
+}
+
+#scriptOutput::selection {
+    background: #198754;
+    color: white;
+}
+
+/* Form sections */
+.bg-light.rounded {
+    border: 1px solid #e9ecef;
+}
+
+/* Pack cards animation */
+.col-lg-4 .card {
+    transition: all 0.3s ease;
+}
+
+.col-lg-4 .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+    .display-5 {
+        font-size: 1.5rem;
+    }
+    #scriptOutput {
+        font-size: 10px !important;
+        max-height: 400px !important;
+    }
+}
+
+/* Copy button animation */
+.btn-success {
+    transition: all 0.3s ease;
+}
+
+/* Sticky sidebar scroll */
+.sticky-top {
+    scrollbar-width: thin;
+    scrollbar-color: #0d6efd #f8f9fa;
+}
+
+.sticky-top::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sticky-top::-webkit-scrollbar-thumb {
+    background-color: #0d6efd;
+    border-radius: 3px;
+}
+
+/* Print styles */
+@media print {
+    .navbar, footer, .btn, form, .alert {
+        display: none !important;
+    }
+    #scriptOutput {
+        max-height: none !important;
+        color: black !important;
+        background: white !important;
+        border: 1px solid #000 !important;
+        font-size: 8pt !important;
+    }
+}

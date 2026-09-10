@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-white mb-3">
+            <span class="text-primary">KETRIKA</span> MIKROTIK
+        </h1>
+        <p class="lead text-muted mx-auto" style="max-width: 700px;">
+            Générateur de script RouterOS en 1 clic. Contournez les blocages FAI, activez le WiFi et WARP WireGuard sans aucune erreur de collage Winbox.
+        </p>
+        <div class="mt-4">
+            <a href="/activate" class="btn btn-primary btn-lg me-2 px-4">
+                <i class="fas fa-key me-2"></i>J'ai déjà une clé
+            </a>
+            <a href="/payment" class="btn btn-outline-warning btn-lg px-4">
+                <i class="fas fa-shopping-cart me-2"></i>Tarifs & Paiement
+            </a>
+        </div>
+    </div>
+
+    <!-- Les 3 Packs -->
+    <div class="row g-4 justify-content-center">
+        {% for id, pack in packs.items() %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card card-custom h-100 shadow p-3 {% if id == 2 %}border-primary border-2{% endif %}">
+                {% if id == 2 %}
+                <span class="badge bg-primary position-absolute top-0 end-0 m-3 px-3 py-2">RECOMMANDÉ</span>
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h4 class="fw-bold mb-3 text-warning">{{ pack.name }}</h4>
+                    <div class="display-5 fw-bold text-white mb-3">
+                        {{ "{:,}".format(pack.price) }} <span class="fs-6 text-muted">Ar</span>
+                    </div>
+                    <ul class="list-unstyled mb-4 flex-grow-1">
+                        {% for feature in pack.features %}
+                        <li class="mb-2 text-light small">
+                            <i class="fas fa-check-circle text-success me-2"></i>{{ feature }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="/payment" class="btn btn-warning fw-bold text-dark w-100 mb-2">
+                        Commander ce pack
+                    </a>
+                    <a href="/demo/{{ id }}" class="btn btn-sm btn-outline-secondary w-100">
+                        <i class="fas fa-vial me-1"></i>Tester en mode Démo
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
