@@ -1,386 +1,135 @@
-# -*- coding: utf-8 -*-
 """
-KETRIKA MIKROTIK 301 - Moteur RSC
-- Utilise les clés réelles Cloudflare WARP récupérées par l'API.
-- Wi-Fi : Applique par index sans paramètre country pour éviter tout blocage.
-- Routage : Mangle de routage optimisé avec fallback automatique pour éviter toute perte de connexion.
+WireGuard WARP client sans dépendance externe.
+Curve25519 en pur Python + appel API Cloudflare.
 """
-
-import random
-import string
-from datetime import datetime
-
-CF_PUBKEY = "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo="
-CF_ENDPOINT_IP = "162.159.193.1"
-CF_ENDPOINT_PORT = "2408"
+import os
+import base64
+import json
+import requests
 
 
-def generate_rsc(order, model_info):
-    plan = order.plan_type
-    has24 = model_info.get("wifi_24ghz", False)
-    has5 = model_info.get("wifi_5ghz", False)
-    wtype = model_info.get("wifi_type")
-    ports = model_info.get("ports", 5)
-    wan = order.wan_interface or "ether1"
-    gw = order.lan_gateway or "192.168.10.1"
-    net = ".".join(gw.split(".")[:3]) + ".0"
-    ps = order.dhcp_pool_start or "192.168.10.10"
-    pe = order.dhcp_pool_end or "192.168.10.250"
-    s2 = order.ssid_2g or "KETRIKA-WiFi"
-    s5 = order.ssid_5g or (s2 + "-5G")
-    wp = order.wifi_password or "ketrika2024"
-
-    L = []
-    a = L.append
-    fn = f"ketrika_{order.license_key}.rsc"
-
-    a("# KETRIKA MIKROTIK 301")
-    a(f"# Licence : {order.license_key}")
-    a(f"# Client  : {order.client_name}")
-    a(f"# Plan    : {plan.upper()}")
-    a(f"# Modele  : {model_info['name']}")
-    a(f"# Routeur : {order.router_name}")
-    a(f"# Date    : {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}")
-    a("")
-    a(":log warning \"KETRIKA 301 : Debut de la configuration...\"")
-    a(":delay 1s")
-    a("")
-
-    # === FASTTRACK OFF ===
-    a("# 1. Desactivation de FastTrack")
-    a(":foreach i in=[/ip/firewall/filter/find where action=\"fasttrack-connection\"] do={")
-    a("  :do { /ip/firewall/filter/set $i disabled=yes } on-error={}")
-    a("}")
-    a("")
-
-    # === MAC SERVER ===
-    a("# 2. MAC Server pour Winbox")
-    a(":do { /tool/mac-server/set allowed-interface-list=all } on-error={}")
-    a(":do { /tool/mac-server/mac-winbox/set allowed-interface-list=all } on-error={}")
-    a(":do { /tool/mac-server/ping/set enabled=yes } on-error={}")
-    a("")
-
-    # === SERVICES ===
-    a("# 3. Services")
-    a(":do { /ip/service/set winbox port=8291 disabled=no } on-error={}")
-    a(":do { /ip/service/set ssh port=22 disabled=no } on-error={}")
-    for s in ["telnet", "ftp", "api", "api-ssl", "www", "www-ssl"]:
-        a(f":do {{ /ip/service/disable {s} }} on-error={{}}")
-    a("")
-
-    # === BRIDGE ===
-    a("# 4. Bridge LAN")
-    a(":if ([:len [/interface/bridge/find where name=\"bridge\"]] = 0) do={")
-    a("  /interface/bridge/add name=bridge")
-    a("}")
-    a("")
-
-    # === PORTS ===
-    a("# 5. Assignation des ports au bridge (Exclut le port WAN)")
-    for i in range(1, ports + 1):
-        e = f"ether{i}"
-        if e == wan:
-            continue
-        a(f":do {{")
-        a(f"  :if ([:len [/interface/find where name=\"{e}\"]] > 0) do={{")
-        a(f"    :if ([:len [/interface/bridge/port/find where interface=\"{e}\"]] = 0) do={{")
-        a(f"      /interface/bridge/port/add bridge=bridge interface={e}")
-        a(f"    }}")
-        a(f"  }}")
-        a(f"}} on-error={{}}")
-    a("")
-
-    # === CONFIGURATION IP ===
-    a("# 6. Adresses IP")
-    a(f":if ([:len [/ip/address/find where comment=\"KETRIKA\"]] = 0) do={{")
-    a(f"  /ip/address/add address={gw}/24 interface=bridge network={net} comment=\"KETRIKA\"")
-    a("}")
-    a(":if ([:len [/ip/address/find where comment=\"BACKUP\"]] = 0) do={")
-    a("  /ip/address/add address=192.168.88.1/24 interface=bridge network=192.168.88.0 comment=\"BACKUP\"")
-    a("}")
-    a("")
-
-    # === DHCP SERVER ===
-    a("# 7. Serveur DHCP")
-    a(f":if ([:len [/ip/pool/find where name=\"pool1\"]] = 0) do={{ /ip/pool/add name=pool1 ranges={ps}-{pe} }}")
-    a(":if ([:len [/ip/dhcp-server/find where name=\"dhcp1\"]] = 0) do={ /ip/dhcp-server/add name=dhcp1 interface=bridge address-pool=pool1 disabled=no lease-time=1d }")
-    a(f":if ([:len [/ip/dhcp-server/network/find where gateway=\"{gw}\"]] = 0) do={{ /ip/dhcp-server/network/add address={net}/24 gateway={gw} dns-server=1.1.1.1,8.8.8.8 }}")
-    a("/ip/dns/set servers=1.1.1.1,8.8.8.8 allow-remote-requests=yes")
-    a("")
-
-    # === DHCP CLIENT WAN ===
-    a("# 8. Client DHCP WAN")
-    a(f":if ([:len [/ip/dhcp-client/find where interface=\"{wan}\"]] = 0) do={{")
-    a(f"  /ip/dhcp-client/add interface={wan} disabled=no add-default-route=yes use-peer-dns=no")
-    a("}")
-    a("")
-
-    # === NAT PRIORITAIRE ===
-    a("# 9. NAT Masquerade (WAN Physique)")
-    a(f":if ([:len [/ip/firewall/nat/find where comment=\"K-NAT\"]] = 0) do={{")
-    a(f"  /ip/firewall/nat/add chain=srcnat action=masquerade out-interface={wan} comment=\"K-NAT\"")
-    a("}")
-    a("")
-
-    # === MAC SPOOFING ===
-    if plan in ("performance", "business") and order.mac_spoof and order.mac_address:
-        a("# 10. MAC Spoofing")
-        a(f":do {{ /interface/ethernet/set [/interface/ethernet/find where name=\"{wan}\"] mac-address={order.mac_address} }} on-error={{}}")
-        a("")
-
-    # === WI-FI SANS PAYS (ÉVITE TOUT REJET DE SYNTAXE) ===
-    if has24 or has5:
-        a("# 11. Configuration Wi-Fi")
-        if wtype == "ax":
-            a("# Mode Wi-Fi 6 (AX)")
-            a(":do { /interface/wifi/security/remove [/interface/wifi/security/find where name=\"ksec\"] } on-error={}")
-            a(":do { /interface/wifi/configuration/remove [/interface/wifi/configuration/find where name=\"kcfg2\"] } on-error={}")
-            a(":do { /interface/wifi/configuration/remove [/interface/wifi/configuration/find where name=\"kcfg5\"] } on-error={}")
-            a("")
-            a(f"/interface/wifi/security/add name=ksec authentication-types=wpa2-psk,wpa3-psk passphrase=\"{wp}\"")
-            a(f"/interface/wifi/configuration/add name=kcfg2 ssid=\"{s2}\" security=ksec mode=ap")
-            if has5:
-                a(f"/interface/wifi/configuration/add name=kcfg5 ssid=\"{s5}\" security=ksec mode=ap")
-            a("")
-            a(":local idx 0")
-            a(":foreach w in=[/interface/wifi/find] do={")
-            a("  :if ($idx = 0) do={")
-            a("    :do { /interface/wifi/set $w configuration=kcfg2 disabled=no } on-error={}")
-            a("  }")
-            if has5:
-                a("  :if ($idx = 1) do={")
-                a("    :do { /interface/wifi/set $w configuration=kcfg5 disabled=no } on-error={}")
-                a("  }")
-            a("  :set idx ($idx + 1)")
-            a("}")
-            a(":do { /interface/wifi/enable [/interface/wifi/find] } on-error={}")
-            a("")
-            a("# Ajout au bridge")
-            a(":foreach w in=[/interface/wifi/find] do={")
-            a("  :local wn [/interface/wifi/get $w name]")
-            a("  :if ([:len [/interface/bridge/port/find where interface=$wn]] = 0) do={")
-            a("    :do { /interface/bridge/port/add bridge=bridge interface=$wn } on-error={}")
-            a("  }")
-            a("}")
-        else:
-            a("# Mode Wi-Fi 4/5 (AC/N)")
-            a(":do { /interface/wireless/security-profiles/remove [/interface/wireless/security-profiles/find where name=\"ksec\"] } on-error={}")
-            a(f"/interface/wireless/security-profiles/add name=ksec mode=dynamic-keys authentication-types=wpa2-psk wpa2-pre-shared-key=\"{wp}\"")
-            a("")
-            a(":local idx 0")
-            a(":foreach w in=[/interface/wireless/find] do={")
-            a("  :if ($idx = 0) do={")
-            a(f"    :do {{ /interface/wireless/set $w mode=ap-bridge ssid=\"{s2}\" security-profile=ksec band=2ghz-b/g/n channel-width=20/40mhz-XX frequency=auto disabled=no }} on-error={{}}")
-            a("  }")
-            if has5:
-                a("  :if ($idx = 1) do={")
-                a(f"    :do {{ /interface/wireless/set $w mode=ap-bridge ssid=\"{s5}\" security-profile=ksec band=5ghz-a/n/ac channel-width=20/40/80mhz-XXXX frequency=auto disabled=no }} on-error={{}}")
-                a("  }")
-            a("  :set idx ($idx + 1)")
-            a("}")
-            a(":do { /interface/wireless/enable [/interface/wireless/find] } on-error={}")
-            a("")
-            a("# Ajout au bridge")
-            a(":foreach w in=[/interface/wireless/find] do={")
-            a("  :local wn [/interface/wireless/get $w name]")
-            a("  :if ([:len [/interface/bridge/port/find where interface=$wn]] = 0) do={")
-            a("    :do { /interface/bridge/port/add bridge=bridge interface=$wn } on-error={}")
-            a("  }")
-            a("}")
-        a("")
-
-    # === WIREGUARD WARP (Uniquement si Plan Performance ou Business) ===
-    if plan in ("performance", "business") and order.warp_private_key:
-        a("# =========================================")
-        a("# 12. WIREGUARD WARP CONFIGURATION")
-        a("# =========================================")
-        a("")
-        a("# Nettoyage")
-        a(":do { /interface/wireguard/peers/remove [/interface/wireguard/peers/find] } on-error={}")
-        a(":do { /ip/address/remove [/ip/address/find where interface=\"wg-warp\"] } on-error={}")
-        a(":do { /interface/wireguard/remove [/interface/wireguard/find where name=\"wg-warp\"] } on-error={}")
-        a("")
-        a("# Creation de l'interface")
-        a(f"/interface/wireguard/add name=wg-warp listen-port=13231 mtu=1280 private-key=\"{order.warp_private_key}\"")
-        a("")
-        a(f"# Attribution IP Cloudflare")
-        a(f"/ip/address/add address={order.warp_ipv4} interface=wg-warp comment=\"KW-IP\"")
-        a("")
-        a("# Ajout du Peer")
-        a(f"/interface/wireguard/peers/add interface=wg-warp public-key=\"{CF_PUBKEY}\" endpoint-address={CF_ENDPOINT_IP} endpoint-port={CF_ENDPOINT_PORT} allowed-address=0.0.0.0/0 persistent-keepalive=25s comment=\"KW-PEER\"")
-        a("")
-        a("# NAT pour le tunnel")
-        a(":if ([:len [/ip/firewall/nat/find where comment=\"KW-NAT\"]] = 0) do={")
-        a("  /ip/firewall/nat/add chain=srcnat action=masquerade out-interface=wg-warp comment=\"KW-NAT\"")
-        a("}")
-        a("")
-        a("# =========================================")
-        a("# 13. ROUTAGE PAR TABLE (Bypass Fasttrack)")
-        a("# =========================================")
-        a("")
-        a(":if ([:len [/routing/table/find where name=\"to-warp\"]] = 0) do={")
-        a("  /routing/table/add name=to-warp fib")
-        a("}")
-        a("")
-        a(":do { /ip/route/remove [/ip/route/find where comment=\"KW-ROUTE\"] } on-error={}")
-        a("/ip/route/add dst-address=0.0.0.0/0 gateway=wg-warp routing-table=to-warp comment=\"KW-ROUTE\"")
-        a("")
-        a("# Liste des reseaux locaux")
-        a(":foreach addr in={\"192.168.0.0/16\";\"10.0.0.0/8\";\"172.16.0.0/12\"} do={")
-        a("  :if ([:len [/ip/firewall/address-list/find where list=\"local-net\" and address=$addr]] = 0) do={")
-        a("    /ip/firewall/address-list/add list=local-net address=$addr")
-        a("  }")
-        a("}")
-        a("")
-        a("# Marquage Mangle")
-        a(":do { /ip/firewall/mangle/remove [/ip/firewall/mangle/find where comment~\"KW-\"] } on-error={}")
-        a(f"/ip/firewall/mangle/add chain=prerouting action=accept protocol=tcp dst-port=8291 src-address={net}/24 comment=\"KW-EXCL\"")
-        a(f"/ip/firewall/mangle/add chain=prerouting action=accept src-address={net}/24 dst-address-list=local-net comment=\"KW-LOCAL\"")
-        a(f"/ip/firewall/mangle/add chain=prerouting action=mark-routing new-routing-mark=to-warp src-address={net}/24 dst-address-list=!local-net connection-state=new passthrough=no comment=\"KW-MARK\"")
-        a("")
-        a(":log warning \"KETRIKA : Routage WireGuard WARP configure.\"")
-        a("")
-
-    # === MSS CLAMPING ===
-    a("# 14. MSS Clamping")
-    a(":if ([:len [/ip/firewall/mangle/find where comment=\"K-MSS\"]] = 0) do={")
-    a("  /ip/firewall/mangle/add chain=forward action=change-mss new-mss=1280 protocol=tcp tcp-flags=syn tcp-mss=1281-65535 passthrough=yes comment=\"K-MSS\"")
-    a("}")
-    a("")
-
-    # === OPTIMISATION TTL ===
-    if plan in ("performance", "business") and order.ttl_value and order.ttl_value > 0:
-        a(f"# 15. Changement de TTL (Valeur: {order.ttl_value})")
-        a(":do { /ip/firewall/mangle/remove [/ip/firewall/mangle/find where comment~\"K-TTL\"] } on-error={}")
-        for c, t in [("prerouting", "PRE"), ("postrouting", "POST"), ("forward", "FWD")]:
-            a(f"/ip/firewall/mangle/add chain={c} action=change-ttl new-ttl=set:{order.ttl_value} passthrough=yes comment=\"K-TTL-{t}\"")
-        a("")
-
-    # === LIMITES DE DEBIT (QOS) ===
-    if plan in ("performance", "business"):
-        if (order.dl_limit and order.dl_limit > 0) or (order.ul_limit and order.ul_limit > 0):
-            dl = f"{order.dl_limit}M" if order.dl_limit > 0 else "0"
-            ul = f"{order.ul_limit}M" if order.ul_limit > 0 else "0"
-            a("# 16. Limitation de bande passante globale")
-            a(":do { /queue/simple/remove [/queue/simple/find where comment=\"KETRIKA\"] } on-error={}")
-            a(f"/queue/simple/add name=ketrika-qos target={net}/24 max-limit={ul}/{dl} comment=\"KETRIKA\"")
-            a("")
-
-    # === HOTSPOT ===
-    if plan == "business" and order.hotspot_tickets_count and order.hotspot_tickets_count > 0:
-        a("# 17. Portail Captif Hotspot")
-        a(f":if ([:len [/ip/hotspot/profile/find where name=\"hsprof\"]] = 0) do={{")
-        a(f"  /ip/hotspot/profile/add name=hsprof hotspot-address={gw} dns-name=login.ketrika.mg html-directory=hotspot login-by=http-chap,http-pap")
-        a("}")
-        for pn, to, rl in [("h1h","1h","5M/10M"),("h1d","1d","5M/10M"),("h1w","1w","5M/10M"),("h1m","4w2d","10M/20M")]:
-            a(f":if ([:len [/ip/hotspot/user/profile/find where name=\"{pn}\"]] = 0) do={{")
-            a(f"  /ip/hotspot/user/profile/add name={pn} session-timeout={to} shared-users=1 rate-limit={rl}")
-            a("}")
-        a(":if ([:len [/ip/hotspot/find where name=\"hs1\"]] = 0) do={")
-        a("  /ip/hotspot/add name=hs1 interface=bridge address-pool=pool1 profile=hsprof disabled=no")
-        a("}")
-        a("")
-        for _ in range(min(order.hotspot_tickets_count, 200)):
-            u = "T" + "".join(random.choices(string.ascii_uppercase + string.digits, k=5))
-            p = "".join(random.choices(string.digits, k=6))
-            a(f":if ([:len [/ip/hotspot/user/find where name=\"{u}\"]] = 0) do={{")
-            a(f"  /ip/hotspot/user/add name={u} password={p} profile=h1d server=hs1")
-            a("}")
-        a("")
-
-    # === IDENTITY ===
-    a(f"# 18. Nom du routeur")
-    a(f":do {{ /system/identity/set name=\"{order.router_name}\" }} on-error={{}}")
-    a("")
-
-    # === PLANIFICATEUR DE VEILLE WI-FI ===
-    if order.sleep_mode and order.sleep_mode != "off" and order.sleep_start and order.sleep_end:
-        if wtype == "ax":
-            off = "/interface/wifi/disable [find]"
-            on = "/interface/wifi/enable [find]"
-        elif has24 or has5:
-            off = "/interface/wireless/disable [find]"
-            on = "/interface/wireless/enable [find]"
-        else:
-            off = on = ""
-        if off:
-            ss = order.sleep_start if ":" in order.sleep_start else order.sleep_start + ":00"
-            se = order.sleep_end if ":" in order.sleep_end else order.sleep_end + ":00"
-            a("# 19. Gestion d economie d energie Wi-Fi")
-            a(":do { /system/scheduler/remove [/system/scheduler/find where name~\"kwifi\"] } on-error={}")
-            a(f"/system/scheduler/add name=kwifi-off start-time={ss}:00 interval=1d on-event=\"{off}\"")
-            a(f"/system/scheduler/add name=kwifi-on start-time={se}:00 interval=1d on-event=\"{on}\"")
-            a("")
-
-    # === PROTECTION DU PARE-FEU ===
-    a("# 20. Securisation Pare-Feu")
-    for ch, act, par, tag in [
-        ("input","accept","connection-state=established,related","est"),
-        ("input","accept","src-address=192.168.0.0/16","lan"),
-        ("input","accept","protocol=icmp","icmp"),
-        ("input","drop",f"in-interface={wan}","drp"),
-        ("forward","accept","connection-state=established,related","fwd"),
-        ("forward","drop",f"connection-state=invalid in-interface={wan}","fdi"),
-    ]:
-        a(f":if ([:len [/ip/firewall/filter/find where comment=\"K-{tag}\"]] = 0) do={{")
-        a(f"  :do {{ /ip/firewall/filter/add chain={ch} action={act} {par} comment=\"K-{tag}\" }} on-error={{}}")
-        a("}")
-    a("")
-
-    # === SUCCES ===
-    a(":delay 2s")
-    a(":put \"\"")
-    a(":put \"================================================\"")
-    a(":put \"  KETRIKA MIKROTIK 301 - SUCCESS\"")
-    a(":put \"================================================\"")
-    a(f":put \"  Routeur : {order.router_name}\"")
-    if has24:
-        a(f":put \"  Wi-Fi   : {s2}\"")
-        a(f":put \"  Mdp     : {wp}\"")
-    a(f":put \"  IP      : {gw}\"")
-    if plan in ("performance", "business"):
-        a(":put \"  WARP    : ACTIVE AVEC REDIRECTION (rx/tx ok)\"")
-    a(":put \"  Support : wa.me/261382817100\"")
-    a(":put \"================================================\"")
-    a(":log warning \"KETRIKA 301 : Configuration appliquee.\"")
-
-    return "\n".join(L)
+# ============================================================
+# Curve25519 en pur Python (RFC 7748)
+# ============================================================
+P = 2**255 - 19
+A24 = 121665
 
 
-def generate_tutorial_txt(order, filename):
-    plan = order.plan_type
-    L = [
-        "================================================",
-        "  KETRIKA MIKROTIK 301",
-        "  GUIDE D'INSTALLATION",
-        "================================================",
-        "",
-        f"  Licence : {order.license_key}",
-        f"  Client  : {order.client_name}",
-        f"  Plan    : {plan.upper()}",
-        "",
-        "  ETAPE 1 : Ouvrir Winbox",
-        "  ETAPE 2 : Cliquer sur Files",
-        f"  ETAPE 3 : Glisser {filename}",
-        "  ETAPE 4 : Ouvrir New Terminal",
-        "  ETAPE 5 : Coller la commande :",
-        "",
-        f"  /import file-name={filename}",
-        "",
-        "  VOS IDENTIFIANTS :",
-        f"  Routeur : {order.router_name}",
-        f"  IP      : {order.lan_gateway}",
-    ]
-    if order.ssid_2g:
-        L.append(f"  Wi-Fi 2.4 : {order.ssid_2g}")
-    if order.ssid_5g:
-        L.append(f"  Wi-Fi 5   : {order.ssid_5g}")
-    if order.wifi_password:
-        L.append(f"  Mdp Wi-Fi : {order.wifi_password}")
-    L.extend([
-        "",
-        "  Support : wa.me/261382817100",
-        "  KETRIKA MIKROTIK Madagascar",
-        "================================================",
-    ])
-    return "\n".join(L)
+def _cswap(swap, x2, x3):
+    dummy = swap * (x2 - x3)
+    return x2 - dummy, x3 + dummy
+
+
+def _x25519(k_int, u_int):
+    x1 = u_int
+    x2, z2 = 1, 0
+    x3, z3 = u_int, 1
+    swap = 0
+    for t in range(254, -1, -1):
+        k_t = (k_int >> t) & 1
+        swap ^= k_t
+        x2, x3 = _cswap(swap, x2, x3)
+        z2, z3 = _cswap(swap, z2, z3)
+        swap = k_t
+        A = (x2 + z2) % P
+        AA = (A * A) % P
+        B = (x2 - z2) % P
+        BB = (B * B) % P
+        E = (AA - BB) % P
+        C = (x3 + z3) % P
+        D = (x3 - z3) % P
+        DA = (D * A) % P
+        CB = (C * B) % P
+        x3 = pow((DA + CB) % P, 2, P)
+        z3 = (x1 * pow((DA - CB) % P, 2, P)) % P
+        x2 = (AA * BB) % P
+        z2 = (E * ((AA + A24 * E) % P)) % P
+    x2, x3 = _cswap(swap, x2, x3)
+    z2, z3 = _cswap(swap, z2, z3)
+    return (x2 * pow(z2, P - 2, P)) % P
+
+
+def _decode_scalar(k):
+    k = bytearray(k)
+    k[0] &= 248
+    k[31] &= 127
+    k[31] |= 64
+    return int.from_bytes(k, "little")
+
+
+def _decode_u(u):
+    return int.from_bytes(u, "little") % P
+
+
+def _encode(n):
+    return n.to_bytes(32, "little")
+
+
+def curve25519_scalarmult(scalar_bytes, u_bytes):
+    return _encode(_x25519(_decode_scalar(scalar_bytes), _decode_u(u_bytes)))
+
+
+# Base point 9
+BASE = b"\x09" + b"\x00" * 31
+
+
+def generate_wireguard_keypair():
+    """Génère (private_b64, public_b64) au format WireGuard."""
+    priv = bytearray(os.urandom(32))
+    priv[0] &= 248
+    priv[31] &= 127
+    priv[31] |= 64
+    priv = bytes(priv)
+    pub = curve25519_scalarmult(priv, BASE)
+    return (
+        base64.b64encode(priv).decode(),
+        base64.b64encode(pub).decode(),
+    )
+
+
+# ============================================================
+# API Cloudflare WARP
+# ============================================================
+WARP_API = "https://api.cloudflareclient.com/v0a2158/reg"
+WARP_HEADERS = {
+    "CF-Client-Version": "a-6.11-2223",
+    "User-Agent": "okhttp/3.12.1",
+    "Content-Type": "application/json",
+}
+
+
+def register_warp():
+    """
+    Inscrit un client WARP auprès de Cloudflare.
+    Retourne dict {private_key, public_key, ipv4} ou None.
+    """
+    try:
+        priv_b64, pub_b64 = generate_wireguard_keypair()
+        payload = {
+            "install_id": "",
+            "tos": "2023-01-01T00:00:00.000Z",
+            "key": pub_b64,
+            "fcm_token": "",
+            "type": "Android",
+            "locale": "fr_FR",
+        }
+        r = requests.post(WARP_API, headers=WARP_HEADERS, json=payload, timeout=15)
+        if r.status_code not in (200, 201):
+            return None
+        data = r.json()
+        cfg = data.get("config", {})
+        ipv4 = ""
+        for addr in cfg.get("interface", {}).get("addresses", {}).get("v4", []):
+            ipv4 = addr
+            break
+        if not ipv4:
+            v4 = cfg.get("interface", {}).get("addresses", {}).get("v4")
+            if isinstance(v4, str):
+                ipv4 = v4
+        return {
+            "private_key": priv_b64,
+            "public_key": pub_b64,
+            "ipv4": ipv4 or "172.16.0.2",
+        }
+    except Exception:
+        return None
