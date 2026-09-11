@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KETRIKA MIKROTIK {{ version }} - Cybersécurité Réseau Professionnelle</title>
+<title>KETRIKA MIKROTIK {{ version }} - Cybersécurité et Optimisation Réseau</title>
 <style>
 :root{
   --bg:#f8fafc; --card:#ffffff; --bdr:#e2e8f0;
@@ -13,40 +13,38 @@
   --shadow:0 1px 3px rgba(0,0,0,.05); --shadow-lg:0 10px 25px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--bg);color:var(--t1);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5;font-size:16px}
-img{max-width:100%}
+html,body{background:var(--bg);color:var(--t1);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.5;font-size:16px}
 
-.topbar{background:var(--card);border-bottom:1px solid var(--bdr);padding:12px 16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.topbar{background:var(--card);border-bottom:1px solid var(--bdr);padding:14px 16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
 .topbar-in{max-width:1200px;margin:0 auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .topbar-title{font-weight:700;color:var(--blue);font-size:15px;white-space:nowrap}
-.check-form{display:flex;gap:8px;flex:1;min-width:220px}
-.check-form input{flex:1;padding:9px 12px;border:1px solid var(--bdr);border-radius:8px;font-size:14px;background:var(--bg);color:var(--t1)}
-.check-form button{padding:9px 16px;background:var(--blue);color:#fff;border:0;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
+.check-form{display:flex;gap:8px;flex:1;min-width:240px}
+.check-form input{flex:1;padding:10px 14px;border:1px solid var(--bdr);border-radius:8px;font-size:14px;background:var(--bg);color:var(--t1);text-transform:uppercase}
+.check-form button{padding:10px 18px;background:var(--blue);color:#fff;border:0;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
 .check-form button:hover{background:var(--blue-dark)}
 
-.hero{background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);padding:60px 16px 50px;text-align:center}
-.hero h1{font-size:clamp(32px,7vw,60px);font-weight:800;color:var(--t1);letter-spacing:-1px;line-height:1.05}
+.hero{background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);padding:60px 16px 50px;text-align:center;border-bottom:1px solid var(--bdr)}
+.hero h1{font-size:clamp(32px,6vw,56px);font-weight:800;color:var(--t1);letter-spacing:-1px;line-height:1.1}
 .hero h1 span{color:var(--blue)}
-.hero p{margin-top:16px;font-size:clamp(15px,2.2vw,19px);color:var(--t2);max-width:700px;margin-left:auto;margin-right:auto}
-.hero-badges{margin-top:22px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.badge{background:var(--card);border:1px solid var(--bdr);padding:6px 12px;border-radius:20px;font-size:13px;color:var(--t2);font-weight:500}
+.hero p{margin-top:16px;font-size:clamp(15px,2vw,18px);color:var(--t2);max-width:720px;margin-left:auto;margin-right:auto}
+.hero-badges{margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.badge{background:var(--card);border:1px solid var(--bdr);padding:8px 14px;border-radius:20px;font-size:13px;color:var(--t2);font-weight:600;box-shadow:var(--shadow)}
 
 .container{max-width:1200px;margin:0 auto;padding:40px 16px}
-.section-title{font-size:26px;font-weight:700;margin-bottom:8px;color:var(--t1)}
+.section-title{font-size:26px;font-weight:800;margin-bottom:6px;color:var(--t1)}
 .section-sub{color:var(--t3);margin-bottom:28px;font-size:15px}
 
-.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
-.plan{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;position:relative;transition:transform .15s}
-.plan:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.plan{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:26px;box-shadow:var(--shadow);display:flex;flex-direction:column;position:relative}
 .plan.reco{border:2px solid var(--blue)}
-.plan-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
-.plan h3{font-size:20px;font-weight:700;margin-bottom:4px}
-.plan .price{font-size:34px;font-weight:800;margin:12px 0 4px}
+.plan-tag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700}
+.plan h3{font-size:20px;font-weight:800;margin-bottom:4px}
+.plan .price{font-size:36px;font-weight:800;margin:12px 0 4px}
 .plan .price small{font-size:14px;font-weight:500;color:var(--t3)}
-.plan ul{list-style:none;margin:16px 0;flex:1}
-.plan li{padding:7px 0;font-size:14px;color:var(--t2);padding-left:22px;position:relative}
-.plan li:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
-.plan button{width:100%;padding:12px;border:0;border-radius:8px;font-weight:600;font-size:15px;cursor:pointer;color:#fff}
+.plan ul{list-style:none;margin:20px 0;flex:1}
+.plan li{padding:8px 0;font-size:14px;color:var(--t2);padding-left:24px;position:relative}
+.plan li:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:800}
+.plan button{width:100%;padding:12px;border:0;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer;color:#fff}
 .plan.p1 button{background:var(--green)}
 .plan.p2 button{background:var(--blue)}
 .plan.p3 button{background:var(--purple)}
@@ -54,54 +52,53 @@ img{max-width:100%}
 .plan.p2 h3{color:var(--blue)}
 .plan.p3 h3{color:var(--purple)}
 
-.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:flex-start;justify-content:center;padding:20px 12px;overflow-y:auto;z-index:200}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.6);display:none;align-items:flex-start;justify-content:center;padding:24px 12px;overflow-y:auto;z-index:200}
 .modal.show{display:flex}
-.modal-box{background:var(--card);border-radius:12px;max-width:640px;width:100%;padding:24px;box-shadow:var(--shadow-lg);margin:auto}
-.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.modal-hdr h2{font-size:20px;color:var(--blue)}
-.close{background:none;border:0;font-size:26px;cursor:pointer;color:var(--t3);line-height:1}
+.modal-box{background:var(--card);border-radius:12px;max-width:640px;width:100%;padding:26px;box-shadow:var(--shadow-lg);margin:auto}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-hdr h2{font-size:20px;color:var(--blue);font-weight:800}
+.close{background:none;border:0;font-size:28px;cursor:pointer;color:var(--t3);line-height:1}
 
-.steps{display:flex;gap:8px;margin-bottom:20px}
-.step{flex:1;text-align:center;padding:8px 4px;border-radius:6px;background:var(--bg);color:var(--t3);font-size:12px;font-weight:600;border:1px solid var(--bdr)}
+.steps{display:flex;gap:8px;margin-bottom:22px}
+.step{flex:1;text-align:center;padding:8px 4px;border-radius:6px;background:var(--bg);color:var(--t3);font-size:12px;font-weight:700;border:1px solid var(--bdr)}
 .step.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 
 .form-page{display:none}
 .form-page.active{display:block}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:13px;font-weight:600;color:var(--t2);margin-bottom:6px}
-.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid var(--bdr);border-radius:8px;font-size:14px;background:var(--card);color:var(--t1);font-family:inherit}
+.field input,.field select{width:100%;padding:10px 12px;border:1px solid var(--bdr);border-radius:8px;font-size:14px;background:var(--card);color:var(--t1)}
 .field input:focus,.field select:focus{outline:2px solid var(--blue);border-color:var(--blue)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:520px){.row{grid-template-columns:1fr}}
 .hint{font-size:12px;color:var(--t3);margin-top:4px}
 .chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--t2);cursor:pointer}
-.chk input{width:auto;margin-top:2px}
-.specs{background:var(--blue-light);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--blue-dark);margin-top:6px;display:none}
+.chk input{width:auto;margin-top:3px}
+.specs{background:var(--blue-light);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--blue-dark);margin-top:6px;display:none;font-weight:500}
 .specs.show{display:block}
-.form-nav{display:flex;justify-content:space-between;gap:8px;margin-top:20px}
-.btn{padding:11px 20px;border:0;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
+.form-nav{display:flex;justify-content:space-between;gap:8px;margin-top:22px}
+.btn{padding:11px 20px;border:0;border-radius:8px;font-weight:700;cursor:pointer;font-size:14px}
 .btn-prev{background:var(--bg);color:var(--t2);border:1px solid var(--bdr)}
 .btn-next{background:var(--blue);color:#fff}
 .btn-submit{background:var(--green);color:#fff;flex:1}
 
-.result{background:var(--card);border:2px solid var(--green);border-radius:12px;padding:20px;margin-top:16px;display:none}
+.result{background:var(--card);border:2px solid var(--green);border-radius:12px;padding:22px;margin-top:16px;display:none}
 .result.show{display:block}
-.result h3{color:var(--green);margin-bottom:12px}
-.result .lic{background:var(--bg);padding:12px;border-radius:8px;font-family:monospace;font-size:18px;text-align:center;letter-spacing:2px;color:var(--blue);font-weight:700;margin:10px 0}
-.result .mvola{background:#fef3c7;padding:12px;border-radius:8px;font-size:15px;text-align:center;color:var(--amber);font-weight:600;margin:10px 0}
-.wa-btn{display:block;text-align:center;background:#25d366;color:#fff;padding:12px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:10px}
+.result h3{color:var(--green);margin-bottom:10px;font-size:18px}
+.result .lic{background:var(--bg);padding:14px;border-radius:8px;font-family:monospace;font-size:20px;text-align:center;letter-spacing:2px;color:var(--blue);font-weight:800;margin:12px 0}
+.result .mvola{background:#fef3c7;padding:14px;border-radius:8px;font-size:15px;text-align:center;color:var(--amber);font-weight:700;margin:12px 0}
+.wa-btn{display:block;text-align:center;background:#25d366;color:#fff;padding:12px;border-radius:8px;text-decoration:none;font-weight:700;margin-top:12px}
 
-.check-result{background:var(--card);border-radius:8px;padding:14px;margin-top:10px;display:none;box-shadow:var(--shadow);border:1px solid var(--bdr)}
+.check-result{background:var(--card);border-radius:8px;padding:16px;margin-top:12px;display:none;box-shadow:var(--shadow);border:1px solid var(--bdr)}
 .check-result.show{display:block}
 .check-result.ok{border-color:var(--green)}
 .check-result.no{border-color:#dc2626}
-.dl-btn{display:inline-block;background:var(--blue);color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:8px;margin-right:6px}
+.dl-btn{display:inline-block;background:var(--blue);color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:700;margin-top:10px;margin-right:8px}
 
-footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;text-align:center;color:var(--t3);font-size:13px;margin-top:40px}
-
-.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:24px}
-.feat{background:var(--card);padding:20px;border-radius:10px;border:1px solid var(--bdr);box-shadow:var(--shadow)}
-.feat h4{color:var(--blue);margin-bottom:6px;font-size:16px}
+footer{background:var(--card);border-top:1px solid var(--bdr);padding:28px 16px;text-align:center;color:var(--t3);font-size:13px;margin-top:50px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:24px}
+.feat{background:var(--card);padding:22px;border-radius:10px;border:1px solid var(--bdr);box-shadow:var(--shadow)}
+.feat h4{color:var(--blue);margin-bottom:6px;font-size:16px;font-weight:700}
 .feat p{color:var(--t2);font-size:14px}
 </style>
 </head>
@@ -122,28 +119,28 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
 
 <section class="hero">
   <h1>KETRIKA MIKROTIK <span>{{ version }}</span></h1>
-  <p>Cybersécurité et optimisation réseau de niveau entreprise pour votre routeur MikroTik. Configuration automatique, tunnel chiffré Cloudflare, protection avancée.</p>
+  <p>Cybersécurité et optimisation réseau de niveau entreprise pour votre routeur MikroTik. Déploiement automatique, tunnel chiffré Cloudflare nouvelle génération et protection intégrale.</p>
   <div class="hero-badges">
-    <div class="badge">🛡️ Navigation sécurisée</div>
-    <div class="badge">⚡ Stabilité garantie</div>
-    <div class="badge">🌐 VPN nouvelle génération</div>
-    <div class="badge">📱 Support WhatsApp 30j</div>
+    <div class="badge">🛡️ Navigation sécurisée et chiffrée</div>
+    <div class="badge">⚡ Stabilité de connexion garantie</div>
+    <div class="badge">🌐 Technologie VPN nouvelle génération</div>
+    <div class="badge">📱 Support WhatsApp garanti 30j</div>
   </div>
 </section>
 
 <div class="container">
-  <h2 class="section-title">Choisissez votre plan</h2>
-  <p class="section-sub">Trois formules professionnelles adaptées à vos besoins</p>
+  <h2 class="section-title">Formules de configuration</h2>
+  <p class="section-sub">Choisissez la protection adaptée à votre infrastructure réseau</p>
 
   <div class="plans">
     <div class="plan p1">
       <h3>ESSENTIEL</h3>
       <div class="price">30 000 <small>Ar</small></div>
-      <p style="color:var(--t3);font-size:13px">Configuration de base complète</p>
+      <p style="color:var(--t3);font-size:13px">Configuration réseau fondamentale</p>
       <ul>
-        <li>Bridge & LAN automatique</li>
-        <li>Serveur DHCP + DNS Cloudflare</li>
-        <li>Wi-Fi 2.4 GHz + 5 GHz</li>
+        <li>Bridge et LAN automatique</li>
+        <li>Serveur DHCP et DNS Cloudflare</li>
+        <li>Wi-Fi 2.4 GHz et 5 GHz</li>
         <li>Veille Wi-Fi programmable</li>
         <li>Support WhatsApp 30 jours</li>
       </ul>
@@ -154,13 +151,13 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
       <div class="plan-tag">RECOMMANDÉ</div>
       <h3>PERFORMANCE</h3>
       <div class="price">50 000 <small>Ar</small></div>
-      <p style="color:var(--t3);font-size:13px">Cybersécurité avancée + VPN</p>
+      <p style="color:var(--t3);font-size:13px">Cybersécurité avancée et VPN</p>
       <ul>
         <li>Tout le plan Essentiel</li>
-        <li>Tunnel VPN WireGuard Cloudflare</li>
-        <li>DNS chiffré Cloudflare</li>
-        <li>Optimisation TTL</li>
-        <li>Anonymisation MAC WAN</li>
+        <li>Tunnel VPN WireGuard Cloudflare réel</li>
+        <li>DNS chiffré et sécurisé</li>
+        <li>Optimisation signature TTL</li>
+        <li>Anonymisation de la signature réseau MAC</li>
         <li>Limites de débit configurables</li>
       </ul>
       <button onclick="openForm('performance')">Commander</button>
@@ -169,23 +166,23 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
     <div class="plan p3">
       <h3>BUSINESS</h3>
       <div class="price">80 000 <small>Ar</small></div>
-      <p style="color:var(--t3);font-size:13px">Solution professionnelle complète</p>
+      <p style="color:var(--t3);font-size:13px">Portail captif et gestion client</p>
       <ul>
         <li>Tout le plan Performance</li>
-        <li>Portail Captif Hotspot pro</li>
-        <li>Tickets d'accès (10 à 100)</li>
-        <li>Profils durée (1h/1j/1sem/1mois)</li>
+        <li>Portail Captif Hotspot professionnel</li>
+        <li>Tickets d'accès générés (10 à 100)</li>
+        <li>Profils de durée (1h / 1j / 1sem / 1mois)</li>
       </ul>
       <button onclick="openForm('business')">Commander</button>
     </div>
   </div>
 
-  <h2 class="section-title" style="margin-top:50px">Pourquoi KETRIKA ?</h2>
+  <h2 class="section-title" style="margin-top:50px">Avantages KETRIKA</h2>
   <div class="features">
-    <div class="feat"><h4>🔒 Protection vie privée</h4><p>Tunnel chiffré Cloudflare de bout en bout pour anonymiser votre navigation.</p></div>
-    <div class="feat"><h4>⚡ Performance optimale</h4><p>QoS, MSS clamping et optimisations avancées pour une connexion stable.</p></div>
-    <div class="feat"><h4>🎯 Installation en 5 minutes</h4><p>Un seul fichier à importer dans Winbox. Aucune compétence technique requise.</p></div>
-    <div class="feat"><h4>📱 Support garanti 30 jours</h4><p>Assistance WhatsApp directe pour tout problème de configuration.</p></div>
+    <div class="feat"><h4>🔒 Protection de la vie privée</h4><p>Chiffrement direct via le réseau Cloudflare pour anonymiser vos flux.</p></div>
+    <div class="feat"><h4>⚡ Optimisation réseau avancée</h4><p>MSS clamping, QoS et priorisation des paquets pour un débit fluide.</p></div>
+    <div class="feat"><h4>🎯 Prêt à l'emploi en 3 clics</h4><p>Importation instantanée du script dans Winbox sans ligne de commande complexe.</p></div>
+    <div class="feat"><h4>📱 Accompagnement technique</h4><p>Assistance WhatsApp dédiée pour vous accompagner pas à pas.</p></div>
   </div>
 </div>
 
@@ -209,12 +206,12 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
       <div class="form-page active" id="p1">
         <div class="field">
           <label>Nom complet *</label>
-          <input type="text" id="customer_name" required maxlength="120">
+          <input type="text" id="customer_name" required maxlength="120" placeholder="Ex: Jean Rakoto">
         </div>
         <div class="field">
           <label>Numéro WhatsApp (avec 261) *</label>
-          <input type="text" id="whatsapp" required placeholder="261340000000" maxlength="40">
-          <div class="hint">Format international sans + ni espace</div>
+          <input type="text" id="whatsapp" required placeholder="261382817100" maxlength="40">
+          <div class="hint">Format international sans espace ni indicatif +</div>
         </div>
       </div>
 
@@ -260,8 +257,8 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
         </div>
 
         <div id="wifi-block">
-          <label class="chk" style="margin:10px 0">
-            <input type="checkbox" id="wifi_enabled" checked> Activer le Wi-Fi
+          <label class="chk" style="margin:12px 0 8px">
+            <input type="checkbox" id="wifi_enabled" checked> Activer le point d'accès Wi-Fi
           </label>
           <div class="row">
             <div class="field">
@@ -284,15 +281,15 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
       <div class="form-page" id="p3">
         <div id="opt-basic">
           <label class="chk" style="margin-bottom:10px">
-            <input type="checkbox" id="sleep_enabled"> Programmer veille Wi-Fi
+            <input type="checkbox" id="sleep_enabled"> Programmer une veille Wi-Fi nocturne
           </label>
           <div class="row">
             <div class="field">
-              <label>Heure début veille</label>
+              <label>Début veille</label>
               <input type="time" id="sleep_start" value="23:00">
             </div>
             <div class="field">
-              <label>Heure fin veille</label>
+              <label>Fin veille</label>
               <input type="time" id="sleep_stop" value="06:00">
             </div>
           </div>
@@ -301,12 +298,12 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
         <div id="opt-perf" style="display:none">
           <hr style="margin:14px 0;border:0;border-top:1px solid var(--bdr)">
           <div class="field">
-            <label>Valeur TTL (optimisation réseau)</label>
+            <label>Optimisation TTL (Signature réseau)</label>
             <select id="ttl_value">
               <option value="0">Désactivé</option>
-              <option value="64">64</option>
+              <option value="64">64 (Standard)</option>
               <option value="65">65</option>
-              <option value="128">128</option>
+              <option value="128">128 (Windows)</option>
             </select>
           </div>
           <div class="field">
@@ -314,25 +311,25 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
             <select id="mac_spoof" onchange="toggleMac()">
               <option value="off">Désactivée</option>
               <option value="auto">Automatique (aléatoire)</option>
-              <option value="manuel">Manuelle</option>
+              <option value="manuel">Manuelle personnalisée</option>
             </select>
           </div>
           <div class="field" id="mac-manual-field" style="display:none">
-            <label>Adresse MAC (format AA:BB:CC:DD:EE:FF)</label>
+            <label>Adresse MAC WAN personnalisée</label>
             <input type="text" id="mac_manual" placeholder="02:11:22:33:44:55" maxlength="17">
           </div>
           <div class="row">
             <div class="field">
-              <label>Limite download global (kbps)</label>
+              <label>Limite Download global (kbps, 0=illimité)</label>
               <input type="number" id="limit_down" value="0" min="0">
             </div>
             <div class="field">
-              <label>Limite upload global (kbps)</label>
+              <label>Limite Upload global (kbps, 0=illimité)</label>
               <input type="number" id="limit_up" value="0" min="0">
             </div>
           </div>
           <div class="field">
-            <label>Limite par client (kbps, 0=aucune)</label>
+            <label>Limite par client (kbps, 0=illimité)</label>
             <input type="number" id="limit_per_client" value="0" min="0">
           </div>
         </div>
@@ -341,7 +338,7 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
           <hr style="margin:14px 0;border:0;border-top:1px solid var(--bdr)">
           <div class="row">
             <div class="field">
-              <label>Nombre de tickets</label>
+              <label>Nombre de tickets d'accès</label>
               <select id="hotspot_tickets">
                 <option value="10">10 tickets</option>
                 <option value="20">20 tickets</option>
@@ -350,7 +347,7 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
               </select>
             </div>
             <div class="field">
-              <label>Durée par ticket</label>
+              <label>Durée par session ticket</label>
               <select id="hotspot_profile">
                 <option value="1h">1 heure</option>
                 <option value="1j">1 jour</option>
@@ -364,14 +361,14 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
         <hr style="margin:16px 0;border:0;border-top:1px solid var(--bdr)">
         <label class="chk">
           <input type="checkbox" id="cgu" required>
-          <span>J'accepte les conditions générales : ce service est destiné à l'optimisation et à la cybersécurité de mon réseau personnel. Aucun remboursement après téléchargement.</span>
+          <span>J'accepte les conditions générales : cette configuration est destinée à l'optimisation et à la cybersécurité de mon routeur personnel. Aucun remboursement après téléchargement.</span>
         </label>
       </div>
 
       <div class="form-nav">
         <button type="button" class="btn btn-prev" id="btn-prev" onclick="prevStep()" style="display:none">← Précédent</button>
         <button type="button" class="btn btn-next" id="btn-next" onclick="nextStep()">Suivant →</button>
-        <button type="submit" class="btn btn-submit" id="btn-submit" style="display:none">Valider la commande</button>
+        <button type="submit" class="btn btn-submit" id="btn-submit" style="display:none">Confirmer la commande</button>
       </div>
     </form>
 
@@ -380,8 +377,8 @@ footer{background:var(--card);border-top:1px solid var(--bdr);padding:24px 16px;
 </div>
 
 <footer>
-  <p><strong>KETRIKA MIKROTIK {{ version }}</strong> — Cybersécurité réseau professionnelle</p>
-  <p style="margin-top:6px">Mvola : <strong>{{ mvola }}</strong> · WhatsApp : <a href="{{ whatsapp_link }}" style="color:var(--blue)">+261 38 28 171 00</a></p>
+  <p><strong>KETRIKA MIKROTIK {{ version }}</strong> — Cybersécurité et optimisation réseau</p>
+  <p style="margin-top:6px">Paiement Mvola : <strong>{{ mvola }}</strong> · Support WhatsApp : <a href="{{ whatsapp_link }}" style="color:var(--blue);font-weight:600">+261 38 28 171 00</a></p>
 </footer>
 
 <script>
@@ -418,7 +415,7 @@ function updateModel(){
     wifiBlock.style.display = 'block';
     ssid5f.style.display = info.wifi_5 ? '' : 'none';
   } else {
-    txt += 'Sans Wi-Fi';
+    txt += 'Modèle sans interface Wi-Fi';
     wifiBlock.style.display = 'none';
   }
   specs.textContent = txt;
@@ -427,7 +424,7 @@ function updateModel(){
 
 function openForm(plan){
   document.getElementById('f-plan').value = plan;
-  document.getElementById('modal-title').textContent = 'Commande - ' + plan.toUpperCase();
+  document.getElementById('modal-title').textContent = 'Configuration ' + plan.toUpperCase();
   document.getElementById('opt-perf').style.display = (plan === 'performance' || plan === 'business') ? 'block' : 'none';
   document.getElementById('opt-biz').style.display = (plan === 'business') ? 'block' : 'none';
   document.getElementById('result').classList.remove('show');
@@ -454,7 +451,7 @@ function showStep(){
 function nextStep(){
   if(currentStep===1){
     if(!document.getElementById('customer_name').value.trim() || !document.getElementById('whatsapp').value.trim()){
-      alert('Remplissez tous les champs'); return;
+      alert('Veuillez remplir votre nom et votre numéro WhatsApp'); return;
     }
   }
   if(currentStep<3){ currentStep++; showStep(); }
@@ -467,9 +464,9 @@ function toggleMac(){
 
 async function submitOrder(e){
   e.preventDefault();
-  if(!document.getElementById('cgu').checked){ alert('Acceptez les conditions'); return; }
+  if(!document.getElementById('cgu').checked){ alert('Veuillez accepter les conditions'); return; }
   const btn = document.getElementById('btn-submit');
-  btn.disabled = true; btn.textContent = 'Traitement...';
+  btn.disabled = true; btn.textContent = 'Enregistrement en cours...';
 
   const data = {
     plan: document.getElementById('f-plan').value,
@@ -503,23 +500,23 @@ async function submitOrder(e){
   try{
     const r = await fetch('/api/order', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
     const d = await r.json();
-    if(!d.ok){ alert(d.msg||'Erreur'); btn.disabled=false; btn.textContent='Valider la commande'; return; }
+    if(!d.ok){ alert(d.msg||'Erreur'); btn.disabled=false; btn.textContent='Confirmer la commande'; return; }
     document.getElementById('order-form').style.display = 'none';
     const res = document.getElementById('result');
     res.innerHTML = `
-      <h3>✅ Commande enregistrée !</h3>
-      <p>Voici votre clé de licence unique :</p>
+      <h3>✅ Commande enregistrée avec succès !</h3>
+      <p>Votre clé de licence unique :</p>
       <div class="lic">${d.license}</div>
-      <p><strong>Plan :</strong> ${d.plan_name} · <strong>Montant :</strong> ${d.price.toLocaleString()} Ar</p>
-      <div class="mvola">💰 Payez ${d.price.toLocaleString()} Ar par Mvola au<br><strong style="font-size:20px">${MVOLA}</strong></div>
-      <p style="font-size:13px;color:var(--t3);margin-top:10px">Envoyez la capture de paiement sur WhatsApp avec votre clé de licence :</p>
-      <a href="${WA_LINK}?text=Bonjour%2C%20paiement%20effectu%C3%A9%20pour%20licence%20${d.license}" target="_blank" class="wa-btn">📱 Envoyer la capture sur WhatsApp</a>
-      <p style="font-size:12px;color:var(--t3);margin-top:12px;text-align:center">Notez votre clé <strong>${d.license}</strong> pour télécharger votre pack dès validation (barre en haut du site).</p>
+      <p><strong>Formule :</strong> ${d.plan_name} · <strong>Montant :</strong> ${d.price.toLocaleString()} Ar</p>
+      <div class="mvola">💰 Effectuez le transfert Mvola de ${d.price.toLocaleString()} Ar au<br><strong style="font-size:20px">${MVOLA}</strong></div>
+      <p style="font-size:13px;color:var(--t3);margin-top:10px">Envoyez la capture d'écran du paiement par WhatsApp en précisant votre licence :</p>
+      <a href="${WA_LINK}?text=Bonjour%2C%20paiement%20effectue%20pour%20la%20licence%20${d.license}" target="_blank" class="wa-btn">📱 Envoyer la preuve sur WhatsApp</a>
+      <p style="font-size:12px;color:var(--t3);margin-top:12px;text-align:center">Conservez votre clé <strong>${d.license}</strong> pour télécharger votre pack dès validation (barre supérieure).</p>
     `;
     res.classList.add('show');
   }catch(err){
     alert('Erreur réseau : ' + err.message);
-    btn.disabled=false; btn.textContent='Valider la commande';
+    btn.disabled=false; btn.textContent='Confirmer la commande';
   }
 }
 
@@ -528,7 +525,7 @@ async function checkLic(e){
   const key = document.getElementById('lic-input').value.trim().toUpperCase();
   const box = document.getElementById('check-result');
   box.className = 'check-result';
-  if(!key){ return; }
+  if(!key) return;
   try{
     const r = await fetch('/api/check-license', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({license:key})});
     const d = await r.json();
@@ -540,19 +537,19 @@ async function checkLic(e){
     box.classList.add('show','ok');
     if(d.status === 'validated'){
       box.innerHTML = `
-        <strong style="color:var(--green)">✅ Licence validée — ${d.customer}</strong><br>
-        Plan : ${d.plan.toUpperCase()}<br>
-        <a class="dl-btn" href="${d.download_zip}">📦 Télécharger le pack ZIP complet</a>
-        <a class="dl-btn" href="${d.download_rsc}" style="background:var(--t2)">📄 Fichier .rsc seul</a>
+        <strong style="color:var(--green)">✅ Licence active et validée — ${d.customer}</strong><br>
+        Formule : ${d.plan.toUpperCase()}<br>
+        <a class="dl-btn" href="${d.download_zip}">📦 Télécharger le pack complet (.zip)</a>
+        <a class="dl-btn" href="${d.download_rsc}" style="background:var(--t2)">📄 Télécharger le script seul (.rsc)</a>
       `;
     } else if(d.status === 'pending'){
-      box.innerHTML = '<strong style="color:var(--amber)">⏳ En attente de validation</strong><br>Votre paiement est en cours de vérification. Contactez le support si nécessaire.';
+      box.innerHTML = '<strong style="color:var(--amber)">⏳ Paiement en cours de validation</strong><br>Votre transfert est en cours de vérification par notre équipe. Envoyez votre capture sur WhatsApp si ce n\'est pas encore fait.';
     } else {
-      box.innerHTML = '<strong style="color:#dc2626">❌ Licence rejetée</strong><br>Contactez le support WhatsApp.';
+      box.innerHTML = '<strong style="color:#dc2626">❌ Licence refusée ou expirée</strong><br>Veuillez contacter le support.';
     }
   }catch(err){
     box.classList.add('show','no');
-    box.innerHTML = '<strong style="color:#dc2626">Erreur réseau</strong>';
+    box.innerHTML = '<strong style="color:#dc2626">Erreur de connexion</strong>';
   }
 }
 
