@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KETRIKA MIKROTIK 301 — Optimisation Réseau & Sécurité</title>
+<title>KETRIKA MIKROTIK 301 — Cybersécurité & Réseau</title>
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
 <style>
@@ -21,7 +21,7 @@ body{background:var(--bg);color:var(--t2);font-family:var(--font);line-height:1.
 a{color:var(--blue);text-decoration:none;font-weight:600}
 .ctn{max-width:1000px;margin:0 auto;padding:0 20px}.hidden{display:none!important}
 
-/* NAVIGATION */
+/* NAV */
 .nav{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);box-shadow:var(--shadow)}
 .nav-in{max-width:1000px;margin:0 auto;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
@@ -36,7 +36,7 @@ a{color:var(--blue);text-decoration:none;font-weight:600}
   .navl.open{display:flex}.mt{display:block}
 }
 
-/* BOUTONS */
+/* BTN */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:6px;font-weight:700;font-size:14px;border:none;cursor:pointer;transition:all .15s;text-decoration:none}
 .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
 .btn-b{background:var(--blue);color:#fff}.btn-g{background:var(--green);color:#fff}.btn-w{background:#22c55e;color:#fff}
@@ -44,7 +44,7 @@ a{color:var(--blue);text-decoration:none;font-weight:600}
 .btn-s{background:var(--bg);color:var(--t2);border:1px solid var(--bdr);cursor:pointer;font-weight:600;border-radius:6px;padding:12px 20px}
 .btn-full{width:100%}.btn-lg{padding:14px 28px;font-size:15px}
 
-/* MODULE DE VÉRIFICATION LICENCE */
+/* LICENCE BAR */
 .licbar{background:#fff;border-bottom:1px solid var(--bdr);padding:14px 20px;box-shadow:var(--shadow)}
 .licin{max-width:1000px;margin:0 auto}
 .licr{display:flex;gap:8px;flex-wrap:wrap}
@@ -55,7 +55,7 @@ a{color:var(--blue);text-decoration:none;font-weight:600}
 .lres.wait{background:#fffbeb;border:1px solid #fef3c7;color:#92400e}
 .lres.err{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
 
-/* EN-TÊTE PRINCIPAL (HERO) */
+/* HERO */
 .hero{padding:60px 20px;text-align:center;background:#fff;border-bottom:1px solid var(--bdr)}
 .hero-badge{display:inline-block;padding:6px 14px;background:#eff6ff;color:var(--blue);border-radius:20px;font-size:13px;font-weight:700;margin-bottom:20px}
 .hero-title{font-size:clamp(32px,8vw,64px);font-weight:900;line-height:1.05;color:var(--t1);letter-spacing:-1.5px;margin-bottom:12px}
@@ -66,11 +66,24 @@ a{color:var(--blue);text-decoration:none;font-weight:600}
 .stat-v{font-size:24px;font-weight:800;color:var(--t1)}.stat-l{font-size:11px;color:var(--t4)}
 @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
 
-/* SECTIONS GÉNÉRALES */
+/* SECTIONS */
 .sec{padding:60px 0}
 .sec-h{text-align:center;margin-bottom:36px}
 .sec-h h2{font-size:clamp(20px,3.5vw,28px);font-weight:800;color:var(--t1);letter-spacing:-0.5px}
 .sec-h p{color:var(--t3);font-size:14px;margin-top:4px}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* FEATURE CARDS */
+.fc{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);padding:20px;text-align:center;box-shadow:var(--shadow)}
+.fc-i{font-size:32px;margin-bottom:10px}
+.fc h3{font-size:15px;margin-bottom:6px;color:var(--t1)}
+.fc p{color:var(--t3);font-size:12.5px}
 
 /* PLANS */
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
@@ -83,12 +96,7 @@ a{color:var(--blue);text-decoration:none;font-weight:600}
 .pl-ft{list-style:none;flex:1;margin:12px 0}.pl-ft li{padding:4px 0;font-size:12.5px;display:flex;gap:6px;color:var(--t2)}.pl-ft li::before{content:'✓';color:var(--green);font-weight:900}
 .pl-btn{margin-top:auto;width:100%}
 
-/* CARTES POURQUOI */
-.fc{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);padding:20px;text-align:center;box-shadow:var(--shadow)}
-.fc:hover{border-color:var(--blue);box-shadow:var(--shadow2)}.fc-i{font-size:32px;margin-bottom:10px}
-.fc h3{font-size:15px;margin-bottom:6px;color:var(--t1)}.fc p{color:var(--t3);font-size:12.5px}
-
-/* FORMULAIRE DYNAMIQUE */
+/* FORM */
 .fw{max-width:680px;margin:0 auto;background:#fff;border:1px solid var(--bdr);border-radius:12px;padding:24px;box-shadow:var(--shadow2)}
 .ftag{display:inline-flex;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;margin-bottom:16px}
 .tag-essentiel{background:#f0f9ff;color:var(--sky);border:1px solid #bae6fd}
@@ -110,14 +118,14 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .fn{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
 @media(max-width:400px){.fn{flex-direction:column}}
 
-/* RECAPITULATIF */
+/* RECAP */
 .rcp{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:20px;margin-top:16px}
 .rcp h3{color:var(--green);margin-bottom:12px;font-size:16px}
 .rr{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #d1fae5;font-size:13.5px;gap:8px}.rl{color:var(--t3)}.rv{font-weight:600;text-align:right;word-break:break-all}
 .mvola{background:var(--amber);color:#fff;padding:16px;border-radius:var(--r);margin-top:14px}.mvola h4{margin-bottom:6px}
 .mvola-n{font-size:clamp(18px,4vw,24px);font-weight:900;letter-spacing:1px;margin:6px 0;font-family:var(--mono)}
 
-/* TUTORIEL D'IMPORTATION */
+/* TUTO */
 .tc{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)}
 .tc-n{width:36px;height:36px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;margin-bottom:12px}
 .tc h3{margin-bottom:6px;font-size:14px;color:var(--t1)}.tc p{color:var(--t3);font-size:12.5px}
@@ -126,20 +134,22 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .alt-g{background:#f0fdf4;border:1px solid #bbf7d0}.alt-g h4{color:var(--green)}
 .alt-p{background:#f0f9ff;border:1px solid #bae6fd}.alt-p h4{color:var(--blue)}
 
-/* FAQ & LEGAL */
+/* FAQ */
 .faq{max-width:680px;margin:0 auto}
 .fq{background:#fff;border:1px solid var(--bdr);border-radius:6px;margin-bottom:6px;box-shadow:var(--shadow)}
 .fq-q{padding:14px 16px;cursor:pointer;font-weight:600;font-size:13.5px;display:flex;justify-content:space-between;align-items:center;color:var(--t1)}
 .fq-q::after{content:'+';font-size:18px;color:var(--blue)}.fq.open .fq-q::after{content:'-'}
 .fq-a{max-height:0;overflow:hidden;transition:max-height .3s,padding .3s;padding:0 16px;color:var(--t3);font-size:13px;line-height:1.6}
 .fq.open .fq-a{max-height:300px;padding:0 16px 14px}
+
+/* TERMS */
 .terms{max-width:680px;margin:0 auto;font-size:13px;color:var(--t3);line-height:1.7}
 .terms h3{color:var(--t1);margin:14px 0 6px;font-size:14px}.terms p{margin-bottom:8px}.terms ul{padding-left:16px;margin-bottom:8px}
 
 /* FOOTER */
 footer{background:#fff;border-top:1px solid var(--bdr);padding:30px 20px;text-align:center;color:var(--t3);font-size:12.5px}footer a{color:var(--blue)}
 
-/* FLOATING WIDGET */
+/* WA */
 .waf{position:fixed;bottom:16px;right:16px;z-index:999;background:#22c55e;color:#fff;padding:10px 16px;border-radius:50px;font-weight:700;font-size:13px;text-decoration:none;box-shadow:0 3px 12px rgba(34,197,94,.3);display:flex;align-items:center;gap:6px}
 </style>
 </head>
@@ -296,7 +306,7 @@ document.getElementById('mS').addEventListener('change',function(){const k=this.
 
 document.querySelectorAll('.fq').forEach(i=>i.querySelector('.fq-q').addEventListener('click',()=>{document.querySelectorAll('.fq').forEach(j=>{if(j!==i)j.classList.remove('open')});i.classList.toggle('open')}));
 
-document.getElementById('oF').addEventListener('submit',async function(e){e.preventDefault();if(!document.getElementById('tC').checked){alert('Veuillez accepter les conditions.');return}const fd=new FormData(this),d=Object.fromEntries(fd.entries()),sm=d.sleep_mode||'off';if(sm!=='off'&&sm!=='custom'){const p=sm.split('-');d.sleep_start=p[0].padStart(2,'0')+':00';d.sleep_end=p[1].padStart(2,'0')+':00'}else if(sm==='custom'){d.sleep_start=document.getElementById('slS').value;d.sleep_end=document.getElementById('slE').value}d.mac_spoof=document.getElementById('mcS')?document.getElementById('mcS').checked:false;if(d.mac_spoof&&document.getElementById('mcM')&&document.getElementById('mcM').value==='auto')d.mac_address='';d.terms_accepted=document.getElementById('tC').checked;const b=document.getElementById('sBtn');b.disabled=true;b.textContent='Enregistrement...';try{const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});const res=await r.json();if(!res.ok)throw new Error(res.err||'Erreur de communication.');document.getElementById('oF').classList.add('hidden');document.querySelector('.prog').classList.add('hidden');document.getElementById('fTag').classList.add('hidden');document.getElementById('rcBox').classList.remove('hidden');document.getElementById('rcA').textContent=res.amount.toLocaleString();document.getElementById('rcRef').textContent='#'+res.id+' — '+res.lic;document.getElementById('rcWa').href=res.wa;let h='';h+='<div class="rr"><span class="rl">Commande</span><span class="rv">#'+res.id+'</span></div>';h+='<div class="rr"><span class="rl">Plan</span><span class="rv">'+res.plan.toUpperCase()+'</span></div>';h+='<div class="rr"><span class="rl">Routeur</span><span class="rv">'+res.router+'</span></div>';h+='<div class="rr"><span class="rl">Clé unique</span><span class="rv" style="font-family:var(--mono);font-size:11px">'+res.lic+'</span></div>';h+='<div class="rr"><span class="rl">Total</span><span class="rv" style="color:var(--green);font-size:16px;font-weight:700">'+res.amount.toLocaleString()+' Ar</span></div>';document.getElementById('rcR').innerHTML=h;document.getElementById('rcBox').scrollIntoView({behavior:'smooth'})}catch(err){alert(err.message);b.disabled=false;b.textContent='Valider la configuration'}});
+document.getElementById('oF').addEventListener('submit',async function(e){e.preventDefault();if(!document.getElementById('tC').checked){alert('Veuillez accepter les conditions.');return}const fd=new FormData(this),d=Object.fromEntries(fd.entries()),sm=d.sleep_mode||'off';if(sm!=='off'&&sm!=='custom'){const p=sm.split('-');d.sleep_start=p[0].padStart(2,'0')+':00';d.sleep_end=p[1].padStart(2,'0')+':00'}else if(sm==='custom'){d.sleep_start=document.getElementById('slS').value;d.sleep_end=document.getElementById('slE').value}d.mac_spoof=document.getElementById('mcS')?document.getElementById('mcS').checked:false;if(d.mac_spoof&&document.getElementById('mcM')&&document.getElementById('mcM').value==='auto')d.mac_address='';d.terms_accepted=document.getElementById('tC').checked;const b=document.getElementById('sBtn');b.disabled=true;b.textContent='Enregistrement...';try{const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});const res=await r.json();if(!res.ok)throw new Error(res.err||'Erreur de communication.');document.getElementById('oF').classList.add('hidden');document.querySelector('.prog').classList.add('hidden');document.getElementById('fTag').classList.add('hidden');document.getElementById('rcBox').classList.remove('hidden');document.getElementById('rcA').textContent=res.amount.toLocaleString();document.getElementById('rcRef').textContent='#'+res.id+' — '+res.lic;document.getElementById('rcWa').href=res.wa;let h='';h+='<div class="rr"><span class="rl">Commande</span><span class="rv">#'+res.id+'</span></div>';h+='<div class="rr"><span class="rl">Plan</span><span class="rv">'+res.plan.toUpperCase()+'</span></div>';h+='<div class="rr"><span class="rl">Routeur</span><span class="rv">'+res.router+'</span></div>';h+='<div class="rr"><span class="rl">Clé unique</span><span class="rv" style="font-family:var(--mono);font-size:11px">'+res.lic+'</span></div>';h+='<div class="rr"><span class="rl">Total</span><span class="rv" style="color:var(--green);font-size:16px;font-weight:700">'+res.amount.toLocaleString()+' Ar</span></div>';document.getElementById('recR').innerHTML=h;document.getElementById('rcBox').scrollIntoView({behavior:'smooth'})}catch(err){alert(err.message);b.disabled=false;b.textContent='Valider la configuration'}});
 
 upUI('essentiel');
 document.querySelectorAll('.navl a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.navl').classList.remove('open')));
