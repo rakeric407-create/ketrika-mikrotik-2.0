@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-KETRIKA MIKROTIK 301 - Generateur .rsc CORRIGE FINAL
-Syntaxe RouterOS v7 verifiee :
-- Utilisation de [:pick $liste 0] au lieu de ($liste->0)
-- Wi-Fi applique via foreach avec compteur
-- WireGuard genere localement (pas d API externe)
-- NAT en premier (garantit la connexion)
+KETRIKA MIKROTIK 301 - Generateur .rsc
+Correction : country=etsi pour wifi AX (Madagascar non supporte)
 """
 
 import random
@@ -16,7 +12,7 @@ from datetime import datetime
 
 
 def _gen_wg_privkey():
-    """Genere une cle privee WireGuard valide (curve25519)"""
+    """Genere une cle privee WireGuard curve25519"""
     raw = bytearray(os.urandom(32))
     raw[0] &= 248
     raw[31] = (raw[31] & 127) | 64
@@ -148,7 +144,7 @@ def generate_rsc(order, model_info):
         a("")
 
     # ============================================================
-    # WI-FI - SYNTAXE ROUTEROS v7 CORRECTE (foreach avec compteur)
+    # WI-FI - CORRECTION country=etsi (Madagascar non supporte pour AX)
     # ============================================================
     if has24 or has5:
         a("# =========================================")
@@ -157,7 +153,7 @@ def generate_rsc(order, model_info):
         a("")
 
         if wtype == "ax":
-            a("# Wi-Fi 6 AX (/interface/wifi)")
+            a("# Wi-Fi 6 AX (/interface/wifi) - country=etsi")
             a("")
             a("# Nettoyage anciens profils")
             a(":do { /interface/wifi/security/remove [/interface/wifi/security/find where name=\"ksec\"] } on-error={}")
@@ -165,9 +161,10 @@ def generate_rsc(order, model_info):
             a(":do { /interface/wifi/configuration/remove [/interface/wifi/configuration/find where name=\"kcfg5\"] } on-error={}")
             a("")
             a(f"/interface/wifi/security/add name=ksec authentication-types=wpa2-psk,wpa3-psk passphrase=\"{wp}\"")
-            a(f"/interface/wifi/configuration/add name=kcfg2 ssid=\"{s2}\" security=ksec country=Madagascar mode=ap")
+            # CORRECTION : country=etsi au lieu de Madagascar
+            a(f"/interface/wifi/configuration/add name=kcfg2 ssid=\"{s2}\" security=ksec country=etsi mode=ap")
             if has5:
-                a(f"/interface/wifi/configuration/add name=kcfg5 ssid=\"{s5}\" security=ksec country=Madagascar mode=ap")
+                a(f"/interface/wifi/configuration/add name=kcfg5 ssid=\"{s5}\" security=ksec country=etsi mode=ap")
             a("")
             a("# Application avec compteur")
             a(":local idx 0")
@@ -199,7 +196,7 @@ def generate_rsc(order, model_info):
             a("")
             a(f"/interface/wireless/security-profiles/add name=ksec mode=dynamic-keys authentication-types=wpa2-psk wpa2-pre-shared-key=\"{wp}\"")
             a("")
-            a("# Application avec compteur")
+            a("# Application avec compteur (country omis = no_country_set par defaut)")
             a(":local idx 0")
             a(":foreach w in=[/interface/wireless/find] do={")
             a("  :if ($idx = 0) do={")
