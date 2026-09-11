@@ -23,9 +23,12 @@ APWD = "ketrika2024"
 VER = "301"
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ketrika.db"
+
+# Base de données robuste absolue
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(basedir, "ketrika.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "ketrika-secret")
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "ketrika-secret-301")
 init_db(app)
 
 # ============================================================
@@ -68,7 +71,6 @@ def curve25519_eval(n, base=9):
 
 
 def generate_curve25519_keypair():
-    """Génère une clé privée et publique Curve25519 valide en Base64"""
     priv_bytes = bytearray(os.urandom(32))
     priv_bytes[0] &= 248
     priv_bytes[31] = (priv_bytes[31] & 127) | 64
@@ -99,7 +101,7 @@ def register_cloudflare_warp():
             "fcm_token": "",
             "tos": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000Z"),
             "model": "MikroTik Router",
-            "serial_number": secrets.token_hex(4).upper() if "secrets" in globals() else "301PRO",
+            "serial_number": "301PRO",
             "locale": "fr_MG",
         }
         res = requests.post("https://api.cloudflareclient.com/v0a2158/reg", json=payload, headers=headers, timeout=10)
@@ -109,12 +111,10 @@ def register_cloudflare_warp():
             config = result.get("config", {})
             interface_conf = config.get("interface", {})
             addresses = interface_conf.get("addresses", {})
-            # Cloudflare renvoie l'adresse IP valide à configurer (ex: 172.16.0.2/32 ou 10.x.x.x)
             ipv4 = addresses.get("v4", "172.16.0.2/32")
             return priv, pub, ipv4, result.get("id", "")
     except Exception:
         pass
-    # En cas de timeout ou problème réseau, on renvoie une structure saine par défaut
     priv, pub = generate_curve25519_keypair()
     return priv, pub, "172.16.0.2/32", "fallback-id"
 
@@ -291,7 +291,7 @@ def admin():
     if pwd != APWD:
         return """<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Admin</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#f8fafc;font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-.b{background:#fff;border-radius:16px;padding:40px;max-width:400px;width:100%;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.08)}h1{color:#1e293b;margin-bottom:24px}
+.b{background:#fff;border-radius:16px;padding:40px;max-width:400px;width:100%;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.08)}h1{{color:#1e293b;margin-bottom:24px}}
 input{width:100%;padding:14px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;font-size:16px;margin-bottom:16px}
 button{width:100%;padding:14px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:16px}</style></head>
 <body><div class="b"><h1>KETRIKA Admin</h1><form method="get"><input type="password" name="pwd" placeholder="Mot de passe" required autofocus><button>Entrer</button></form></div></body></html>"""
