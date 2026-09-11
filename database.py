@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-"""KETRIKA MIKROTIK 301 - Base de donnees"""
+"""
+KETRIKA MIKROTIK 301 - Module Base de Données
+Stocke les configurations et les clés réelles Cloudflare WARP de chaque client.
+"""
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -43,16 +46,25 @@ class Order(db.Model):
     validated_at = db.Column(db.DateTime, nullable=True)
     terms_accepted = db.Column(db.Boolean, default=False)
 
+    # Clés uniques générées par Cloudflare WARP
+    warp_private_key = db.Column(db.String(100), default="")
+    warp_public_key = db.Column(db.String(100), default="")
+    warp_ipv4 = db.Column(db.String(30), default="")
+    warp_client_id = db.Column(db.String(100), default="")
+
 
 def generate_license_key():
+    """Génère une clé de licence unique pour le client"""
     return "LIC-" + secrets.token_hex(16).upper()
 
 
 def generate_router_name(license_key):
+    """Génère un identifiant système par défaut"""
     return "KETRIKA-" + license_key.replace("LIC-", "")[:6]
 
 
 def generate_random_mac():
+    """Génère une adresse MAC factice pour contourner les restrictions FAI"""
     prefixes = ["00:12:FB", "AC:37:43", "F0:25:B7", "34:CE:00", "28:6C:07"]
     oui = random.choice(prefixes)
     tail = ":".join(f"{random.randint(0, 255):02X}" for _ in range(3))
@@ -83,13 +95,6 @@ MIKROTIK_MODELS = {
 
 def get_model_info(model_key):
     return MIKROTIK_MODELS.get(model_key, MIKROTIK_MODELS["hap_ac2"])
-
-
-PLAN_PRICES = {"essentiel": 30000, "performance": 50000, "business": 80000}
-
-
-def get_plan_price(plan_type):
-    return PLAN_PRICES.get(plan_type, 30000)
 
 
 def init_db(app):
