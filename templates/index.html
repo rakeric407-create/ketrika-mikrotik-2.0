@@ -2,428 +2,316 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KETRIKA MIKROTIK {{ version }}</title>
-<meta name="theme-color" content="#0f172a">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KETRIKA MIKROTIK {{ ver }}</title>
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
---bg:#0f172a;--bg2:#1e293b;--card:#1e293b;--card2:#334155;
---bdr:#334155;--bdr2:#475569;
---blue:#38bdf8;--green:#10b981;--purple:#8b5cf6;--amber:#f59e0b;--red:#ef4444;
---t1:#f8fafc;--t2:#e2e8f0;--t3:#94a3b8;--t4:#64748b;
---r:12px;--font:system-ui,-apple-system,sans-serif;--mono:ui-monospace,monospace;
-}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--t2);font-family:var(--font);line-height:1.6;font-size:15px}
+:root{--bg:#f8fafc;--bg2:#ffffff;--card:#ffffff;--bdr:#e2e8f0;--bdr2:#cbd5e1;
+--blue:#2563eb;--sky:#0ea5e9;--green:#059669;--purple:#7c3aed;--amber:#d97706;--red:#dc2626;
+--t1:#0f172a;--t2:#334155;--t3:#64748b;--t4:#94a3b8;
+--font:system-ui,-apple-system,sans-serif;--mono:ui-monospace,monospace;--r:12px;
+--shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);--shadow2:0 4px 16px rgba(0,0,0,.08)}
+html{scroll-behavior:smooth}body{background:var(--bg);color:var(--t2);font-family:var(--font);line-height:1.65;font-size:15px}
 a{color:var(--blue);text-decoration:none}
-.container{max-width:1200px;margin:0 auto;padding:0 20px}
-.hidden{display:none!important}
+.ctn{max-width:1100px;margin:0 auto;padding:0 20px}.hidden{display:none!important}
 
 /* NAV */
-.nav{position:sticky;top:0;z-index:1000;background:rgba(15,23,42,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr)}
-.nav-in{max-width:1200px;margin:0 auto;padding:10px 20px;display:flex;justify-content:space-between;align-items:center}
+.nav{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr);box-shadow:var(--shadow)}
+.nav-in{max-width:1100px;margin:0 auto;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo-i{width:40px;height:40px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px}
-.logo-t{font-size:22px;font-weight:900;background:linear-gradient(90deg,var(--blue),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.logo-v{font-size:10px;color:var(--t4);font-weight:500;letter-spacing:2px}
-.nav-l{display:flex;gap:18px;align-items:center}
-.nav-l a{color:var(--t3);font-size:14px;font-weight:500}
-.nav-l a:hover{color:var(--blue)}
-.nav-l .cta{background:var(--green);color:#000;padding:8px 16px;border-radius:20px;font-weight:700;font-size:13px}
-.menu-t{display:none;background:none;border:none;color:var(--t1);font-size:28px;cursor:pointer}
-@media(max-width:768px){.nav-l{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg2);border-bottom:1px solid var(--bdr);flex-direction:column;padding:20px;gap:16px}.nav-l.open{display:flex}.menu-t{display:block}}
+.logo-i{width:38px;height:38px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}
+.logo-t{font-size:20px;font-weight:900;color:var(--blue)}.logo-v{font-size:10px;color:var(--t4);font-weight:600;letter-spacing:2px}
+.navl{display:flex;gap:20px;align-items:center}.navl a{color:var(--t3);font-size:14px;font-weight:500}.navl a:hover{color:var(--blue)}
+.navl .cta{background:var(--blue);color:#fff;padding:8px 18px;border-radius:8px;font-weight:700;font-size:13px}
+.mt{display:none;background:none;border:none;color:var(--t1);font-size:26px;cursor:pointer}
+@media(max-width:768px){.navl{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border-bottom:1px solid var(--bdr);flex-direction:column;padding:20px;gap:16px;box-shadow:var(--shadow2)}.navl.open{display:flex}.mt{display:block}}
 
 /* BTN */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border-radius:8px;font-weight:700;font-size:15px;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
-.btn:hover{transform:translateY(-2px)}
-.btn-b{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;box-shadow:0 4px 16px rgba(56,189,248,.3)}
-.btn-g{background:var(--green);color:#000}
-.btn-w{background:#25D366;color:#fff}
-.btn-o{background:transparent;border:2px solid var(--bdr2);color:var(--t2)}
-.btn-s{background:var(--card2);color:var(--t2);padding:12px 24px;border:1px solid var(--bdr);cursor:pointer;font-weight:600;font-size:14px;border-radius:8px}
-.btn-full{width:100%}
-.btn-lg{padding:16px 36px;font-size:17px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow2)}
+.btn-b{background:var(--blue);color:#fff}.btn-g{background:var(--green);color:#fff}.btn-w{background:#25D366;color:#fff}
+.btn-o{background:transparent;border:2px solid var(--bdr2);color:var(--t2)}.btn-o:hover{border-color:var(--blue);color:var(--blue)}
+.btn-s{background:var(--bg);color:var(--t2);border:1px solid var(--bdr);cursor:pointer;font-weight:600;border-radius:8px;padding:12px 24px}
+.btn-full{width:100%}.btn-lg{padding:16px 32px;font-size:16px}
 
-/* LICENCE BAR */
-.lic-bar{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:16px 20px}
-.lic-in{max-width:1200px;margin:0 auto}
-.lic-row{display:flex;gap:10px;flex-wrap:wrap}
-.lic-row input{flex:1;min-width:200px;padding:12px 16px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;color:var(--t1);font-size:14px;font-family:var(--mono)}
-.lic-row input:focus{border-color:var(--blue);outline:none}
-.lic-res{margin-top:14px;padding:16px;border-radius:8px;font-size:14px;line-height:1.7;animation:fd .3s}
-.lic-res.ok{background:rgba(16,185,129,.08);border:1px solid var(--green);color:var(--t2)}
-.lic-res.wait{background:rgba(245,158,11,.08);border:1px solid var(--amber);color:var(--amber)}
-.lic-res.err{background:rgba(239,68,68,.08);border:1px solid var(--red);color:var(--red)}
-@keyframes fd{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+/* LICENCE */
+.licbar{background:#fff;border-bottom:1px solid var(--bdr);padding:14px 20px}
+.licin{max-width:1100px;margin:0 auto}
+.licr{display:flex;gap:10px;flex-wrap:wrap}
+.licr input{flex:1;min-width:200px;padding:12px 16px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;color:var(--t1);font-size:14px;font-family:var(--mono)}
+.licr input:focus{border-color:var(--blue);outline:none}
+.lres{margin-top:14px;padding:16px;border-radius:8px;font-size:14px;line-height:1.7}
+.lres.ok{background:#ecfdf5;border:1px solid var(--green);color:var(--t1)}
+.lres.wait{background:#fffbeb;border:1px solid var(--amber);color:#92400e}
+.lres.err{background:#fef2f2;border:1px solid var(--red);color:#991b1b}
 
 /* HERO */
-.hero{min-height:90vh;display:flex;align-items:center;padding:80px 20px;position:relative;overflow:hidden;text-align:center}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(56,189,248,.1),transparent 60%),radial-gradient(ellipse at 70% 60%,rgba(139,92,246,.08),transparent 60%);pointer-events:none}
-.hero-c{max-width:900px;margin:0 auto;position:relative;z-index:2}
-.hero-badge{display:inline-block;padding:8px 20px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.3);color:var(--blue);border-radius:24px;font-size:13px;font-weight:600;margin-bottom:30px}
-.hero-title{font-size:clamp(60px,14vw,140px);font-weight:900;line-height:.95;letter-spacing:-4px;margin-bottom:8px}
-.hero-title .k{background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero-title .m{background:linear-gradient(90deg,var(--green),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:.4em;display:block;letter-spacing:6px}
-.hero-ver{display:inline-block;padding:10px 30px;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border-radius:30px;font-size:clamp(18px,3vw,24px);font-weight:900;letter-spacing:6px;margin:20px 0 30px;box-shadow:0 8px 24px rgba(56,189,248,.3)}
-.hero h2{font-size:clamp(16px,2.5vw,24px);font-weight:600;color:var(--t3);margin-bottom:30px}
-.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:50px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:700px;margin:0 auto}
-.stat-v{font-size:clamp(22px,3vw,30px);font-weight:900;color:var(--blue)}
-.stat-l{font-size:13px;color:var(--t4)}
-@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.hero{min-height:auto;padding:60px 20px}}
+.hero{padding:80px 20px 60px;text-align:center;background:linear-gradient(180deg,#eff6ff 0%,#f8fafc 100%)}
+.hero-badge{display:inline-block;padding:6px 16px;background:#dbeafe;color:var(--blue);border-radius:20px;font-size:13px;font-weight:600;margin-bottom:24px}
+.hero-title{font-size:clamp(48px,10vw,100px);font-weight:900;line-height:1;letter-spacing:-3px;color:var(--blue);margin-bottom:6px}
+.hero-sub{font-size:clamp(24px,5vw,48px);font-weight:900;color:var(--t1);letter-spacing:-1px;line-height:1.1}
+.hero-ver{display:inline-block;padding:8px 24px;background:var(--blue);color:#fff;border-radius:8px;font-size:18px;font-weight:900;letter-spacing:4px;margin:20px 0 24px}
+.hero p{font-size:17px;color:var(--t3);margin-bottom:30px;max-width:600px;margin-left:auto;margin-right:auto}
+.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:50px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:600px;margin:0 auto}
+.stat-v{font-size:28px;font-weight:900;color:var(--blue)}.stat-l{font-size:12px;color:var(--t4)}
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}}
 
 /* SECTIONS */
-.sec{padding:80px 0}@media(max-width:768px){.sec{padding:50px 0}}
-.sec-h{text-align:center;margin-bottom:48px}
-.sec-h h2{font-size:clamp(24px,4vw,36px);font-weight:900;margin-bottom:10px;color:var(--t1)}
-.sec-h h2 .hl{background:linear-gradient(90deg,var(--blue),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sec-h p{color:var(--t3);font-size:16px}
+.sec{padding:70px 0}
+.sec-h{text-align:center;margin-bottom:44px}
+.sec-h h2{font-size:clamp(22px,4vw,32px);font-weight:900;margin-bottom:8px;color:var(--t1)}
+.sec-h h2 .hl{color:var(--blue)}.sec-h p{color:var(--t3)}
 
 /* GRID */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 @media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
 
-/* FEATURE CARDS */
-.fc{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:28px;text-align:center;transition:all .3s}
-.fc:hover{transform:translateY(-6px);border-color:var(--blue)}
-.fc-i{font-size:40px;margin-bottom:16px}
-.fc h3{font-size:17px;margin-bottom:10px;color:var(--t1)}
-.fc p{color:var(--t3);font-size:13px}
+/* FEATURE */
+.fc{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);padding:24px;text-align:center;transition:all .2s;box-shadow:var(--shadow)}
+.fc:hover{border-color:var(--blue);box-shadow:var(--shadow2)}.fc-i{font-size:36px;margin-bottom:12px}
+.fc h3{font-size:16px;margin-bottom:8px;color:var(--t1)}.fc p{color:var(--t3);font-size:13px}
 
 /* PLANS */
-.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
-@media(max-width:900px){.plans{grid-template-columns:1fr;max-width:420px;margin:0 auto}}
-.pl{background:var(--card);border:2px solid var(--bdr);border-radius:16px;padding:32px 28px;display:flex;flex-direction:column;position:relative;transition:all .3s}
-.pl:hover{transform:translateY(-6px)}
-.pl.pop{border-color:var(--green);box-shadow:0 0 40px rgba(16,185,129,.1)}
-@media(min-width:901px){.pl.pop{transform:scale(1.05)}.pl.pop:hover{transform:scale(1.05) translateY(-6px)}}
-.pl-rib{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;padding:5px 18px;border-radius:20px;font-size:11px;font-weight:900}
-.pl-ess{border-color:rgba(56,189,248,.4)}
-.pl-bus{border-color:rgba(139,92,246,.4)}
-.pl-ic{font-size:34px;margin-bottom:10px}
-.pl-nm{font-size:20px;font-weight:800;color:var(--t1)}
-.pl-pr{font-size:clamp(28px,4vw,36px);font-weight:900;margin:14px 0;color:var(--t1)}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+@media(max-width:900px){.plans{grid-template-columns:1fr;max-width:380px;margin:0 auto}}
+.pl{background:#fff;border:2px solid var(--bdr);border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;position:relative;transition:all .2s;box-shadow:var(--shadow)}
+.pl:hover{box-shadow:var(--shadow2);transform:translateY(-4px)}
+.pl.pop{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),var(--shadow2)}
+@media(min-width:901px){.pl.pop{transform:scale(1.04)}.pl.pop:hover{transform:scale(1.04) translateY(-4px)}}
+.pl-rib{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:4px 16px;border-radius:16px;font-size:11px;font-weight:800}
+.pl-ess{border-color:var(--sky)}.pl-bus{border-color:var(--purple)}
+.pl-ic{font-size:32px;margin-bottom:8px}.pl-nm{font-size:18px;font-weight:800;color:var(--t1)}.pl-pr{font-size:clamp(26px,4vw,34px);font-weight:900;margin:12px 0;color:var(--t1)}
 .pl-pr small{font-size:14px;color:var(--t3);font-weight:400}
-.pl-ft{list-style:none;flex:1;margin:16px 0}
-.pl-ft li{padding:6px 0;font-size:13px;display:flex;gap:10px;color:var(--t2)}
-.pl-ft li::before{content:'✓';color:var(--green);font-weight:900;flex-shrink:0}
-.pl-btn{margin-top:auto;width:100%;padding:14px;font-size:15px}
-.pl-ess .pl-btn{background:var(--blue);color:#000}
-.pl.pop .pl-btn{background:var(--green);color:#000}
-.pl-bus .pl-btn{background:var(--purple);color:#fff}
+.pl-ft{list-style:none;flex:1;margin:14px 0}.pl-ft li{padding:5px 0;font-size:13px;display:flex;gap:8px;color:var(--t2)}.pl-ft li::before{content:'✓';color:var(--green);font-weight:900}
+.pl-btn{margin-top:auto;width:100%;padding:12px}
+.pl-ess .pl-btn{background:var(--sky);color:#fff}.pl.pop .pl-btn{background:var(--blue);color:#fff}.pl-bus .pl-btn{background:var(--purple);color:#fff}
 
 /* FORM */
-.fw{max-width:780px;margin:0 auto;background:var(--card);border:1px solid var(--bdr);border-radius:16px;padding:clamp(24px,4vw,40px)}
-.f-tag{display:inline-flex;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:20px}
-.tag-essentiel{background:rgba(56,189,248,.12);color:var(--blue);border:1px solid var(--blue)}
-.tag-performance{background:rgba(16,185,129,.12);color:var(--green);border:1px solid var(--green)}
-.tag-business{background:rgba(139,92,246,.12);color:var(--purple);border:1px solid var(--purple)}
-.prog{display:flex;justify-content:space-between;margin-bottom:30px;position:relative;padding:0 10px}
-.prog::before{content:'';position:absolute;top:18px;left:40px;right:40px;height:3px;background:var(--bdr);z-index:0}
-.ps{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:6px}
-.pn{width:36px;height:36px;border-radius:50%;border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;background:var(--card);transition:all .3s}
-.ps.active .pn{border-color:var(--blue);color:var(--blue);box-shadow:0 0 12px rgba(56,189,248,.3)}
-.ps.done .pn{background:var(--green);color:#000;border-color:var(--green)}
-.ps-l{font-size:11px;color:var(--t4);font-weight:600}
-.ps.active .ps-l{color:var(--blue)}
-.ps.done .ps-l{color:var(--green)}
-.fs{display:none}.fs.active{display:block;animation:fd .3s}
-.fs-t{font-size:20px;font-weight:800;margin-bottom:20px;color:var(--t1)}
-.fg{margin-bottom:16px}
-.fg label{display:block;font-size:13px;margin-bottom:6px;font-weight:600;color:var(--t2)}
-.fg .hint{font-size:12px;color:var(--t4);margin-top:5px}
-.fi{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;color:var(--t1);font-size:15px;font-family:var(--font);transition:border .2s}
-.fi:focus{outline:none;border-color:var(--blue)}
-select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
-.ck{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;cursor:pointer}
-.ck:hover{border-color:var(--blue)}
-.ck input{width:18px;height:18px;accent-color:var(--green);flex-shrink:0}
-.ms{padding:14px;background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.2);border-radius:8px;margin-top:8px;font-size:13px;line-height:1.7;color:var(--t2)}
-.fn{display:flex;justify-content:space-between;gap:12px;margin-top:28px}
+.fw{max-width:720px;margin:0 auto;background:#fff;border:1px solid var(--bdr);border-radius:16px;padding:clamp(20px,4vw,36px);box-shadow:var(--shadow2)}
+.ftag{display:inline-flex;padding:5px 14px;border-radius:16px;font-size:13px;font-weight:700;margin-bottom:18px}
+.tag-essentiel{background:#e0f2fe;color:var(--sky)}.tag-performance{background:#dbeafe;color:var(--blue)}.tag-business{background:#ede9fe;color:var(--purple)}
+.prog{display:flex;justify-content:space-between;margin-bottom:28px;position:relative;padding:0 10px}
+.prog::before{content:'';position:absolute;top:16px;left:40px;right:40px;height:2px;background:var(--bdr)}
+.ps{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.pn{width:34px;height:34px;border-radius:50%;border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;background:#fff;transition:all .2s}
+.ps.active .pn{border-color:var(--blue);color:var(--blue)}.ps.done .pn{background:var(--green);color:#fff;border-color:var(--green)}
+.psl{font-size:11px;color:var(--t4);font-weight:600}.ps.active .psl{color:var(--blue)}.ps.done .psl{color:var(--green)}
+.fs{display:none}.fs.active{display:block}
+.fst{font-size:18px;font-weight:800;margin-bottom:18px;color:var(--t1)}
+.fg{margin-bottom:14px}.fg label{display:block;font-size:13px;margin-bottom:5px;font-weight:600;color:var(--t2)}.fg .hint{font-size:12px;color:var(--t4);margin-top:4px}
+.fi{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;color:var(--t1);font-size:14px;font-family:var(--font)}.fi:focus{outline:none;border-color:var(--blue)}
+select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.ck{display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;cursor:pointer}.ck input{width:18px;height:18px;accent-color:var(--blue)}
+.msp{padding:12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;margin-top:8px;font-size:13px;color:var(--t2)}
+.fn{display:flex;justify-content:space-between;gap:12px;margin-top:24px}
 @media(max-width:400px){.fn{flex-direction:column}}
 
 /* RECAP */
-.rcp{background:rgba(16,185,129,.05);border:2px solid var(--green);border-radius:16px;padding:clamp(24px,4vw,32px);margin-top:24px}
-.rcp h3{color:var(--green);margin-bottom:16px;font-size:20px}
-.rcp-r{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;gap:10px}
-.rcp-l{color:var(--t3)}.rcp-v{font-weight:600;text-align:right;word-break:break-all}
-.mvola{background:var(--amber);color:#000;padding:24px;border-radius:var(--r);margin-top:20px}
-.mvola h4{margin-bottom:10px;font-size:18px}
-.mvola-n{font-size:clamp(22px,5vw,30px);font-weight:900;letter-spacing:3px;margin:10px 0;font-family:var(--mono)}
+.rcp{background:#ecfdf5;border:2px solid var(--green);border-radius:16px;padding:clamp(20px,4vw,28px);margin-top:20px}
+.rcp h3{color:var(--green);margin-bottom:14px;font-size:18px}
+.rr{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #d1fae5;font-size:14px;gap:8px}.rl{color:var(--t3)}.rv{font-weight:600;text-align:right;word-break:break-all}
+.mvola{background:var(--amber);color:#fff;padding:20px;border-radius:var(--r);margin-top:16px}.mvola h4{margin-bottom:8px}
+.mvola-n{font-size:clamp(20px,5vw,28px);font-weight:900;letter-spacing:2px;margin:8px 0;font-family:var(--mono)}
 
 /* TUTO */
-.tc{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:28px 24px;transition:border .3s}
-.tc:hover{border-color:var(--blue)}
-.tc-n{width:44px;height:44px;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;margin-bottom:16px}
-.tc h3{margin-bottom:10px;font-size:16px;color:var(--t1)}
-.tc p{color:var(--t3);font-size:14px}
-.code{background:#000;color:var(--green);padding:14px 18px;border-radius:8px;font-family:var(--mono);font-size:13px;margin-top:12px;overflow-x:auto;border:1px solid var(--bdr);word-break:break-all}
-.alt{max-width:780px;margin:24px auto 0;background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.2);border-radius:var(--r);padding:24px}
-.alt h4{color:var(--purple);margin-bottom:10px}
-.alt2{background:rgba(16,185,129,.05);border-color:rgba(16,185,129,.2)}
-.alt2 h4{color:var(--green)}
+.tc{background:#fff;border:1px solid var(--bdr);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}.tc:hover{border-color:var(--blue)}
+.tc-n{width:40px;height:40px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;margin-bottom:14px}
+.tc h3{margin-bottom:8px;font-size:15px;color:var(--t1)}.tc p{color:var(--t3);font-size:13px}
+.code{background:var(--t1);color:#4ade80;padding:12px 16px;border-radius:8px;font-family:var(--mono);font-size:13px;margin-top:10px;overflow-x:auto}
+.alt{max-width:720px;margin:20px auto 0;padding:20px;border-radius:var(--r)}
+.alt-g{background:#ecfdf5;border:1px solid #a7f3d0}.alt-g h4{color:var(--green)}
+.alt-p{background:#eff6ff;border:1px solid #bfdbfe}.alt-p h4{color:var(--blue)}
 
 /* FAQ */
-.faq{max-width:780px;margin:0 auto}
-.fq{background:var(--card);border:1px solid var(--bdr);border-radius:8px;margin-bottom:10px;overflow:hidden}
-.fq-q{padding:18px 20px;cursor:pointer;font-weight:600;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--t1)}
-.fq-q::after{content:'+';font-size:22px;color:var(--blue);flex-shrink:0}
-.fq.open .fq-q::after{content:'-'}
-.fq-a{max-height:0;overflow:hidden;transition:max-height .3s,padding .3s;padding:0 20px;color:var(--t3);font-size:14px;line-height:1.7}
-.fq.open .fq-a{max-height:300px;padding:0 20px 18px}
+.faq{max-width:720px;margin:0 auto}
+.fq{background:#fff;border:1px solid var(--bdr);border-radius:8px;margin-bottom:8px;box-shadow:var(--shadow)}
+.fq-q{padding:16px 18px;cursor:pointer;font-weight:600;font-size:14px;display:flex;justify-content:space-between;align-items:center;color:var(--t1)}
+.fq-q::after{content:'+';font-size:20px;color:var(--blue)}.fq.open .fq-q::after{content:'-'}
+.fq-a{max-height:0;overflow:hidden;transition:max-height .3s,padding .3s;padding:0 18px;color:var(--t3);font-size:14px;line-height:1.7}
+.fq.open .fq-a{max-height:300px;padding:0 18px 16px}
 
 /* TERMS */
-.terms{max-width:780px;margin:0 auto;font-size:14px;color:var(--t3);line-height:1.8}
-.terms h3{color:var(--t1);margin:20px 0 10px;font-size:16px}
-.terms p{margin-bottom:12px}
-.terms ul{padding-left:24px;margin-bottom:12px}
+.terms{max-width:720px;margin:0 auto;font-size:14px;color:var(--t3);line-height:1.8}
+.terms h3{color:var(--t1);margin:18px 0 8px;font-size:15px}.terms p{margin-bottom:10px}.terms ul{padding-left:20px;margin-bottom:10px}
 
 /* FOOTER */
-footer{background:var(--bg2);border-top:1px solid var(--bdr);padding:40px 20px;text-align:center;color:var(--t3);font-size:13px}
-footer a{color:var(--blue)}
+footer{background:#fff;border-top:1px solid var(--bdr);padding:36px 20px;text-align:center;color:var(--t3);font-size:13px}footer a{color:var(--blue)}
 
-/* WA FLOAT */
-.waf{position:fixed;bottom:24px;right:24px;z-index:999;background:#25D366;color:#fff;padding:14px 22px;border-radius:50px;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,.4);display:flex;align-items:center;gap:8px}
-@media(max-width:500px){.waf{padding:12px 16px;font-size:14px;bottom:16px;right:16px}}
+/* WA */
+.waf{position:fixed;bottom:20px;right:20px;z-index:999;background:#25D366;color:#fff;padding:12px 20px;border-radius:50px;font-weight:700;font-size:14px;text-decoration:none;box-shadow:0 4px 16px rgba(37,211,102,.3);display:flex;align-items:center;gap:6px}
 </style>
 </head>
 <body>
 
 <nav class="nav"><div class="nav-in">
-<a href="#accueil" class="logo"><div class="logo-i">⚡</div><div><div class="logo-t">KETRIKA</div><div class="logo-v">MIKROTIK {{ version }}</div></div></a>
-<button class="menu-t" onclick="document.querySelector('.nav-l').classList.toggle('open')">☰</button>
-<div class="nav-l"><a href="#accueil">Accueil</a><a href="#plans">Plans</a><a href="#commander">Commander</a><a href="#tutoriel">Tutoriel</a><a href="#faq">FAQ</a><a class="cta" href="{{ whatsapp_link }}" target="_blank">💬 WhatsApp</a></div>
+<a href="#top" class="logo"><div class="logo-i">⚡</div><div><div class="logo-t">KETRIKA</div><div class="logo-v">MIKROTIK {{ ver }}</div></div></a>
+<button class="mt" onclick="document.querySelector('.navl').classList.toggle('open')">☰</button>
+<div class="navl"><a href="#plans">Plans</a><a href="#commander">Commander</a><a href="#tuto">Tutoriel</a><a href="#faq">FAQ</a><a class="cta" href="{{ walink }}" target="_blank">💬 Contact</a></div>
 </div></nav>
 
-<div class="lic-bar"><div class="lic-in">
-<p style="font-size:14px;color:var(--t2);margin-bottom:10px">🔑 <b>Vous avez une clé de licence ?</b></p>
-<div class="lic-row"><input type="text" id="licIn" placeholder="LIC-XXXXXXXX..." spellcheck="false"><button class="btn btn-b" onclick="checkLic()" id="licBtn">🔍 Vérifier</button></div>
+<div class="licbar"><div class="licin">
+<p style="font-size:14px;margin-bottom:8px"><b>🔑 Déjà client ?</b> Entrez votre clé de licence :</p>
+<div class="licr"><input id="licIn" placeholder="LIC-XXXXXXXX..." spellcheck="false"><button class="btn btn-b" onclick="chkLic()" id="licBtn">Vérifier</button></div>
 <div id="licRes"></div>
 </div></div>
 
-<section id="accueil" class="hero"><div class="hero-c">
-<span class="hero-badge">✨ RouterOS v7 — Tous modèles MikroTik</span>
-<div class="hero-title"><span class="k">KETRIKA</span><span class="m">MIKROTIK</span></div>
-<div class="hero-ver">{{ version }}</div>
-<h2>Configuration professionnelle en 1 clic</h2>
-<div class="hero-ctas"><a href="#plans" class="btn btn-b btn-lg">Nos offres →</a><a href="#tutoriel" class="btn btn-o btn-lg">📖 Tutoriel</a></div>
-<div class="stats">
-<div><div class="stat-v">500+</div><div class="stat-l">Routeurs</div></div>
-<div><div class="stat-v">99.9%</div><div class="stat-l">Satisfaction</div></div>
-<div><div class="stat-v">24/7</div><div class="stat-l">Support</div></div>
-<div><div class="stat-v">🇲🇬</div><div class="stat-l">Madagascar</div></div>
-</div>
-</div></section>
+<section id="top" class="hero">
+<span class="hero-badge">Compatible RouterOS v7 — Tous modèles</span>
+<div class="hero-title">KETRIKA</div>
+<div class="hero-sub">MIKROTIK</div>
+<div class="hero-ver">{{ ver }}</div>
+<p>Configuration automatique professionnelle de routeurs MikroTik. Sécurisez et optimisez votre réseau en 30 secondes.</p>
+<div class="hero-ctas"><a href="#plans" class="btn btn-b btn-lg">Voir les offres →</a><a href="#tuto" class="btn btn-o btn-lg">📖 Comment ca marche</a></div>
+<div class="stats"><div><div class="stat-v">500+</div><div class="stat-l">Routeurs</div></div><div><div class="stat-v">99.9%</div><div class="stat-l">Satisfaction</div></div><div><div class="stat-v">24/7</div><div class="stat-l">Support</div></div><div><div class="stat-v">🇲🇬</div><div class="stat-l">Madagascar</div></div></div>
+</section>
 
-<section class="sec" style="background:var(--bg2)"><div class="container">
+<section class="sec" style="background:#fff"><div class="ctn">
 <div class="sec-h"><h2>Pourquoi <span class="hl">KETRIKA</span> ?</h2></div>
 <div class="g4">
-<div class="fc"><div class="fc-i">⚡</div><h3>Ultra Rapide</h3><p>Configuration en 30 secondes. Un fichier, zéro erreur.</p></div>
-<div class="fc"><div class="fc-i">🛡️</div><h3>Sécurité Maximale</h3><p>VPN WireGuard WARP, DNS chiffré Cloudflare.</p></div>
-<div class="fc"><div class="fc-i">📶</div><h3>Wi-Fi Optimisé</h3><p>Dual-Band 2.4 + 5 GHz, couverture étendue.</p></div>
-<div class="fc"><div class="fc-i">🎯</div><h3>Sur Mesure</h3><p>Adapté à votre modèle et vos besoins.</p></div>
+<div class="fc"><div class="fc-i">⚡</div><h3>30 secondes</h3><p>Un fichier, zéro erreur, configuration complète.</p></div>
+<div class="fc"><div class="fc-i">🛡️</div><h3>Sécurité VPN</h3><p>WireGuard WARP + DNS chiffré Cloudflare.</p></div>
+<div class="fc"><div class="fc-i">📶</div><h3>Wi-Fi optimisé</h3><p>Dual-Band 2.4 + 5 GHz configuré automatiquement.</p></div>
+<div class="fc"><div class="fc-i">🎯</div><h3>Personnalisé</h3><p>Adapté à votre modèle exact et vos besoins.</p></div>
 </div></div></section>
 
-<section id="plans" class="sec"><div class="container">
-<div class="sec-h"><h2>Nos <span class="hl">Plans</span></h2></div>
+<section id="plans" class="sec"><div class="ctn">
+<div class="sec-h"><h2>Nos <span class="hl">offres</span></h2><p>Choisissez selon vos besoins</p></div>
 <div class="plans">
 <div class="pl pl-ess"><div class="pl-ic">⭐</div><div class="pl-nm">Essentiel</div><div class="pl-pr">30 000 <small>Ar</small></div>
-<ul class="pl-ft"><li>Bridge & LAN automatique</li><li>DHCP intelligent</li><li>Wi-Fi 2.4 + 5 GHz</li><li>Protection réseau</li><li>Veille Wi-Fi programmable</li><li>Support WhatsApp 30j</li></ul>
-<button class="btn pl-btn" onclick="selectPlan('essentiel')">Commander →</button></div>
+<ul class="pl-ft"><li>Bridge & LAN automatique</li><li>DHCP intelligent</li><li>Wi-Fi 2.4 + 5 GHz</li><li>Protection réseau</li><li>Veille Wi-Fi</li><li>Support 30 jours</li></ul>
+<button class="btn pl-btn" onclick="selPlan('essentiel')">Choisir →</button></div>
 
-<div class="pl pop"><div class="pl-rib">🔥 POPULAIRE</div><div class="pl-ic">🚀</div><div class="pl-nm">Performance</div><div class="pl-pr">50 000 <small>Ar</small></div>
-<ul class="pl-ft"><li>Tout le plan Essentiel</li><li>VPN WireGuard / WARP</li><li>DNS chiffré Cloudflare</li><li>Optimisation débit</li><li>Masquage trafic + TTL</li><li>MAC WAN anonymisée</li><li>Limites débit configurables</li></ul>
-<button class="btn pl-btn" onclick="selectPlan('performance')">Commander →</button></div>
+<div class="pl pop"><div class="pl-rib">POPULAIRE</div><div class="pl-ic">🚀</div><div class="pl-nm">Performance</div><div class="pl-pr">50 000 <small>Ar</small></div>
+<ul class="pl-ft"><li>Tout le plan Essentiel</li><li>VPN WireGuard WARP</li><li>DNS chiffré Cloudflare</li><li>Optimisation débit</li><li>Masquage trafic + TTL</li><li>MAC WAN anonyme</li><li>Limites configurables</li></ul>
+<button class="btn pl-btn" onclick="selPlan('performance')">Choisir →</button></div>
 
 <div class="pl pl-bus"><div class="pl-ic">🏢</div><div class="pl-nm">Business</div><div class="pl-pr">80 000 <small>Ar</small></div>
-<ul class="pl-ft"><li>Tout le plan Performance</li><li>Hotspot portail captif</li><li>Tickets / coupons</li><li>Contrôle par utilisateur</li><li>Idéal hôtels, cafés</li><li>Page login personnalisable</li></ul>
-<button class="btn pl-btn" onclick="selectPlan('business')">Commander →</button></div>
+<ul class="pl-ft"><li>Tout le plan Performance</li><li>Portail Hotspot captif</li><li>Tickets / coupons</li><li>Contrôle utilisateurs</li><li>Pour hôtels, cafés</li></ul>
+<button class="btn pl-btn" onclick="selPlan('business')">Choisir →</button></div>
 </div></div></section>
 
-<section id="commander" class="sec" style="background:var(--bg2)"><div class="container">
-<div class="sec-h"><h2>Passer <span class="hl">Commande</span></h2></div>
+<section id="commander" class="sec" style="background:#fff"><div class="ctn">
+<div class="sec-h"><h2>Commander</h2><p>Recevez votre pack par WhatsApp</p></div>
 <div class="fw" id="fBox">
-<div class="f-tag tag-essentiel" id="fTag">⭐ Essentiel — 30 000 Ar</div>
-<div class="prog">
-<div class="ps active" id="ps1"><div class="pn">1</div><div class="ps-l">Identité</div></div>
-<div class="ps" id="ps2"><div class="pn">2</div><div class="ps-l">Routeur</div></div>
-<div class="ps" id="ps3"><div class="pn">3</div><div class="ps-l">Options</div></div>
-</div>
+<div class="ftag tag-essentiel" id="fTag">⭐ Essentiel — 30 000 Ar</div>
+<div class="prog"><div class="ps active" id="ps1"><div class="pn">1</div><div class="psl">Identité</div></div><div class="ps" id="ps2"><div class="pn">2</div><div class="psl">Routeur</div></div><div class="ps" id="ps3"><div class="pn">3</div><div class="psl">Options</div></div></div>
 
-<form id="oForm" novalidate>
-<input type="hidden" name="plan_type" id="pType" value="essentiel">
+<form id="oF" novalidate>
+<input type="hidden" name="plan_type" id="pT" value="essentiel">
 
 <div class="fs active" data-step="1">
-<div class="fs-t">👤 Identité</div>
-<div class="fg"><label>Nom complet *</label><input type="text" name="client_name" class="fi" required placeholder="Ex : Rakoto Jean"></div>
-<div class="fg"><label>WhatsApp *</label><input type="tel" name="whatsapp_number" class="fi" required placeholder="261 38 xx xxx xx"><div class="hint">Format : 261 + votre numéro</div></div>
-<div class="fn"><span></span><button type="button" class="btn btn-b" onclick="goStep(2)">Suivant →</button></div>
-</div>
+<div class="fst">👤 Vos informations</div>
+<div class="fg"><label>Nom complet</label><input name="client_name" class="fi" required placeholder="Ex : Rakoto Jean"></div>
+<div class="fg"><label>WhatsApp</label><input name="whatsapp_number" class="fi" required placeholder="261 38 xx xxx xx"><div class="hint">Format : 261 + numéro</div></div>
+<div class="fn"><span></span><button type="button" class="btn btn-b" onclick="goS(2)">Suivant →</button></div></div>
 
 <div class="fs" data-step="2">
-<div class="fs-t">📡 Routeur</div>
-<div class="fg"><label>Modèle MikroTik *</label>
-<select name="mikrotik_model" id="mSel" class="fi" required>
-<option value="">— Choisir —</option>
+<div class="fst">📡 Votre routeur</div>
+<div class="fg"><label>Modèle MikroTik</label>
+<select name="mikrotik_model" id="mS" class="fi" required><option value="">— Choisir —</option>
 <optgroup label="hAP (Wi-Fi)">{% for k,m in models.items() if k.startswith('hap') %}<option value="{{k}}">{{m.name}}</option>{% endfor %}</optgroup>
-<optgroup label="RB (sans Wi-Fi)">{% for k,m in models.items() if k.startswith('rb') %}<option value="{{k}}">{{m.name}}</option>{% endfor %}</optgroup>
+<optgroup label="RB (filaire)">{% for k,m in models.items() if k.startswith('rb') %}<option value="{{k}}">{{m.name}}</option>{% endfor %}</optgroup>
 <optgroup label="CCR">{% for k,m in models.items() if k.startswith('ccr') %}<option value="{{k}}">{{m.name}}</option>{% endfor %}</optgroup>
-<optgroup label="Virtuel"><option value="chr">CHR</option></optgroup>
-</select><div class="ms hidden" id="mSpec"></div></div>
-
-<div class="fg" id="g2g"><label>📶 SSID Wi-Fi 2.4 GHz</label><input type="text" name="ssid_2g" class="fi" placeholder="MonWiFi"></div>
-<div class="fg" id="g5g"><label>📶 SSID Wi-Fi 5 GHz</label><input type="text" name="ssid_5g" class="fi" placeholder="MonWiFi-5G"></div>
-<div class="fg" id="gPwd"><label>🔑 Mot de passe Wi-Fi</label>
-<div style="position:relative"><input type="password" name="wifi_password" id="wPwd" class="fi" minlength="8" placeholder="Min. 8 caractères" style="padding-right:50px">
-<button type="button" onclick="document.getElementById('wPwd').type=document.getElementById('wPwd').type==='password'?'text':'password'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--blue);cursor:pointer;font-size:18px">👁️</button></div>
-<div class="hint" id="pStr"></div></div>
-
-<div class="g2">
-<div class="fg"><label>🏷️ Nom routeur</label><input type="text" name="router_name" class="fi" placeholder="HOTEL-RDC"></div>
-<div class="fg"><label>🌐 Interface WAN</label><select name="wan_interface" class="fi"><option value="ether1">ether1</option><option value="ether2">ether2</option><option value="ether3">ether3</option><option value="sfp1">sfp1</option></select></div>
-</div>
-<div class="g2">
-<div class="fg"><label>📌 IP routeur</label><input type="text" name="lan_gateway" class="fi" value="192.168.10.1"></div>
-<div class="fg"><label>📌 Réseau LAN</label><input type="text" name="lan_network" class="fi" value="192.168.10.0/24"></div>
-</div>
-<div class="g2">
-<div class="fg"><label>DHCP début</label><input type="text" name="dhcp_pool_start" class="fi" value="192.168.10.10"></div>
-<div class="fg"><label>DHCP fin</label><input type="text" name="dhcp_pool_end" class="fi" value="192.168.10.250"></div>
-</div>
-<div class="fn"><button type="button" class="btn-s" onclick="goStep(1)">← Retour</button><button type="button" class="btn btn-b" onclick="goStep(3)">Suivant →</button></div>
-</div>
+<optgroup label="Virtuel"><option value="chr">CHR</option></optgroup></select>
+<div class="msp hidden" id="mI"></div></div>
+<div class="fg" id="g2g"><label>📶 Nom Wi-Fi 2.4 GHz</label><input name="ssid_2g" class="fi" placeholder="MonWiFi"></div>
+<div class="fg" id="g5g"><label>📶 Nom Wi-Fi 5 GHz</label><input name="ssid_5g" class="fi" placeholder="MonWiFi-5G"></div>
+<div class="fg" id="gPw"><label>🔑 Mot de passe Wi-Fi</label><div style="position:relative"><input type="password" name="wifi_password" id="wP" class="fi" minlength="8" placeholder="Min. 8 caractères" style="padding-right:44px"><button type="button" onclick="document.getElementById('wP').type=document.getElementById('wP').type==='password'?'text':'password'" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px">👁️</button></div></div>
+<div class="g2"><div class="fg"><label>Nom routeur</label><input name="router_name" class="fi" placeholder="HOTEL-RDC"></div><div class="fg"><label>Interface WAN</label><select name="wan_interface" class="fi"><option>ether1</option><option>ether2</option><option>ether3</option><option>sfp1</option></select></div></div>
+<div class="g2"><div class="fg"><label>IP routeur</label><input name="lan_gateway" class="fi" value="192.168.10.1"></div><div class="fg"><label>Réseau</label><input name="lan_network" class="fi" value="192.168.10.0/24"></div></div>
+<div class="g2"><div class="fg"><label>DHCP début</label><input name="dhcp_pool_start" class="fi" value="192.168.10.10"></div><div class="fg"><label>DHCP fin</label><input name="dhcp_pool_end" class="fi" value="192.168.10.250"></div></div>
+<div class="fn"><button type="button" class="btn-s" onclick="goS(1)">← Retour</button><button type="button" class="btn btn-b" onclick="goS(3)">Suivant →</button></div></div>
 
 <div class="fs" data-step="3">
-<div class="fs-t">⚙️ Options</div>
-
+<div class="fst">⚙️ Options</div>
 <div id="o2" class="hidden">
-<div class="fg"><label>🔄 TTL <span style="color:var(--green)">(Recommandé)</span></label>
-<select name="ttl_value" class="fi"><option value="0">Désactivé</option><option value="64" selected>64 (Recommandé)</option><option value="65">65</option><option value="128">128</option></select>
-<div class="hint">Optimise la connexion via le tunnel VPN</div></div>
+<div class="fg"><label>🔄 TTL <span style="color:var(--green)">(Recommandé)</span></label><select name="ttl_value" class="fi"><option value="0">Désactivé</option><option value="64" selected>64</option><option value="65">65</option><option value="128">128</option></select><div class="hint">Optimise la connexion via le tunnel</div></div>
+<div class="fg"><label class="ck"><input type="checkbox" name="mac_spoof" id="mcS" onchange="document.getElementById('mcO').classList.toggle('hidden',!this.checked)" checked><span>🔒 MAC anonyme <b style="color:var(--green)">(Recommandé)</b></span></label></div>
+<div class="fg" id="mcO"><select id="mcM" class="fi" onchange="document.getElementById('mcI').classList.toggle('hidden',this.value!=='manual')"><option value="auto">Automatique</option><option value="manual">Manuel</option></select><input name="mac_address" id="mcI" class="fi hidden" placeholder="AA:BB:CC:DD:EE:FF" style="margin-top:8px"></div>
+<div class="g2"><div class="fg"><label>⬇️ Limite DL (Mbps)</label><input type="number" name="dl_limit" class="fi" value="0" min="0"><div class="hint">0 = illimité</div></div><div class="fg"><label>⬆️ Limite UL (Mbps)</label><input type="number" name="ul_limit" class="fi" value="0" min="0"></div></div>
+<div class="fg"><label>👤 Limite/client (Mbps)</label><input type="number" name="client_limit" class="fi" value="0" min="0"></div></div>
 
-<div class="fg"><label class="ck"><input type="checkbox" name="mac_spoof" id="macS" onchange="document.getElementById('macO').classList.toggle('hidden',!this.checked)" checked>
-<span>🔒 MAC WAN anonyme <b style="color:var(--green)">(Recommandé)</b></span></label></div>
-<div class="fg" id="macO"><select id="macM" class="fi" onchange="document.getElementById('macI').classList.toggle('hidden',this.value!=='manual')"><option value="auto">Auto (recommandé)</option><option value="manual">Manuel</option></select>
-<input type="text" name="mac_address" id="macI" class="fi hidden" placeholder="AA:BB:CC:DD:EE:FF" style="margin-top:8px"></div>
+<div id="o3" class="hidden" style="margin-top:18px;padding-top:18px;border-top:1px solid var(--bdr)"><div class="fst" style="font-size:16px">🎫 Hotspot</div>
+<div class="g2"><div class="fg"><label>Tickets</label><select name="hotspot_tickets_count" class="fi"><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option></select></div>
+<div class="fg"><label>Durée</label><select name="hotspot_profile" class="fi"><option value="1h">1h</option><option value="1d" selected>1 jour</option><option value="1w">1 sem</option><option value="1m">1 mois</option></select></div></div></div>
 
-<div class="g2">
-<div class="fg"><label>⬇️ Limite DL (Mbps)</label><input type="number" name="dl_limit" class="fi" value="0" min="0"><div class="hint">0 = illimité</div></div>
-<div class="fg"><label>⬆️ Limite UL (Mbps)</label><input type="number" name="ul_limit" class="fi" value="0" min="0"><div class="hint">0 = illimité</div></div>
-</div>
-<div class="fg"><label>👤 Limite/client (Mbps)</label><input type="number" name="client_limit" class="fi" value="0" min="0"><div class="hint">0 = pas de limite individuelle</div></div>
-</div>
+<div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--bdr)"><div class="fst" style="font-size:16px">💤 Veille Wi-Fi</div>
+<div class="fg"><select name="sleep_mode" id="slM" class="fi" onchange="document.getElementById('slC').classList.toggle('hidden',this.value!=='custom')"><option value="off">Désactivé</option><option value="22-05">22h-05h</option><option value="23-06">23h-06h</option><option value="00-06">00h-06h</option><option value="22-07">22h-07h</option><option value="custom">Personnalisé</option></select></div>
+<div class="g2 hidden" id="slC"><div class="fg"><label>Début</label><input type="time" id="slS" class="fi"></div><div class="fg"><label>Fin</label><input type="time" id="slE" class="fi"></div></div></div>
 
-<div id="o3" class="hidden" style="margin-top:20px;padding-top:20px;border-top:1px solid var(--bdr)">
-<div class="fs-t" style="font-size:17px">🎫 Hotspot</div>
-<div class="g2">
-<div class="fg"><label>Tickets</label><select name="hotspot_tickets_count" class="fi"><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="100">100</option></select></div>
-<div class="fg"><label>Durée</label><select name="hotspot_profile" class="fi"><option value="1h">1h</option><option value="1d" selected>1 jour</option><option value="1w">1 semaine</option><option value="1m">1 mois</option></select></div>
-</div></div>
-
-<div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--bdr)">
-<div class="fs-t" style="font-size:17px">💤 Veille Wi-Fi</div>
-<div class="fg"><select name="sleep_mode" id="slM" class="fi" onchange="document.getElementById('slC').classList.toggle('hidden',this.value!=='custom')">
-<option value="off">Désactivé</option><option value="22-05">22h-05h</option><option value="23-06">23h-06h</option><option value="00-06">00h-06h</option><option value="01-05">01h-05h</option><option value="22-07">22h-07h</option><option value="23-07">23h-07h</option><option value="00-07">00h-07h</option><option value="custom">Personnalisé</option></select>
-<div class="hint">Le Wi-Fi s'éteint et se rallume automatiquement</div></div>
-<div class="g2 hidden" id="slC"><div class="fg"><label>Début</label><input type="time" id="slS" class="fi"></div><div class="fg"><label>Fin</label><input type="time" id="slE" class="fi"></div></div>
-</div>
-
-<div class="fg" style="margin-top:24px"><label class="ck"><input type="checkbox" id="tChk" required><span>J'accepte les <a href="#conditions" style="text-decoration:underline">conditions générales</a></span></label></div>
-<div class="fn"><button type="button" class="btn-s" onclick="goStep(2)">← Retour</button><button type="submit" class="btn btn-b btn-full btn-lg" id="subBtn">✅ Valider — 30 000 Ar</button></div>
-</div>
+<div class="fg" style="margin-top:20px"><label class="ck"><input type="checkbox" id="tC" required><span>J'accepte les <a href="#cond">conditions</a></span></label></div>
+<div class="fn"><button type="button" class="btn-s" onclick="goS(2)">← Retour</button><button type="submit" class="btn btn-b btn-full btn-lg" id="sBtn">✅ Valider — 30 000 Ar</button></div></div>
 </form>
 
-<div id="recapBox" class="hidden"><div class="rcp">
-<h3>✅ Commande enregistrée !</h3>
-<div id="recR"></div>
-<div class="mvola"><h4>💳 Paiement Mvola</h4><p>Envoyez au :</p><div class="mvola-n">{{ mvola_number }}</div><p><b>Montant : <span id="recA"></span> Ar</b></p><p style="font-size:13px;margin-top:6px">Ref : <b id="recRef"></b></p></div>
-<a id="recWa" href="#" target="_blank" class="btn btn-w btn-full btn-lg" style="margin-top:16px">📤 Envoyer preuve WhatsApp</a>
-<p style="text-align:center;margin-top:12px;font-size:13px;color:var(--t3)">Pack ZIP envoyé après validation</p>
-</div></div>
+<div id="rcBox" class="hidden"><div class="rcp"><h3>✅ Commande enregistrée</h3><div id="rcR"></div>
+<div class="mvola"><h4>💳 Mvola</h4><p>Envoyez au :</p><div class="mvola-n">{{ mvola }}</div><p><b><span id="rcA"></span> Ar</b></p><p style="font-size:13px;margin-top:4px">Ref : <b id="rcRef"></b></p></div>
+<a id="rcWa" href="#" target="_blank" class="btn btn-w btn-full btn-lg" style="margin-top:14px">📤 Envoyer preuve WhatsApp</a></div></div>
 </div></div></section>
 
-<section id="tutoriel" class="sec"><div class="container">
-<div class="sec-h"><h2>Comment <span class="hl">installer</span> ?</h2></div>
-<div style="max-width:780px;margin:0 auto 40px;background:rgba(56,189,248,.06);border:1px solid var(--blue);border-radius:var(--r);padding:20px">
-<p style="color:var(--t1)"><b>💡 Le pack ZIP contient :</b></p>
-<ul style="color:var(--t3);padding-left:20px;margin-top:10px;font-size:14px;line-height:1.8">
-<li><b style="color:var(--green)">ketrika_LIC-XXXX.rsc</b> — Fichier de config</li>
-<li><b style="color:var(--blue)">LISEZ-MOI-INSTALLATION.txt</b> — Tutoriel avec vos identifiants</li>
-<li><b style="color:var(--purple)">COMMANDE-A-COPIER.txt</b> — Commande prête à coller</li></ul></div>
-
+<section id="tuto" class="sec"><div class="ctn">
+<div class="sec-h"><h2>Installation</h2><p>3 étapes, 30 secondes</p></div>
 <div class="g3">
-<div class="tc"><div class="tc-n">1</div><h3>📥 Téléchargez</h3><p>Décompressez le ZIP sur votre PC.</p></div>
-<div class="tc"><div class="tc-n">2</div><h3>📂 Glissez dans Winbox</h3><p>Ouvrez Winbox → Files → glissez le .rsc</p></div>
-<div class="tc"><div class="tc-n">3</div><h3>⚡ Collez la commande</h3><p>New Terminal → collez depuis COMMANDE-A-COPIER.txt :</p>
-<div class="code">/import file-name=ketrika_LIC-XXXX.rsc</div>
-<p style="margin-top:10px">10-30 sec... Terminé ! ✅</p></div></div>
-
-<div class="alt alt2" style="margin-top:40px"><h4>💡 Astuce : renommer en k.rsc</h4><div class="code">/import file-name=k.rsc</div></div>
-<div style="max-width:780px;margin:30px auto 0;text-align:center"><a href="{{ whatsapp_link }}?text=Aide%20installation%20KETRIKA" target="_blank" class="btn btn-w btn-lg">💬 Aide WhatsApp</a></div>
+<div class="tc"><div class="tc-n">1</div><h3>Téléchargez le ZIP</h3><p>Décompressez sur votre PC.</p></div>
+<div class="tc"><div class="tc-n">2</div><h3>Glissez dans Winbox</h3><p>Files → glissez le fichier .rsc</p></div>
+<div class="tc"><div class="tc-n">3</div><h3>Collez la commande</h3><p>New Terminal → copiez depuis COMMANDE.txt :</p><div class="code">/import file-name=ketrika_LIC-XXXX.rsc</div></div>
+</div>
+<div class="alt alt-g"><h4>💡 Astuce : renommer en k.rsc</h4><div class="code">/import file-name=k.rsc</div></div>
 </div></section>
 
-<section id="faq" class="sec" style="background:var(--bg2)"><div class="container">
-<div class="sec-h"><h2>Questions <span class="hl">fréquentes</span></h2></div>
+<section id="faq" class="sec" style="background:#fff"><div class="ctn">
+<div class="sec-h"><h2>FAQ</h2></div>
 <div class="faq">
-<div class="fq"><div class="fq-q">Compatible avec mon routeur ?</div><div class="fq-a">Oui, tous les MikroTik sous RouterOS v7 : hAP, RB, CCR, CHR, Wi-Fi 4/5/6.</div></div>
-<div class="fq"><div class="fq-q">Configuration permanente ?</div><div class="fq-a">Oui, sauvegardée en flash. Résiste aux redémarrages et coupures.</div></div>
-<div class="fq"><div class="fq-q">Modifiable après ?</div><div class="fq-a">Oui, accès total via Winbox. Rien n'est verrouillé.</div></div>
-<div class="fq"><div class="fq-q">Comment payer ?</div><div class="fq-a">Mvola au {{ mvola_number }}, capture WhatsApp, livraison en ~15 min.</div></div>
-<div class="fq"><div class="fq-q">Le Plan Performance inclut quoi ?</div><div class="fq-a">VPN WireGuard WARP Cloudflare + TTL + MAC + limites débit.</div></div>
-<div class="fq"><div class="fq-q">Hotspot sans serveur externe ?</div><div class="fq-a">Oui, 100% intégré dans le routeur. Tickets générés dans le .rsc.</div></div>
-<div class="fq"><div class="fq-q">Contenu du pack ZIP ?</div><div class="fq-a">3 fichiers : .rsc + tutoriel personnalisé + commande à copier-coller.</div></div>
-<div class="fq"><div class="fq-q">Support après achat ?</div><div class="fq-a">30 jours de support gratuit par WhatsApp.</div></div>
+<div class="fq"><div class="fq-q">Compatible avec mon routeur ?</div><div class="fq-a">Oui, tous les MikroTik RouterOS v7.</div></div>
+<div class="fq"><div class="fq-q">Configuration permanente ?</div><div class="fq-a">Oui, sauvegardée en flash.</div></div>
+<div class="fq"><div class="fq-q">Modifiable après ?</div><div class="fq-a">Oui, accès total via Winbox.</div></div>
+<div class="fq"><div class="fq-q">Comment payer ?</div><div class="fq-a">Mvola → capture WhatsApp → livraison en ~15 min.</div></div>
+<div class="fq"><div class="fq-q">Contenu du ZIP ?</div><div class="fq-a">Fichier .rsc + tutoriel + commande à coller.</div></div>
+<div class="fq"><div class="fq-q">Support ?</div><div class="fq-a">30 jours WhatsApp gratuit.</div></div>
 </div></div></section>
 
-<section id="conditions" class="sec"><div class="container">
-<div class="sec-h"><h2>Conditions <span class="hl">Générales</span></h2></div>
+<section id="cond" class="sec"><div class="ctn">
+<div class="sec-h"><h2>Conditions</h2></div>
 <div class="terms">
-<h3>1. Service</h3><p>KETRIKA MIKROTIK génère des fichiers .rsc personnalisés pour RouterOS v7.</p>
-<h3>2. Paiement</h3><p>Via Mvola au {{ mvola_number }}. Preuve par WhatsApp. Livraison après vérification.</p>
-<h3>3. Tarifs</h3><ul><li>Essentiel : 30 000 Ar</li><li>Performance : 50 000 Ar</li><li>Business : 80 000 Ar</li></ul>
-<h3>4. Support</h3><p>30 jours gratuits par WhatsApp.</p>
-<h3>5. Responsabilité</h3><p>Le client sauvegarde sa config existante. KETRIKA corrige gratuitement tout problème lié au fichier fourni.</p>
-<h3>6. Confidentialité</h3><p>Données utilisées uniquement pour le traitement. Suppression possible sur demande.</p>
-<h3>7. Remboursement</h3><p>Aucun après livraison. Correction gratuite sous 30 jours.</p>
-<p style="margin-top:24px;color:var(--t1);font-weight:600">En commandant, vous acceptez ces conditions.</p>
+<h3>Service</h3><p>KETRIKA génère des fichiers .rsc pour RouterOS v7.</p>
+<h3>Paiement</h3><p>Mvola au {{ mvola }}. Preuve par WhatsApp.</p>
+<h3>Tarifs</h3><ul><li>Essentiel : 30 000 Ar</li><li>Performance : 50 000 Ar</li><li>Business : 80 000 Ar</li></ul>
+<h3>Support</h3><p>30 jours gratuits.</p>
+<h3>Responsabilité</h3><p>Sauvegardez votre config avant import. Correction gratuite sous 30j.</p>
 </div></div></section>
 
 <footer>
-<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px"><div class="logo-i" style="width:34px;height:34px;font-size:18px">⚡</div><div class="logo-t" style="font-size:20px">KETRIKA</div></div>
-<p>Génie Réseau — Madagascar 🇲🇬</p>
-<p style="margin-top:8px">📱 <a href="{{ whatsapp_link }}">{{ mvola_number }}</a></p>
-<p style="margin-top:6px"><a href="#accueil">Accueil</a> | <a href="#plans">Plans</a> | <a href="#faq">FAQ</a> | <a href="#conditions">Conditions</a></p>
-<p style="margin-top:16px">© 2025 KETRIKA MIKROTIK — Tous droits réservés</p>
+<div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px"><div class="logo-i" style="width:30px;height:30px;font-size:16px">⚡</div><span style="font-weight:900;color:var(--blue);font-size:18px">KETRIKA MIKROTIK {{ ver }}</span></div>
+<p>📱 <a href="{{ walink }}">{{ mvola }}</a> | <a href="#plans">Plans</a> | <a href="#faq">FAQ</a></p>
+<p style="margin-top:10px">© 2025 KETRIKA MIKROTIK — Madagascar 🇲🇬</p>
 </footer>
 
-<a class="waf" href="{{ whatsapp_link }}?text=Bonjour%20KETRIKA%20!" target="_blank">💬 WhatsApp</a>
+<a class="waf" href="{{ walink }}?text=Bonjour%20KETRIKA!" target="_blank">💬 WhatsApp</a>
 
 <script>
 const M={{ models|tojson }},P={essentiel:30000,performance:50000,business:80000},N={essentiel:'⭐ Essentiel',performance:'🚀 Performance',business:'🏢 Business'};
 
-async function checkLic(){const i=document.getElementById('licIn'),r=document.getElementById('licRes'),b=document.getElementById('licBtn');let k=i.value.trim().toUpperCase();if(!k){r.className='lic-res err';r.innerHTML='❌ Saisissez une clé.';return}if(!k.startsWith('LIC-'))k='LIC-'+k;b.disabled=true;b.textContent='⏳...';try{const res=await fetch('/api/check-license',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({license_key:k})});const d=await res.json();if(!d.success){r.className='lic-res err';r.innerHTML='❌ '+(d.error||'Introuvable.')}else if(d.payment_status==='validated'){r.className='lic-res ok';r.innerHTML='<b style="color:var(--green)">✅ Licence active !</b><br>👤 '+d.client_name+'<br>📦 '+d.plan_type.toUpperCase()+'<br>🔧 '+d.router_name+'<br><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><a href="'+d.download_url+'" class="btn btn-b" style="background:var(--purple)">📦 ZIP complet</a><a href="'+d.download_rsc_url+'" class="btn btn-g">📥 .rsc seul</a></div><p style="margin-top:10px;font-size:13px;color:var(--t3)">Le ZIP contient .rsc + tutoriel + commande</p>'}else if(d.payment_status==='pending'){r.className='lic-res wait';r.innerHTML='⏳ <b>Paiement en attente</b><br>💰 '+d.amount.toLocaleString()+' Ar — Mvola : <b>'+d.mvola_number+'</b><br><a href="'+d.whatsapp_link+'" target="_blank" class="btn btn-w" style="margin-top:12px">📤 Envoyer preuve</a>'}else{r.className='lic-res err';r.innerHTML='❌ Commande expirée.'}}catch(e){r.className='lic-res err';r.innerHTML='❌ Erreur connexion.'}b.disabled=false;b.textContent='🔍 Vérifier'}
-document.getElementById('licIn').addEventListener('keypress',e=>{if(e.key==='Enter'){e.preventDefault();checkLic()}});
+async function chkLic(){const i=document.getElementById('licIn'),r=document.getElementById('licRes'),b=document.getElementById('licBtn');let k=i.value.trim().toUpperCase();if(!k){r.className='lres err';r.innerHTML='Saisissez une clé.';return}if(!k.startsWith('LIC-'))k='LIC-'+k;b.disabled=true;b.textContent='...';try{const res=await fetch('/api/check-license',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({license_key:k})});const d=await res.json();if(!d.ok){r.className='lres err';r.innerHTML=d.err||'Introuvable.'}else if(d.status==='validated'){r.className='lres ok';r.innerHTML='<b>✅ Licence active</b><br>'+d.name+' — '+d.plan.toUpperCase()+'<br>Routeur : '+d.router+'<br><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><a href="'+d.zip+'" class="btn btn-b">📦 ZIP complet</a><a href="'+d.rsc+'" class="btn btn-g">📥 .rsc</a></div>'}else if(d.status==='pending'){r.className='lres wait';r.innerHTML='⏳ Paiement en attente — '+d.amount.toLocaleString()+' Ar<br>Mvola : <b>'+d.mvola+'</b><br><a href="'+d.wa+'" target="_blank" class="btn btn-w" style="margin-top:8px">Envoyer preuve</a>'}else{r.className='lres err';r.innerHTML='Commande expirée.'}}catch(e){r.className='lres err';r.innerHTML='Erreur connexion.'}b.disabled=false;b.textContent='Vérifier'}
+document.getElementById('licIn').addEventListener('keypress',e=>{if(e.key==='Enter'){e.preventDefault();chkLic()}});
 
-function selectPlan(p){document.getElementById('pType').value=p;upUI(p);document.getElementById('commander').scrollIntoView({behavior:'smooth'})}
-function upUI(p){const t=document.getElementById('fTag');t.className='f-tag tag-'+p;t.textContent=N[p]+' — '+P[p].toLocaleString()+' Ar';document.getElementById('o2').classList.toggle('hidden',p==='essentiel');document.getElementById('o3').classList.toggle('hidden',p!=='business');document.getElementById('subBtn').textContent='✅ Valider — '+P[p].toLocaleString()+' Ar'}
+function selPlan(p){document.getElementById('pT').value=p;upUI(p);document.getElementById('commander').scrollIntoView({behavior:'smooth'})}
+function upUI(p){document.getElementById('fTag').className='ftag tag-'+p;document.getElementById('fTag').textContent=N[p]+' — '+P[p].toLocaleString()+' Ar';document.getElementById('o2').classList.toggle('hidden',p==='essentiel');document.getElementById('o3').classList.toggle('hidden',p!=='business');document.getElementById('sBtn').textContent='✅ Valider — '+P[p].toLocaleString()+' Ar'}
 
-function goStep(n){if(n===2){const nm=document.querySelector('[name="client_name"]'),wa=document.querySelector('[name="whatsapp_number"]');if(!nm.value.trim()){nm.focus();alert('Nom requis');return}if(!wa.value.trim()||wa.value.trim().length<9){wa.focus();alert('WhatsApp requis');return}}if(n===3&&!document.getElementById('mSel').value){document.getElementById('mSel').focus();alert('Choisir un modèle');return}document.querySelectorAll('.fs').forEach(s=>s.classList.remove('active'));document.querySelector('.fs[data-step="'+n+'"]').classList.add('active');[1,2,3].forEach(i=>{const e=document.getElementById('ps'+i);e.classList.remove('active','done');if(i<n)e.classList.add('done');else if(i===n)e.classList.add('active')});document.getElementById('fBox').scrollIntoView({behavior:'smooth',block:'start'})}
+function goS(n){if(n===2){const a=document.querySelector('[name="client_name"]'),b=document.querySelector('[name="whatsapp_number"]');if(!a.value.trim()){a.focus();alert('Nom requis');return}if(!b.value.trim()||b.value.trim().length<9){b.focus();alert('WhatsApp requis');return}}if(n===3&&!document.getElementById('mS').value){document.getElementById('mS').focus();alert('Choisir modèle');return}document.querySelectorAll('.fs').forEach(s=>s.classList.remove('active'));document.querySelector('.fs[data-step="'+n+'"]').classList.add('active');[1,2,3].forEach(i=>{const e=document.getElementById('ps'+i);e.classList.remove('active','done');if(i<n)e.classList.add('done');else if(i===n)e.classList.add('active')});document.getElementById('fBox').scrollIntoView({behavior:'smooth',block:'start'})}
 
-document.getElementById('mSel').addEventListener('change',function(){const k=this.value,s=document.getElementById('mSpec');if(!k||!M[k]){s.classList.add('hidden');return}const m=M[k];let h='<b>📊 Specs :</b><br>• Ports : <b>'+m.ports+'</b><br>';h+='• 2.4GHz : '+(m.wifi_24ghz?'<b style="color:var(--green)">✓</b>':'<b style="color:var(--red)">✗</b>')+'<br>';h+='• 5GHz : '+(m.wifi_5ghz?'<b style="color:var(--green)">✓</b>':'<b style="color:var(--red)">✗</b>')+'<br>';if(m.wifi_type){const w={ax:'Wi-Fi 6 (AX)',ac:'Wi-Fi 5 (AC)',n:'Wi-Fi 4 (N)'};h+='• '+w[m.wifi_type]}else h+='• <span style="color:var(--amber)">Sans Wi-Fi</span>';s.innerHTML=h;s.classList.remove('hidden');document.getElementById('g2g').classList.toggle('hidden',!m.wifi_24ghz);document.getElementById('g5g').classList.toggle('hidden',!m.wifi_5ghz);document.getElementById('gPwd').classList.toggle('hidden',!m.wifi_24ghz&&!m.wifi_5ghz)});
-
-document.getElementById('wPwd').addEventListener('input',function(){const s=document.getElementById('pStr'),v=this.value;if(!v){s.textContent='';return}let c=0;if(v.length>=8)c++;if(v.length>=12)c++;if(/[A-Z]/.test(v))c++;if(/[0-9]/.test(v))c++;if(/[^A-Za-z0-9]/.test(v))c++;s.innerHTML=['🔴 Faible','🟠 Moyen','🟡 OK','🟢 Fort','💪 Excellent'][Math.min(c,4)]+' ('+v.length+')'});
+document.getElementById('mS').addEventListener('change',function(){const k=this.value,s=document.getElementById('mI');if(!k||!M[k]){s.classList.add('hidden');return}const m=M[k];let h='<b>Spécifications :</b><br>Ports: '+m.ports;h+=' | 2.4GHz: '+(m.wifi_24ghz?'✅':'❌');h+=' | 5GHz: '+(m.wifi_5ghz?'✅':'❌');if(m.wifi_type){const w={ax:'Wi-Fi 6',ac:'Wi-Fi 5',n:'Wi-Fi 4'};h+=' | '+w[m.wifi_type]}s.innerHTML=h;s.classList.remove('hidden');document.getElementById('g2g').classList.toggle('hidden',!m.wifi_24ghz);document.getElementById('g5g').classList.toggle('hidden',!m.wifi_5ghz);document.getElementById('gPw').classList.toggle('hidden',!m.wifi_24ghz&&!m.wifi_5ghz)});
 
 document.querySelectorAll('.fq').forEach(i=>i.querySelector('.fq-q').addEventListener('click',()=>{document.querySelectorAll('.fq').forEach(j=>{if(j!==i)j.classList.remove('open')});i.classList.toggle('open')}));
 
-document.getElementById('oForm').addEventListener('submit',async function(e){e.preventDefault();if(!document.getElementById('tChk').checked){alert('Acceptez les conditions.');return}const fd=new FormData(this),d=Object.fromEntries(fd.entries()),sm=d.sleep_mode||'off';if(sm!=='off'&&sm!=='custom'){const p=sm.split('-');d.sleep_start=p[0].padStart(2,'0')+':00';d.sleep_end=p[1].padStart(2,'0')+':00'}else if(sm==='custom'){d.sleep_start=document.getElementById('slS').value||'';d.sleep_end=document.getElementById('slE').value||''}d.mac_spoof=document.getElementById('macS')?document.getElementById('macS').checked:false;if(d.mac_spoof&&document.getElementById('macM')&&document.getElementById('macM').value==='auto')d.mac_address='';d.terms_accepted=document.getElementById('tChk').checked;const b=document.getElementById('subBtn');b.disabled=true;b.textContent='⏳ Enregistrement...';try{const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});const res=await r.json();if(!res.success)throw new Error(res.error||'Erreur');document.getElementById('oForm').classList.add('hidden');document.querySelector('.prog').classList.add('hidden');document.getElementById('fTag').classList.add('hidden');document.getElementById('recapBox').classList.remove('hidden');document.getElementById('recA').textContent=res.amount.toLocaleString();document.getElementById('recRef').textContent='#'+res.order_id+' — '+res.license_key;document.getElementById('recWa').href=res.whatsapp_link;let h='';h+='<div class="rcp-r"><span class="rcp-l">Commande</span><span class="rcp-v">#'+res.order_id+'</span></div>';h+='<div class="rcp-r"><span class="rcp-l">Client</span><span class="rcp-v">'+d.client_name+'</span></div>';h+='<div class="rcp-r"><span class="rcp-l">Plan</span><span class="rcp-v">'+res.plan_type.toUpperCase()+'</span></div>';h+='<div class="rcp-r"><span class="rcp-l">Routeur</span><span class="rcp-v">'+res.router_name+'</span></div>';h+='<div class="rcp-r"><span class="rcp-l">Licence</span><span class="rcp-v" style="font-family:var(--mono);font-size:11px">'+res.license_key+'</span></div>';if(res.warp_registered)h+='<div class="rcp-r"><span class="rcp-l">WARP</span><span class="rcp-v" style="color:var(--green)">✅ Enregistré</span></div>';h+='<div class="rcp-r"><span class="rcp-l">Total</span><span class="rcp-v" style="color:var(--green);font-size:18px">'+res.amount.toLocaleString()+' Ar</span></div>';document.getElementById('recR').innerHTML=h;document.getElementById('recapBox').scrollIntoView({behavior:'smooth'})}catch(err){alert('❌ '+err.message);b.disabled=false;b.textContent='✅ Valider'}});
+document.getElementById('oF').addEventListener('submit',async function(e){e.preventDefault();if(!document.getElementById('tC').checked){alert('Acceptez les conditions.');return}const fd=new FormData(this),d=Object.fromEntries(fd.entries()),sm=d.sleep_mode||'off';if(sm!=='off'&&sm!=='custom'){const p=sm.split('-');d.sleep_start=p[0].padStart(2,'0')+':00';d.sleep_end=p[1].padStart(2,'0')+':00'}else if(sm==='custom'){d.sleep_start=document.getElementById('slS').value;d.sleep_end=document.getElementById('slE').value}d.mac_spoof=document.getElementById('mcS')?document.getElementById('mcS').checked:false;if(d.mac_spoof&&document.getElementById('mcM')&&document.getElementById('mcM').value==='auto')d.mac_address='';d.terms_accepted=document.getElementById('tC').checked;const b=document.getElementById('sBtn');b.disabled=true;b.textContent='⏳...';try{const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});const res=await r.json();if(!res.ok)throw new Error(res.err||'Erreur');document.getElementById('oF').classList.add('hidden');document.querySelector('.prog').classList.add('hidden');document.getElementById('fTag').classList.add('hidden');document.getElementById('rcBox').classList.remove('hidden');document.getElementById('rcA').textContent=res.amount.toLocaleString();document.getElementById('rcRef').textContent='#'+res.id+' — '+res.lic;document.getElementById('rcWa').href=res.wa;let h='';h+='<div class="rr"><span class="rl">Commande</span><span class="rv">#'+res.id+'</span></div>';h+='<div class="rr"><span class="rl">Plan</span><span class="rv">'+res.plan.toUpperCase()+'</span></div>';h+='<div class="rr"><span class="rl">Routeur</span><span class="rv">'+res.router+'</span></div>';h+='<div class="rr"><span class="rl">Licence</span><span class="rv" style="font-family:var(--mono);font-size:11px">'+res.lic+'</span></div>';h+='<div class="rr"><span class="rl">Total</span><span class="rv" style="color:var(--green);font-size:18px">'+res.amount.toLocaleString()+' Ar</span></div>';document.getElementById('rcR').innerHTML=h;document.getElementById('rcBox').scrollIntoView({behavior:'smooth'})}catch(err){alert(err.message);b.disabled=false;b.textContent='✅ Valider'}});
 
 upUI('essentiel');
-document.querySelectorAll('.nav-l a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.nav-l').classList.remove('open')));
+document.querySelectorAll('.navl a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.navl').classList.remove('open')));
 </script>
 </body>
 </html>
