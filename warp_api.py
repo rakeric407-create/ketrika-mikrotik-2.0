@@ -1,16 +1,11 @@
 """
-WireGuard WARP client sans dépendance externe.
-Curve25519 en pur Python + appel API Cloudflare.
+WireGuard WARP - Pur Python (RFC 7748 Curve25519) + API Cloudflare.
+Aucune dépendance externe cryptographique.
 """
 import os
 import base64
-import json
 import requests
 
-
-# ============================================================
-# Curve25519 en pur Python (RFC 7748)
-# ============================================================
 P = 2**255 - 19
 A24 = 121665
 
@@ -69,39 +64,34 @@ def curve25519_scalarmult(scalar_bytes, u_bytes):
     return _encode(_x25519(_decode_scalar(scalar_bytes), _decode_u(u_bytes)))
 
 
-# Base point 9
-BASE = b"\x09" + b"\x00" * 31
+BASE_POINT = b"\x09" + b"\x00" * 31
 
 
 def generate_wireguard_keypair():
-    """Génère (private_b64, public_b64) au format WireGuard."""
     priv = bytearray(os.urandom(32))
     priv[0] &= 248
     priv[31] &= 127
     priv[31] |= 64
     priv = bytes(priv)
-    pub = curve25519_scalarmult(priv, BASE)
+    pub = curve25519_scalarmult(priv, BASE_POINT)
     return (
         base64.b64encode(priv).decode(),
-        base64.b64encode(pub).decode(),
+        base64.b64encode(pub).decode()
     )
 
 
-# ============================================================
-# API Cloudflare WARP
-# ============================================================
 WARP_API = "https://api.cloudflareclient.com/v0a2158/reg"
 WARP_HEADERS = {
     "CF-Client-Version": "a-6.11-2223",
     "User-Agent": "okhttp/3.12.1",
-    "Content-Type": "application/json",
+    "Content-Type": "application/json"
 }
 
 
 def register_warp():
     """
-    Inscrit un client WARP auprès de Cloudflare.
-    Retourne dict {private_key, public_key, ipv4} ou None.
+    Contacte Cloudflare pour enregistrer une cle publique reelle.
+    Retourne {private_key, public_key, ipv4} ou None en cas derreur.
     """
     try:
         priv_b64, pub_b64 = generate_wireguard_keypair()
@@ -111,25 +101,23 @@ def register_warp():
             "key": pub_b64,
             "fcm_token": "",
             "type": "Android",
-            "locale": "fr_FR",
+            "locale": "fr_FR"
         }
-        r = requests.post(WARP_API, headers=WARP_HEADERS, json=payload, timeout=15)
+        r = requests.post(WARP_API, headers=WARP_HEADERS, json=payload, timeout=12)
         if r.status_code not in (200, 201):
             return None
         data = r.json()
         cfg = data.get("config", {})
         ipv4 = ""
-        for addr in cfg.get("interface", {}).get("addresses", {}).get("v4", []):
-            ipv4 = addr
-            break
-        if not ipv4:
-            v4 = cfg.get("interface", {}).get("addresses", {}).get("v4")
-            if isinstance(v4, str):
-                ipv4 = v4
+        v4_list = cfg.get("interface", {}).get("addresses", {}).get("v4", [])
+        if isinstance(v4_list, list) and len(v4_list) > 0:
+            ipv4 = v4_list[0]
+        elif isinstance(v4_list, str):
+            ipv4 = v4_list
         return {
             "private_key": priv_b64,
             "public_key": pub_b64,
-            "ipv4": ipv4 or "172.16.0.2",
+            "ipv4": ipv4 or "172.16.0.2"
         }
     except Exception:
         return None
