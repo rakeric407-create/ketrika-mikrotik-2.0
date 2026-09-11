@@ -2,247 +2,391 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KETRIKA MIKROTIK - Configuration professionnelle de routeurs</title>
-<meta name="description" content="Configuration professionnelle MikroTik en 1 clic. Optimisation réseau, sécurité maximale, Wi-Fi optimisé. Made in Madagascar.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>KETRIKA MIKROTIK v{{ version }} — Configuration professionnelle de routeurs</title>
+<meta name="description" content="KETRIKA MIKROTIK — Configuration professionnelle de routeurs MikroTik en 1 clic. Optimisation réseau, VPN, Hotspot. Made in Madagascar.">
+<meta name="theme-color" content="#0a0f1a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-:root {
-  --bg:#0a0f1a; --bg-2:#0f172a; --card:#111827; --border:#1e293b;
-  --primary:#38bdf8; --success:#10b981; --purple:#8b5cf6;
-  --text:#e2e8f0; --muted:#94a3b8; --danger:#ef4444;
+/* ============================================================
+   KETRIKA MIKROTIK v3.0.1 — DESIGN SYSTEM
+   ============================================================ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0f1a;--bg2:#0f172a;--card:#111827;--card2:#1a2332;
+  --border:#1e293b;--border2:#2d3a4d;
+  --primary:#38bdf8;--success:#10b981;--purple:#8b5cf6;--amber:#f59e0b;--danger:#ef4444;
+  --text:#e2e8f0;--text2:#cbd5e1;--muted:#94a3b8;--dim:#64748b;
+  --radius:12px;--radius-lg:16px;--radius-sm:8px;
+  --shadow:0 4px 24px rgba(0,0,0,.4);
+  --font:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+  --mono:ui-monospace,'Cascadia Mono','Fira Code',monospace;
 }
-html,body { background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif; line-height:1.6; scroll-behavior:smooth; }
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.65;font-size:15px;overflow-x:hidden;}
+img{max-width:100%;display:block;}
+a{color:var(--primary);text-decoration:none;transition:color .2s;}
+a:hover{color:#7dd3fc;}
 
-/* NAVIGATION */
-.nav { position:sticky; top:0; z-index:100; background:rgba(10,15,26,.95); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
-.nav-inner { max-width:1200px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; }
-.logo { font-size:22px; font-weight:900; display:flex; align-items:center; gap:8px; }
-.logo-icon { width:32px; height:32px; background:linear-gradient(135deg,var(--primary),var(--purple)); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; }
-.logo-text { background:linear-gradient(90deg,var(--primary),var(--success)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.nav-links { display:flex; gap:24px; align-items:center; }
-.nav-links a { color:var(--text); text-decoration:none; font-size:14px; font-weight:500; transition:color .2s; }
-.nav-links a:hover { color:var(--primary); }
-.nav-wa { background:#25D366; color:#fff !important; padding:8px 16px; border-radius:20px; font-weight:600 !important; }
-@media(max-width:768px){ .nav-links a:not(.nav-wa){display:none;} }
+/* ============================================================
+   UTILITAIRES RESPONSIVE
+   ============================================================ */
+.container{max-width:1200px;margin:0 auto;padding:0 20px;}
+.section{padding:80px 0;}
+@media(max-width:768px){.section{padding:50px 0;}}
+.section-header{text-align:center;margin-bottom:48px;}
+.section-header h2{font-size:clamp(24px,5vw,38px);font-weight:900;margin-bottom:10px;}
+.section-header h2 .hl{background:linear-gradient(90deg,var(--primary),var(--success));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.section-header p{color:var(--muted);font-size:16px;max-width:600px;margin:0 auto;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+@media(max-width:900px){.grid-3,.grid-4{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+.hidden{display:none!important;}
 
-/* HERO */
-.hero { min-height:88vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:60px 20px; position:relative; overflow:hidden; background:radial-gradient(circle at 20% 30%,rgba(56,189,248,.15),transparent 40%),radial-gradient(circle at 80% 70%,rgba(139,92,246,.15),transparent 40%); }
-.hero::before { content:''; position:absolute; inset:0; background:linear-gradient(45deg,transparent,rgba(16,185,129,.05),transparent); animation:sweep 8s infinite; }
-@keyframes sweep { 0%{transform:translateX(-100%);} 100%{transform:translateX(100%);} }
-.hero-content { max-width:900px; position:relative; z-index:2; }
-.hero-badge { display:inline-block; padding:6px 16px; background:rgba(56,189,248,.1); border:1px solid var(--primary); color:var(--primary); border-radius:20px; font-size:13px; margin-bottom:20px; animation:pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.6;} }
-.hero h1 { font-size:clamp(32px,6vw,58px); font-weight:900; line-height:1.15; margin-bottom:20px; }
-.hero h1 span { background:linear-gradient(90deg,var(--primary),var(--success),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.hero p { font-size:18px; color:var(--muted); margin-bottom:32px; max-width:700px; margin-left:auto; margin-right:auto; }
-.btn { display:inline-block; padding:14px 32px; border-radius:8px; font-weight:700; text-decoration:none; cursor:pointer; border:none; font-size:16px; transition:transform .2s,box-shadow .2s; }
-.btn-primary { background:linear-gradient(135deg,var(--primary),var(--purple)); color:#fff; box-shadow:0 8px 24px rgba(56,189,248,.3); }
-.btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(56,189,248,.5); }
-.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin-top:60px; max-width:800px; margin-left:auto; margin-right:auto; }
-.stat { text-align:center; }
-.stat-num { font-size:28px; font-weight:900; color:var(--primary); }
-.stat-lbl { font-size:13px; color:var(--muted); margin-top:4px; }
-@media(max-width:640px){ .stats{grid-template-columns:repeat(2,1fr);} }
+/* ============================================================
+   BOUTONS
+   ============================================================ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border-radius:var(--radius-sm);font-weight:700;font-size:15px;border:none;cursor:pointer;transition:all .25s;text-decoration:none;line-height:1.4;}
+.btn-primary{background:linear-gradient(135deg,var(--primary),#818cf8);color:#fff;box-shadow:0 6px 20px rgba(56,189,248,.3);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(56,189,248,.5);}
+.btn-success{background:var(--success);color:#000;}
+.btn-success:hover{background:#34d399;}
+.btn-outline{background:transparent;border:2px solid var(--border2);color:var(--text);}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary);}
+.btn-sec{background:var(--card2);color:var(--text);padding:12px 24px;border-radius:var(--radius-sm);border:1px solid var(--border);}
+.btn-sec:hover{background:var(--border);cursor:pointer;}
+.btn-wa{background:#25D366;color:#fff;box-shadow:0 6px 20px rgba(37,211,102,.3);}
+.btn-wa:hover{background:#22c55e;transform:translateY(-2px);}
+.btn-block{width:100%;}
+.btn-lg{padding:16px 36px;font-size:17px;}
 
-/* SECTION GENERIQUE */
-section { padding:80px 20px; }
-.container { max-width:1200px; margin:0 auto; }
-.section-title { text-align:center; margin-bottom:50px; }
-.section-title h2 { font-size:36px; font-weight:900; margin-bottom:12px; }
-.section-title p { color:var(--muted); font-size:16px; }
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+.nav{position:sticky;top:0;z-index:1000;background:rgba(10,15,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--purple));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0;}
+.logo-text{display:flex;flex-direction:column;line-height:1.1;}
+.logo-name{background:linear-gradient(90deg,var(--primary),var(--success));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:20px;}
+.logo-sub{font-size:10px;color:var(--dim);font-weight:500;letter-spacing:2px;}
+.nav-links{display:flex;align-items:center;gap:20px;}
+.nav-links a{color:var(--text2);font-size:14px;font-weight:500;padding:6px 0;}
+.nav-links a:hover{color:var(--primary);}
+.nav-links .nav-cta{background:var(--primary);color:#000;padding:8px 18px;border-radius:20px;font-weight:700;font-size:13px;}
+.menu-toggle{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer;}
+@media(max-width:768px){
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:var(--card);border-bottom:1px solid var(--border);flex-direction:column;padding:20px;gap:16px;}
+  .nav-links.open{display:flex;}
+  .menu-toggle{display:block;}
+}
 
-/* CARTES POURQUOI */
-.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
-@media(max-width:900px){ .grid-4{grid-template-columns:repeat(2,1fr);} }
-@media(max-width:520px){ .grid-4{grid-template-columns:1fr;} }
-.feature-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:28px; text-align:center; transition:transform .3s,border-color .3s; }
-.feature-card:hover { transform:translateY(-6px); border-color:var(--primary); }
-.feature-icon { font-size:40px; margin-bottom:14px; }
-.feature-card h3 { font-size:18px; margin-bottom:10px; }
-.feature-card p { color:var(--muted); font-size:14px; }
+/* ============================================================
+   ACTIVATION LICENCE (BANDE EN HAUT)
+   ============================================================ */
+.license-bar{background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(139,92,246,.08));border-bottom:1px solid var(--border);}
+.license-inner{max-width:1200px;margin:0 auto;padding:16px 20px;}
+.license-row{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;}
+.license-row input{flex:1;min-width:200px;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:var(--mono);}
+.license-row input:focus{border-color:var(--primary);outline:none;}
+.license-row button{padding:12px 24px;white-space:nowrap;}
+.license-result{margin-top:14px;padding:16px;border-radius:var(--radius-sm);font-size:14px;animation:fadeSlide .3s;}
+.license-result.pending{background:rgba(245,158,11,.1);border:1px solid var(--amber);color:var(--amber);}
+.license-result.validated{background:rgba(16,185,129,.1);border:1px solid var(--success);color:var(--success);}
+.license-result.error{background:rgba(239,68,68,.1);border:1px solid var(--danger);color:var(--danger);}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
 
-/* PLANS */
-.plans-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
-@media(max-width:900px){ .plans-grid{grid-template-columns:1fr; max-width:400px; margin:0 auto;} }
-.plan-card { background:var(--card); border:2px solid var(--border); border-radius:16px; padding:32px; position:relative; transition:transform .3s; display:flex; flex-direction:column; }
-.plan-card.essentiel { border-color:var(--primary); }
-.plan-card.performance { border-color:var(--success); transform:scale(1.05); }
-.plan-card.business { border-color:var(--purple); }
-.plan-card:hover { transform:translateY(-8px); }
-.plan-card.performance:hover { transform:scale(1.05) translateY(-8px); }
-.plan-badge { position:absolute; top:-14px; left:50%; transform:translateX(-50%); background:var(--success); color:#000; padding:4px 16px; border-radius:20px; font-size:12px; font-weight:900; }
-.plan-icon { font-size:36px; margin-bottom:12px; }
-.plan-name { font-size:22px; font-weight:800; margin-bottom:6px; }
-.plan-price { font-size:36px; font-weight:900; margin:16px 0; }
-.plan-price small { font-size:14px; color:var(--muted); font-weight:400; }
-.plan-features { list-style:none; margin:20px 0; flex:1; }
-.plan-features li { padding:8px 0; font-size:14px; display:flex; gap:10px; align-items:flex-start; }
-.plan-features li::before { content:'✓'; color:var(--success); font-weight:900; }
-.plan-btn { width:100%; margin-top:20px; }
-.plan-card.essentiel .plan-btn { background:var(--primary); color:#000; }
-.plan-card.performance .plan-btn { background:var(--success); color:#000; }
-.plan-card.business .plan-btn { background:var(--purple); color:#fff; }
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{min-height:90vh;display:flex;align-items:center;padding:80px 20px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:
+  radial-gradient(ellipse 600px 400px at 20% 40%,rgba(56,189,248,.12),transparent),
+  radial-gradient(ellipse 500px 500px at 80% 60%,rgba(139,92,246,.1),transparent),
+  radial-gradient(ellipse 400px 300px at 50% 80%,rgba(16,185,129,.06),transparent);pointer-events:none;}
+.hero-content{max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:2;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.3);color:var(--primary);border-radius:24px;font-size:13px;font-weight:600;margin-bottom:24px;animation:pulseGlow 3s infinite;}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(56,189,248,.2);}50%{box-shadow:0 0 20px 4px rgba(56,189,248,.15);}}
+.hero h1{font-size:clamp(30px,5.5vw,56px);font-weight:900;line-height:1.12;margin-bottom:20px;max-width:800px;}
+.hero h1 .hl{background:linear-gradient(90deg,var(--primary),var(--success),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:18px;color:var(--muted);margin-bottom:36px;max-width:600px;line-height:1.7;}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px;}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:700px;}
+.stat{text-align:center;}
+.stat-val{font-size:clamp(24px,4vw,32px);font-weight:900;color:var(--primary);}
+.stat-lbl{font-size:13px;color:var(--muted);margin-top:4px;}
+@media(max-width:600px){.hero-stats{grid-template-columns:repeat(2,1fr);gap:16px;}.hero{min-height:auto;padding:60px 20px;}}
 
-/* FORMULAIRE */
-#commander { background:var(--bg-2); }
-.form-container { max-width:800px; margin:0 auto; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:40px; box-shadow:0 0 60px rgba(56,189,248,.08); }
-.form-step { display:none; }
-.form-step.active { display:block; animation:fadeIn .4s; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
-.progress { display:flex; justify-content:space-between; margin-bottom:30px; position:relative; }
-.progress::before { content:''; position:absolute; top:15px; left:0; right:0; height:2px; background:var(--border); z-index:0; }
-.progress-step { position:relative; z-index:1; background:var(--card); width:32px; height:32px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
-.progress-step.active { border-color:var(--primary); color:var(--primary); }
-.progress-step.done { background:var(--success); color:#000; border-color:var(--success); }
-.form-group { margin-bottom:18px; }
-.form-group label { display:block; font-size:14px; margin-bottom:6px; font-weight:600; }
-.form-group .hint { font-size:12px; color:var(--muted); margin-top:4px; }
-.form-group input, .form-group select { width:100%; padding:12px; background:var(--bg); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:15px; transition:border-color .2s; }
-.form-group input:focus, .form-group select:focus { outline:none; border-color:var(--primary); }
-.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-@media(max-width:600px){ .grid-2{grid-template-columns:1fr;} }
-.form-nav { display:flex; justify-content:space-between; margin-top:24px; gap:12px; }
-.btn-sec { background:var(--border); color:var(--text); padding:12px 24px; border-radius:8px; border:none; cursor:pointer; font-weight:600; }
-.checkbox-row { display:flex; align-items:center; gap:10px; padding:12px; background:var(--bg); border:1px solid var(--border); border-radius:8px; cursor:pointer; }
-.checkbox-row input { width:auto; }
-.model-info { padding:12px; background:rgba(56,189,248,.08); border:1px solid var(--primary); border-radius:8px; margin-top:8px; font-size:13px; }
-.hidden { display:none !important; }
+/* ============================================================
+   CARTES FONCTIONNALITÉS
+   ============================================================ */
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;transition:all .3s;}
+.feat-card:hover{transform:translateY(-6px);border-color:var(--primary);box-shadow:0 12px 32px rgba(56,189,248,.08);}
+.feat-icon{font-size:42px;margin-bottom:16px;display:block;}
+.feat-card h3{font-size:17px;margin-bottom:10px;}
+.feat-card p{color:var(--muted);font-size:13.5px;}
 
-/* RECAP */
-.recap-box { background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(56,189,248,.1)); border:2px solid var(--success); border-radius:16px; padding:32px; margin-top:20px; }
-.recap-box h3 { color:var(--success); margin-bottom:16px; }
-.recap-item { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); font-size:14px; }
-.mvola-box { background:#f59e0b; color:#000; padding:20px; border-radius:12px; margin-top:20px; }
-.mvola-box h4 { margin-bottom:10px; }
-.mvola-num { font-size:28px; font-weight:900; letter-spacing:2px; margin:10px 0; }
+/* ============================================================
+   PLANS TARIFAIRES
+   ============================================================ */
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch;}
+@media(max-width:900px){.plans-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto;}}
+.plan{background:var(--card);border:2px solid var(--border);border-radius:var(--radius-lg);padding:32px 28px;display:flex;flex-direction:column;position:relative;transition:all .3s;}
+.plan:hover{transform:translateY(-8px);}
+.plan.pop{border-color:var(--success);box-shadow:0 0 40px rgba(16,185,129,.12);}
+@media(min-width:901px){.plan.pop{transform:scale(1.06);}.plan.pop:hover{transform:scale(1.06) translateY(-8px);}}
+.plan-ribbon{position:absolute;top:-1px;left:50%;transform:translateX(-50%) translateY(-50%);background:var(--success);color:#000;padding:5px 18px;border-radius:20px;font-size:11px;font-weight:900;letter-spacing:.5px;white-space:nowrap;}
+.plan-ess{border-color:rgba(56,189,248,.4);}
+.plan-bus{border-color:rgba(139,92,246,.4);}
+.plan-icon{font-size:36px;margin-bottom:12px;}
+.plan-name{font-size:20px;font-weight:800;margin-bottom:4px;}
+.plan-price{font-size:clamp(30px,5vw,38px);font-weight:900;margin:14px 0 6px;}
+.plan-price small{font-size:14px;color:var(--muted);font-weight:400;}
+.plan-feat{list-style:none;flex:1;margin:20px 0;}
+.plan-feat li{padding:7px 0;font-size:13.5px;display:flex;gap:10px;align-items:flex-start;line-height:1.5;}
+.plan-feat li::before{content:'✓';color:var(--success);font-weight:900;flex-shrink:0;}
+.plan-btn{margin-top:auto;width:100%;padding:14px;font-size:15px;}
+.plan-ess .plan-btn{background:var(--primary);color:#000;}
+.plan.pop .plan-btn{background:var(--success);color:#000;}
+.plan-bus .plan-btn{background:var(--purple);color:#fff;}
 
-/* TUTORIEL */
-.tuto-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
-@media(max-width:800px){ .tuto-steps{grid-template-columns:1fr;} }
-.tuto-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; }
-.tuto-num { width:40px; height:40px; background:var(--primary); color:#000; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px; margin-bottom:12px; }
-.tuto-card h3 { margin-bottom:10px; }
-.tuto-card p { color:var(--muted); font-size:14px; }
-.code-block { background:#000; color:var(--success); padding:14px; border-radius:8px; font-family:monospace; font-size:13px; margin-top:12px; overflow-x:auto; border:1px solid var(--border); }
-.alt-box { max-width:800px; margin:40px auto 0; background:rgba(139,92,246,.08); border:1px solid var(--purple); border-radius:12px; padding:24px; }
-.alt-box h4 { color:var(--purple); margin-bottom:10px; }
+/* ============================================================
+   FORMULAIRE
+   ============================================================ */
+.form-wrap{max-width:780px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:clamp(24px,4vw,40px);box-shadow:var(--shadow);}
+.form-plan-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;margin-bottom:20px;}
+.tag-essentiel{background:rgba(56,189,248,.12);color:var(--primary);border:1px solid var(--primary);}
+.tag-performance{background:rgba(16,185,129,.12);color:var(--success);border:1px solid var(--success);}
+.tag-business{background:rgba(139,92,246,.12);color:var(--purple);border:1px solid var(--purple);}
 
-/* FAQ */
-.faq-item { background:var(--card); border:1px solid var(--border); border-radius:8px; margin-bottom:10px; overflow:hidden; }
-.faq-q { padding:16px 20px; cursor:pointer; font-weight:600; display:flex; justify-content:space-between; align-items:center; }
-.faq-q::after { content:'+'; font-size:22px; color:var(--primary); }
-.faq-item.open .faq-q::after { content:'−'; }
-.faq-a { padding:0 20px; max-height:0; overflow:hidden; transition:max-height .3s,padding .3s; color:var(--muted); font-size:14px; }
-.faq-item.open .faq-a { max-height:200px; padding:0 20px 16px; }
+/* Progress bar */
+.progress{display:flex;justify-content:space-between;margin-bottom:32px;position:relative;padding:0 10px;}
+.progress::before{content:'';position:absolute;top:18px;left:40px;right:40px;height:3px;background:var(--border);z-index:0;border-radius:4px;}
+.p-step{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.p-num{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;background:var(--card);transition:all .3s;}
+.p-label{font-size:11px;color:var(--dim);font-weight:600;}
+.p-step.active .p-num{border-color:var(--primary);color:var(--primary);box-shadow:0 0 12px rgba(56,189,248,.3);}
+.p-step.done .p-num{background:var(--success);color:#000;border-color:var(--success);}
+.p-step.active .p-label{color:var(--primary);}
+.p-step.done .p-label{color:var(--success);}
 
-/* FOOTER */
-footer { background:var(--bg-2); padding:40px 20px; text-align:center; border-top:1px solid var(--border); color:var(--muted); font-size:14px; }
-footer a { color:var(--primary); text-decoration:none; }
-footer .foot-links { margin-top:14px; }
-footer .foot-links a { margin:0 8px; }
+/* Steps */
+.form-step{display:none;}
+.form-step.active{display:block;animation:fadeIn .35s;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.step-title{font-size:20px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:13px;margin-bottom:6px;font-weight:600;color:var(--text2);}
+.form-group .hint{font-size:12px;color:var(--dim);margin-top:5px;line-height:1.5;}
+.form-input{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:15px;font-family:var(--font);transition:border-color .2s;}
+.form-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(56,189,248,.1);}
+select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+.check-row{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:border-color .2s;}
+.check-row:hover{border-color:var(--primary);}
+.check-row input[type="checkbox"]{width:18px;height:18px;accent-color:var(--success);flex-shrink:0;}
+.model-specs{padding:14px;background:linear-gradient(135deg,rgba(56,189,248,.06),rgba(139,92,246,.06));border:1px solid rgba(56,189,248,.2);border-radius:var(--radius-sm);margin-top:8px;font-size:13px;line-height:1.7;}
+.form-nav{display:flex;justify-content:space-between;gap:12px;margin-top:28px;}
+.form-nav .btn{min-width:140px;}
+@media(max-width:400px){.form-nav{flex-direction:column;}.form-nav .btn{width:100%;}}
 
-/* WHATSAPP FLOAT */
-.wa-float { position:fixed; bottom:24px; right:24px; background:#25D366; color:#fff; padding:14px 20px; border-radius:50px; font-weight:700; text-decoration:none; box-shadow:0 8px 24px rgba(37,211,102,.4); z-index:99; animation:wapulse 2s infinite; }
-@keyframes wapulse { 0%,100%{box-shadow:0 8px 24px rgba(37,211,102,.4);} 50%{box-shadow:0 8px 32px rgba(37,211,102,.7);} }
+/* ============================================================
+   RECAPITULATIF
+   ============================================================ */
+.recap{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(56,189,248,.08));border:2px solid var(--success);border-radius:var(--radius-lg);padding:clamp(24px,4vw,32px);margin-top:24px;}
+.recap h3{color:var(--success);margin-bottom:16px;font-size:20px;}
+.recap-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;gap:10px;}
+.recap-row:last-child{border-bottom:none;}
+.recap-label{color:var(--muted);}
+.recap-val{font-weight:600;text-align:right;word-break:break-all;}
+.mvola-card{background:var(--amber);color:#000;padding:24px;border-radius:var(--radius);margin-top:20px;}
+.mvola-card h4{margin-bottom:10px;font-size:18px;}
+.mvola-num{font-size:clamp(24px,5vw,32px);font-weight:900;letter-spacing:3px;margin:10px 0;font-family:var(--mono);}
+
+/* ============================================================
+   TUTORIEL
+   ============================================================ */
+.tuto-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 24px;transition:border-color .3s;}
+.tuto-card:hover{border-color:var(--primary);}
+.tuto-num{width:44px;height:44px;background:linear-gradient(135deg,var(--primary),var(--purple));color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;margin-bottom:16px;}
+.tuto-card h3{margin-bottom:10px;font-size:16px;}
+.tuto-card p{color:var(--muted);font-size:14px;line-height:1.6;}
+.code-box{background:#000;color:var(--success);padding:14px 18px;border-radius:var(--radius-sm);font-family:var(--mono);font-size:13px;margin-top:12px;overflow-x:auto;border:1px solid var(--border);line-height:1.6;word-break:break-all;}
+.alt-box{max-width:780px;margin:40px auto 0;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:var(--radius);padding:24px;}
+.alt-box h4{color:var(--purple);margin-bottom:10px;}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+.faq{max-width:780px;margin:0 auto;}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden;transition:border-color .3s;}
+.faq-item:hover{border-color:var(--border2);}
+.faq-q{padding:18px 20px;cursor:pointer;font-weight:600;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:12px;user-select:none;}
+.faq-q::after{content:'+';font-size:22px;color:var(--primary);flex-shrink:0;transition:transform .3s;}
+.faq-item.open .faq-q::after{content:'−';transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;padding:0 20px;color:var(--muted);font-size:14px;line-height:1.7;}
+.faq-item.open .faq-a{max-height:300px;padding:0 20px 18px;}
+
+/* ============================================================
+   CONDITIONS GÉNÉRALES
+   ============================================================ */
+.terms-section{background:var(--bg2);}
+.terms-content{max-width:780px;margin:0 auto;font-size:14px;color:var(--muted);line-height:1.8;}
+.terms-content h3{color:var(--text);margin:20px 0 10px;font-size:16px;}
+.terms-content p{margin-bottom:12px;}
+.terms-content ul{padding-left:24px;margin-bottom:12px;}
+.terms-content li{margin-bottom:6px;}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 20px;text-align:center;}
+footer .logo{justify-content:center;margin-bottom:14px;}
+footer p{color:var(--muted);font-size:13px;margin-bottom:8px;}
+footer a{color:var(--primary);font-size:13px;}
+.foot-links{margin-top:14px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap;font-size:13px;}
+.foot-links a{padding:0 8px;}
+
+/* ============================================================
+   WHATSAPP FLOTTANT
+   ============================================================ */
+.wa-float{position:fixed;bottom:24px;right:24px;z-index:999;background:#25D366;color:#fff;padding:14px 22px;border-radius:50px;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 6px 24px rgba(37,211,102,.4);display:flex;align-items:center;gap:8px;animation:waPulse 2.5s infinite;}
+@keyframes waPulse{0%,100%{box-shadow:0 6px 24px rgba(37,211,102,.4);}50%{box-shadow:0 8px 36px rgba(37,211,102,.6);}}
+@media(max-width:500px){.wa-float{padding:12px 16px;font-size:14px;bottom:16px;right:16px;}}
 </style>
 </head>
 <body>
 
-<!-- NAVIGATION -->
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
 <nav class="nav">
   <div class="nav-inner">
-    <div class="logo"><div class="logo-icon">⚡</div><span class="logo-text">KETRIKA</span></div>
+    <a href="#accueil" class="logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">
+        <span class="logo-name">KETRIKA</span>
+        <span class="logo-sub">MIKROTIK v{{ version }}</span>
+      </div>
+    </a>
+    <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
     <div class="nav-links">
       <a href="#accueil">Accueil</a>
       <a href="#plans">Plans</a>
       <a href="#commander">Commander</a>
       <a href="#tutoriel">Tutoriel</a>
       <a href="#faq">FAQ</a>
-      <a class="nav-wa" href="{{ whatsapp_link }}">💬 Contact</a>
+      <a href="#conditions">Conditions</a>
+      <a class="nav-cta" href="{{ whatsapp_link }}?text=Bonjour%20KETRIKA%20!" target="_blank">💬 WhatsApp</a>
     </div>
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- ============================================================
+     BARRE D'ACTIVATION DE LICENCE (EN HAUT)
+     ============================================================ -->
+<div class="license-bar" id="licenseBar">
+  <div class="license-inner">
+    <p style="font-size:14px;color:var(--text2);margin-bottom:10px;">🔑 <b>Vous avez déjà une clé de licence ?</b> Vérifiez son statut et téléchargez votre configuration :</p>
+    <div class="license-row">
+      <input type="text" id="licenseInput" placeholder="Entrez votre clé (ex: LIC-A1B2C3D4...)" spellcheck="false" autocomplete="off">
+      <button class="btn btn-primary" onclick="checkLicense()" id="licenseBtn">🔍 Vérifier</button>
+    </div>
+    <div id="licenseResult"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
 <section id="accueil" class="hero">
   <div class="hero-content">
     <span class="hero-badge">✨ Compatible RouterOS v7 — Tous modèles MikroTik</span>
-    <h1>Libérez la Puissance de Votre <span>Réseau MikroTik</span></h1>
-    <p>Configuration professionnelle en 1 clic. Performances maximales. Sécurité totale.</p>
-    <a href="#plans" class="btn btn-primary">Découvrir nos offres →</a>
-    <div class="stats">
-      <div class="stat"><div class="stat-num">500+</div><div class="stat-lbl">Routeurs configurés</div></div>
-      <div class="stat"><div class="stat-num">99.9%</div><div class="stat-lbl">Satisfaction</div></div>
-      <div class="stat"><div class="stat-num">24/7</div><div class="stat-lbl">Support</div></div>
-      <div class="stat"><div class="stat-num">🇲🇬</div><div class="stat-lbl">Made in Madagascar</div></div>
+    <h1>Libérez la Puissance<br>de Votre <span class="hl">Réseau MikroTik</span></h1>
+    <p class="hero-sub">Configuration professionnelle en 1 clic. Performances maximales. Navigation sécurisée et chiffrée. Stabilité de connexion garantie.</p>
+    <div class="hero-ctas">
+      <a href="#plans" class="btn btn-primary btn-lg">Découvrir nos offres →</a>
+      <a href="#tutoriel" class="btn btn-outline btn-lg">📖 Comment ça marche</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-val">500+</div><div class="stat-lbl">Routeurs configurés</div></div>
+      <div class="stat"><div class="stat-val">99.9%</div><div class="stat-lbl">Satisfaction client</div></div>
+      <div class="stat"><div class="stat-val">24/7</div><div class="stat-lbl">Support WhatsApp</div></div>
+      <div class="stat"><div class="stat-val">🇲🇬</div><div class="stat-lbl">Made in Madagascar</div></div>
     </div>
   </div>
 </section>
 
-<!-- POURQUOI -->
-<section>
+<!-- ============================================================
+     POURQUOI KETRIKA
+     ============================================================ -->
+<section class="section" style="background:var(--bg2);">
   <div class="container">
-    <div class="section-title">
-      <h2>Pourquoi KETRIKA ?</h2>
+    <div class="section-header">
+      <h2>Pourquoi <span class="hl">KETRIKA</span> ?</h2>
       <p>La solution professionnelle de configuration MikroTik à Madagascar</p>
     </div>
     <div class="grid-4">
-      <div class="feature-card"><div class="feature-icon">⚡</div><h3>Ultra Rapide</h3><p>Configuration complète en moins de 30 secondes. Un seul fichier, zéro erreur.</p></div>
-      <div class="feature-card"><div class="feature-icon">🛡️</div><h3>Sécurité Maximale</h3><p>Tunnel VPN WireGuard, DNS chiffré, protection contre les menaces réseau.</p></div>
-      <div class="feature-card"><div class="feature-icon">📶</div><h3>Wi-Fi Optimisé</h3><p>Double bande 2.4 GHz + 5 GHz, couverture étendue, performances stables.</p></div>
-      <div class="feature-card"><div class="feature-icon">🎯</div><h3>Sur Mesure</h3><p>Chaque configuration est unique, adaptée à votre modèle et vos besoins.</p></div>
+      <div class="feat-card"><span class="feat-icon">⚡</span><h3>Ultra Rapide</h3><p>Configuration complète en moins de 30 secondes. Un seul fichier, zéro erreur.</p></div>
+      <div class="feat-card"><span class="feat-icon">🛡️</span><h3>Sécurité Maximale</h3><p>Tunnel VPN WireGuard, DNS chiffré, protection contre les menaces réseau.</p></div>
+      <div class="feat-card"><span class="feat-icon">📶</span><h3>Wi-Fi Optimisé</h3><p>Double bande 2.4 GHz + 5 GHz, couverture étendue, performances stables.</p></div>
+      <div class="feat-card"><span class="feat-icon">🎯</span><h3>Sur Mesure</h3><p>Chaque configuration est unique, adaptée à votre modèle et vos besoins exacts.</p></div>
     </div>
   </div>
 </section>
 
-<!-- PLANS -->
-<section id="plans">
+<!-- ============================================================
+     PLANS TARIFAIRES
+     ============================================================ -->
+<section id="plans" class="section">
   <div class="container">
-    <div class="section-title">
-      <h2>Nos Plans</h2>
+    <div class="section-header">
+      <h2>Nos <span class="hl">Plans</span></h2>
       <p>Choisissez la formule adaptée à vos besoins</p>
     </div>
     <div class="plans-grid">
       <!-- ESSENTIEL -->
-      <div class="plan-card essentiel">
+      <div class="plan plan-ess">
         <div class="plan-icon">⭐</div>
         <div class="plan-name">Essentiel</div>
         <div class="plan-price">30 000 <small>Ar</small></div>
-        <ul class="plan-features">
+        <ul class="plan-feat">
           <li>Configuration LAN & Bridge automatique</li>
           <li>Serveur DHCP intelligent</li>
           <li>Wi-Fi 2.4 GHz & 5 GHz optimisé</li>
           <li>Protection réseau de base</li>
           <li>Optimisation des performances</li>
-          <li>Support technique WhatsApp</li>
+          <li>Mise en veille Wi-Fi programmable</li>
+          <li>Support technique WhatsApp 30 jours</li>
         </ul>
-        <button class="btn plan-btn" onclick="selectPlan('essentiel')">Commander ce plan</button>
+        <button class="btn plan-btn" onclick="selectPlan('essentiel')">Commander ce plan →</button>
       </div>
       <!-- PERFORMANCE -->
-      <div class="plan-card performance">
-        <div class="plan-badge">🔥 POPULAIRE</div>
+      <div class="plan pop">
+        <div class="plan-ribbon">🔥 LE PLUS POPULAIRE</div>
         <div class="plan-icon">🚀</div>
         <div class="plan-name">Performance</div>
         <div class="plan-price">50 000 <small>Ar</small></div>
-        <ul class="plan-features">
-          <li>Tout le plan Essentiel</li>
+        <ul class="plan-feat">
+          <li>Tout le plan Essentiel inclus</li>
           <li>Tunnel VPN nouvelle génération (WireGuard/WARP)</li>
           <li>DNS chiffré (protection vie privée)</li>
           <li>Optimisation avancée du débit</li>
           <li>Masquage intelligent du trafic</li>
           <li>Protection contre le bridage opérateur</li>
           <li>Stabilité de connexion renforcée</li>
+          <li>Changement d'adresse MAC WAN</li>
         </ul>
-        <button class="btn plan-btn" onclick="selectPlan('performance')">Commander ce plan</button>
+        <button class="btn plan-btn" onclick="selectPlan('performance')">Commander ce plan →</button>
       </div>
       <!-- BUSINESS -->
-      <div class="plan-card business">
+      <div class="plan plan-bus">
         <div class="plan-icon">🏢</div>
         <div class="plan-name">Business</div>
         <div class="plan-price">80 000 <small>Ar</small></div>
-        <ul class="plan-features">
-          <li>Tout le plan Performance</li>
+        <ul class="plan-feat">
+          <li>Tout le plan Performance inclus</li>
           <li>Portail captif Hotspot professionnel</li>
           <li>Gestion de tickets/coupons d'accès</li>
           <li>Contrôle d'accès par utilisateur</li>
@@ -250,39 +394,46 @@ footer .foot-links a { margin:0 8px; }
           <li>Idéal pour hôtels, cafés, bureaux</li>
           <li>Page de connexion personnalisable</li>
         </ul>
-        <button class="btn plan-btn" onclick="selectPlan('business')">Commander ce plan</button>
+        <button class="btn plan-btn" onclick="selectPlan('business')">Commander ce plan →</button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FORMULAIRE -->
-<section id="commander">
+<!-- ============================================================
+     FORMULAIRE DE COMMANDE
+     ============================================================ -->
+<section id="commander" class="section" style="background:var(--bg2);">
   <div class="container">
-    <div class="section-title">
-      <h2>Passer commande</h2>
-      <p>Remplissez le formulaire — vous recevrez votre configuration par WhatsApp</p>
+    <div class="section-header">
+      <h2>Passer <span class="hl">Commande</span></h2>
+      <p>Remplissez le formulaire ci-dessous — vous recevrez votre configuration par WhatsApp</p>
     </div>
-    <div class="form-container" id="orderFormBox">
+    <div class="form-wrap" id="orderFormBox">
+      <!-- Tag du plan sélectionné -->
+      <div class="form-plan-tag tag-essentiel" id="planTag">⭐ Plan Essentiel — 30 000 Ar</div>
+
+      <!-- Barre de progression -->
       <div class="progress">
-        <div class="progress-step active" id="ps1">1</div>
-        <div class="progress-step" id="ps2">2</div>
-        <div class="progress-step" id="ps3">3</div>
+        <div class="p-step active" id="ps1"><div class="p-num">1</div><div class="p-label">Identité</div></div>
+        <div class="p-step" id="ps2"><div class="p-num">2</div><div class="p-label">Routeur</div></div>
+        <div class="p-step" id="ps3"><div class="p-num">3</div><div class="p-label">Options</div></div>
       </div>
-      <form id="orderForm">
+
+      <form id="orderForm" novalidate>
         <input type="hidden" name="plan_type" id="planType" value="essentiel">
 
-        <!-- ÉTAPE 1 -->
+        <!-- ========== ÉTAPE 1 : IDENTITÉ ========== -->
         <div class="form-step active" data-step="1">
-          <h3 style="margin-bottom:20px;">👤 Vos informations</h3>
+          <div class="step-title">👤 Vos informations</div>
           <div class="form-group">
             <label>Nom complet *</label>
-            <input type="text" name="client_name" required placeholder="Ex : Rakoto Jean">
+            <input type="text" name="client_name" class="form-input" required placeholder="Ex : Rakoto Jean" autocomplete="name">
           </div>
           <div class="form-group">
             <label>Numéro WhatsApp *</label>
-            <input type="tel" name="whatsapp_number" required placeholder="261 32 xx xxx xx" pattern="[0-9\s]+">
-            <div class="hint">Format : 261 suivi de votre numéro (nous vous contactons ici)</div>
+            <input type="tel" name="whatsapp_number" class="form-input" required placeholder="261 38 xx xxx xx" autocomplete="tel">
+            <div class="hint">📱 Format international : 261 suivi de votre numéro. Nous vous contacterons ici pour la livraison.</div>
           </div>
           <div class="form-nav">
             <span></span>
@@ -290,57 +441,73 @@ footer .foot-links a { margin:0 8px; }
           </div>
         </div>
 
-        <!-- ÉTAPE 2 -->
+        <!-- ========== ÉTAPE 2 : CONFIGURATION ROUTEUR ========== -->
         <div class="form-step" data-step="2">
-          <h3 style="margin-bottom:20px;">📡 Configuration du routeur</h3>
+          <div class="step-title">📡 Configuration du routeur</div>
+
+          <!-- Modèle MikroTik -->
           <div class="form-group">
             <label>Modèle MikroTik *</label>
-            <select name="mikrotik_model" id="modelSelect" required>
-              <option value="">-- Choisir votre modèle --</option>
-              <optgroup label="hAP série (avec Wi-Fi)">
+            <select name="mikrotik_model" id="modelSelect" class="form-input" required>
+              <option value="">— Choisir votre modèle —</option>
+              <optgroup label="🔵 hAP série (avec Wi-Fi)">
                 {% for k,m in models.items() if k.startswith('hap') %}
-                <option value="{{k}}">{{m.name}}</option>{% endfor %}
+                <option value="{{ k }}">{{ m.name }}</option>
+                {% endfor %}
               </optgroup>
-              <optgroup label="RB série">
+              <optgroup label="🟢 RB série (sans Wi-Fi)">
                 {% for k,m in models.items() if k.startswith('rb') %}
-                <option value="{{k}}">{{m.name}}</option>{% endfor %}
+                <option value="{{ k }}">{{ m.name }}</option>
+                {% endfor %}
               </optgroup>
-              <optgroup label="Cloud Core Router">
+              <optgroup label="🟣 Cloud Core Router">
                 {% for k,m in models.items() if k.startswith('ccr') %}
-                <option value="{{k}}">{{m.name}}</option>{% endfor %}
+                <option value="{{ k }}">{{ m.name }}</option>
+                {% endfor %}
               </optgroup>
-              <optgroup label="Virtuel">
+              <optgroup label="⚪ Virtuel">
                 <option value="chr">CHR (Cloud Hosted Router)</option>
               </optgroup>
             </select>
-            <div class="model-info hidden" id="modelInfo"></div>
+            <div class="model-specs hidden" id="modelSpecs"></div>
           </div>
 
-          <div class="form-group" id="ssid2gGroup">
-            <label>Nom du réseau Wi-Fi 2.4 GHz (SSID)</label>
-            <input type="text" name="ssid_2g" placeholder="Ex : MonWifi">
+          <!-- SSID Wi-Fi 2.4 GHz -->
+          <div class="form-group" id="grpSsid2g">
+            <label>📶 Nom du réseau Wi-Fi 2.4 GHz (SSID)</label>
+            <input type="text" name="ssid_2g" class="form-input" placeholder="Ex : MonWiFi">
           </div>
-          <div class="form-group" id="ssid5gGroup">
-            <label>Nom du réseau Wi-Fi 5 GHz (SSID)</label>
-            <input type="text" name="ssid_5g" placeholder="Ex : MonWifi-5G (peut être identique)">
+
+          <!-- SSID Wi-Fi 5 GHz -->
+          <div class="form-group" id="grpSsid5g">
+            <label>📶 Nom du réseau Wi-Fi 5 GHz (SSID)</label>
+            <input type="text" name="ssid_5g" class="form-input" placeholder="Ex : MonWiFi-5G (peut être identique)">
           </div>
-          <div class="form-group" id="wifiPwdGroup">
-            <label>Mot de passe Wi-Fi</label>
-            <input type="password" name="wifi_password" minlength="8" placeholder="Minimum 8 caractères" id="wifiPwd">
-            <div class="hint"><a href="#" onclick="togglePwd();return false;" style="color:var(--primary);">👁️ Afficher/masquer</a></div>
+
+          <!-- Mot de passe Wi-Fi -->
+          <div class="form-group" id="grpWifiPwd">
+            <label>🔑 Mot de passe Wi-Fi</label>
+            <div style="position:relative;">
+              <input type="password" name="wifi_password" id="wifiPwd" class="form-input" minlength="8" placeholder="Minimum 8 caractères" style="padding-right:50px;">
+              <button type="button" onclick="togglePwd()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--primary);cursor:pointer;font-size:18px;" title="Afficher/masquer">👁️</button>
+            </div>
+            <div class="hint" id="pwdStrength"></div>
           </div>
 
           <div class="grid-2">
             <div class="form-group">
-              <label>Nom du routeur</label>
-              <input type="text" name="router_name" placeholder="Ex : HOTEL-RECEPTION">
+              <label>🏷️ Nom du routeur</label>
+              <input type="text" name="router_name" class="form-input" placeholder="Ex : HOTEL-RECEPTION">
+              <div class="hint">Personnalisez le nom de votre routeur (identité système)</div>
             </div>
             <div class="form-group">
-              <label>Interface WAN</label>
-              <select name="wan_interface">
+              <label>🌐 Interface WAN</label>
+              <select name="wan_interface" class="form-input">
                 <option value="ether1">ether1 (par défaut)</option>
                 <option value="ether2">ether2</option>
                 <option value="ether3">ether3</option>
+                <option value="ether4">ether4</option>
+                <option value="ether5">ether5</option>
                 <option value="sfp1">sfp1</option>
               </select>
             </div>
@@ -348,109 +515,116 @@ footer .foot-links a { margin:0 8px; }
 
           <div class="grid-2">
             <div class="form-group">
-              <label>IP du routeur</label>
-              <input type="text" name="lan_gateway" value="192.168.10.1">
+              <label>📌 IP du routeur</label>
+              <input type="text" name="lan_gateway" class="form-input" value="192.168.10.1">
             </div>
             <div class="form-group">
-              <label>Réseau LAN</label>
-              <input type="text" name="lan_network" value="192.168.10.0/24">
+              <label>📌 Réseau LAN</label>
+              <input type="text" name="lan_network" class="form-input" value="192.168.10.0/24">
             </div>
           </div>
+
           <div class="grid-2">
             <div class="form-group">
-              <label>DHCP début</label>
-              <input type="text" name="dhcp_pool_start" value="192.168.10.10">
+              <label>🔢 DHCP début</label>
+              <input type="text" name="dhcp_pool_start" class="form-input" value="192.168.10.10">
             </div>
             <div class="form-group">
-              <label>DHCP fin</label>
-              <input type="text" name="dhcp_pool_end" value="192.168.10.250">
+              <label>🔢 DHCP fin</label>
+              <input type="text" name="dhcp_pool_end" class="form-input" value="192.168.10.250">
             </div>
           </div>
 
           <div class="form-nav">
-            <button type="button" class="btn-sec" onclick="goStep(1)">← Retour</button>
+            <button type="button" class="btn btn-sec" onclick="goStep(1)">← Retour</button>
             <button type="button" class="btn btn-primary" onclick="goStep(3)">Suivant →</button>
           </div>
         </div>
 
-        <!-- ÉTAPE 3 -->
+        <!-- ========== ÉTAPE 3 : OPTIONS AVANCÉES ========== -->
         <div class="form-step" data-step="3">
-          <h3 style="margin-bottom:20px;">⚙️ Options avancées</h3>
+          <div class="step-title">⚙️ Options avancées</div>
 
-          <!-- Plan 2+ options -->
-          <div id="plan2Options" class="hidden">
+          <!-- Options Performance + Business -->
+          <div id="opts2" class="hidden">
             <div class="form-group">
-              <label>Valeur TTL (optimisation)</label>
-              <select name="ttl_value">
+              <label>🔄 Valeur TTL <span style="color:var(--success);font-weight:700;">(Recommandé ✓)</span></label>
+              <select name="ttl_value" class="form-input" id="ttlSelect">
                 <option value="0">Désactivé</option>
-                <option value="64">64</option>
+                <option value="64" selected>64 (Recommandé)</option>
                 <option value="65">65</option>
                 <option value="128">128</option>
               </select>
-              <div class="hint">Optimise la propagation du trafic sur le réseau</div>
+              <div class="hint">⚡ Optimise la propagation du trafic et protège votre connexion. <b>Valeur recommandée : 64.</b> Cette option est spécifique à votre plan et fonctionne en synergie avec le tunnel VPN.</div>
             </div>
 
             <div class="form-group">
-              <label class="checkbox-row">
-                <input type="checkbox" name="mac_spoof" id="macSpoof" onchange="toggleMac()">
-                <span>Changement d'adresse MAC WAN <b style="color:var(--success);">(Recommandé ✓)</b></span>
+              <label class="check-row" style="margin-bottom:0;">
+                <input type="checkbox" name="mac_spoof" id="macSpoof" onchange="toggleMac()" checked>
+                <span>🔒 Changement d'adresse MAC WAN <b style="color:var(--success);">(Recommandé ✓)</b></span>
               </label>
+              <div class="hint" style="margin-top:6px;">Protège votre identité réseau en utilisant une adresse MAC anonymisée sur l'interface WAN.</div>
             </div>
-            <div class="form-group hidden" id="macChoice">
-              <label>Mode MAC</label>
-              <select id="macMode" onchange="toggleMacManual()">
-                <option value="auto">Générer automatiquement</option>
+
+            <div class="form-group" id="macOpts">
+              <select id="macMode" class="form-input" onchange="toggleMacManual()" style="margin-bottom:8px;">
+                <option value="auto">Générer automatiquement (recommandé)</option>
                 <option value="manual">Saisir manuellement</option>
               </select>
-              <input type="text" name="mac_address" id="macManualInput" class="hidden" placeholder="AA:BB:CC:DD:EE:FF" style="margin-top:10px;">
+              <input type="text" name="mac_address" id="macManualInput" class="form-input hidden" placeholder="AA:BB:CC:DD:EE:FF">
             </div>
 
             <div class="grid-2">
               <div class="form-group">
-                <label>Limite Download globale (Mbps, 0 = illimité)</label>
-                <input type="number" name="dl_limit" value="0" min="0">
+                <label>⬇️ Limite Download globale (Mbps)</label>
+                <input type="number" name="dl_limit" class="form-input" value="0" min="0">
+                <div class="hint">0 = illimité</div>
               </div>
               <div class="form-group">
-                <label>Limite Upload globale (Mbps, 0 = illimité)</label>
-                <input type="number" name="ul_limit" value="0" min="0">
+                <label>⬆️ Limite Upload globale (Mbps)</label>
+                <input type="number" name="ul_limit" class="form-input" value="0" min="0">
+                <div class="hint">0 = illimité</div>
               </div>
             </div>
             <div class="form-group">
-              <label>Limite par client (Mbps, 0 = pas de limite)</label>
-              <input type="number" name="client_limit" value="0" min="0">
+              <label>👤 Limite par client (Mbps)</label>
+              <input type="number" name="client_limit" class="form-input" value="0" min="0">
+              <div class="hint">0 = pas de limite individuelle, sinon chaque appareil est limité à cette valeur</div>
             </div>
           </div>
 
-          <!-- Plan 3 Hotspot -->
-          <div id="plan3Options" class="hidden">
-            <h4 style="margin:20px 0 10px;color:var(--purple);">🎫 Portail Hotspot</h4>
-            <div class="grid-2">
-              <div class="form-group">
-                <label>Nombre de tickets à générer</label>
-                <select name="hotspot_tickets_count">
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Profil durée par défaut</label>
-                <select name="hotspot_profile">
-                  <option value="1h">1 heure</option>
-                  <option value="1d" selected>1 jour</option>
-                  <option value="1w">1 semaine</option>
-                  <option value="1m">1 mois</option>
-                </select>
+          <!-- Options Hotspot (Business uniquement) -->
+          <div id="opts3" class="hidden">
+            <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+              <div class="step-title" style="font-size:17px;">🎫 Portail Hotspot</div>
+              <div class="grid-2">
+                <div class="form-group">
+                  <label>Nombre de tickets</label>
+                  <select name="hotspot_tickets_count" class="form-input">
+                    <option value="10">10 tickets</option>
+                    <option value="20" selected>20 tickets</option>
+                    <option value="50">50 tickets</option>
+                    <option value="100">100 tickets</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Profil de durée par défaut</label>
+                  <select name="hotspot_profile" class="form-input">
+                    <option value="1h">1 heure</option>
+                    <option value="1d" selected>1 jour</option>
+                    <option value="1w">1 semaine</option>
+                    <option value="1m">1 mois</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Mise en veille Wi-Fi (tous plans) -->
-          <div id="sleepBox">
-            <h4 style="margin:20px 0 10px;">💤 Économie d'énergie Wi-Fi</h4>
+          <!-- Mise en veille Wi-Fi (TOUS PLANS) -->
+          <div id="sleepSection" style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+            <div class="step-title" style="font-size:17px;">💤 Économie d'énergie Wi-Fi</div>
             <div class="form-group">
-              <select name="sleep_mode" id="sleepMode" onchange="toggleSleepCustom()">
+              <select name="sleep_mode" id="sleepMode" class="form-input" onchange="toggleSleep()">
                 <option value="off">Désactivé (par défaut)</option>
                 <option value="22-05">22h00 → 05h00</option>
                 <option value="23-06">23h00 → 06h00</option>
@@ -462,124 +636,276 @@ footer .foot-links a { margin:0 8px; }
                 <option value="00-07">00h00 → 07h00</option>
                 <option value="01-06">01h00 → 06h00</option>
                 <option value="01-07">01h00 → 07h00</option>
-                <option value="custom">Personnalisé</option>
+                <option value="custom">⚙️ Personnalisé</option>
               </select>
-              <div class="hint">Le Wi-Fi s'éteint automatiquement pendant les heures choisies pour économiser de l'énergie et prolonger la durée de vie de votre routeur. Il se rallume automatiquement.</div>
+              <div class="hint">Le Wi-Fi s'éteint automatiquement pendant les heures choisies pour économiser de l'énergie et prolonger la durée de vie de votre routeur. Il se rallume automatiquement à l'heure de fin.</div>
             </div>
             <div class="grid-2 hidden" id="sleepCustom">
-              <div class="form-group">
-                <label>Heure début</label>
-                <input type="time" id="sleepStartCustom">
-              </div>
-              <div class="form-group">
-                <label>Heure fin</label>
-                <input type="time" id="sleepEndCustom">
-              </div>
+              <div class="form-group"><label>Heure de début</label><input type="time" id="sleepStartC" class="form-input"></div>
+              <div class="form-group"><label>Heure de fin</label><input type="time" id="sleepEndC" class="form-input"></div>
             </div>
           </div>
 
+          <!-- Acceptation conditions -->
+          <div class="form-group" style="margin-top:24px;">
+            <label class="check-row">
+              <input type="checkbox" name="terms_accepted" id="termsCheck" required>
+              <span>J'accepte les <a href="#conditions" style="text-decoration:underline;">conditions générales d'utilisation</a> et la politique de confidentialité de KETRIKA MIKROTIK.</span>
+            </label>
+          </div>
+
           <div class="form-nav">
-            <button type="button" class="btn-sec" onclick="goStep(2)">← Retour</button>
-            <button type="submit" class="btn btn-primary" id="submitBtn">Valider ma commande — 30 000 Ar</button>
+            <button type="button" class="btn btn-sec" onclick="goStep(2)">← Retour</button>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn">✅ Valider ma commande — 30 000 Ar</button>
           </div>
         </div>
       </form>
 
-      <!-- RECAPITULATIF -->
+      <!-- ========== RECAPITULATIF ========== -->
       <div id="recapBox" class="hidden">
-        <div class="recap-box">
-          <h3>✅ Commande enregistrée !</h3>
-          <div id="recapContent"></div>
-          <div class="mvola-box">
-            <h4>💳 Paiement Mvola</h4>
+        <div class="recap">
+          <h3>✅ Commande enregistrée avec succès !</h3>
+          <div id="recapRows"></div>
+          <div class="mvola-card">
+            <h4>💳 Instructions de paiement Mvola</h4>
             <p>Envoyez le montant exact au numéro :</p>
             <div class="mvola-num">{{ mvola_number }}</div>
-            <p><b>Montant : <span id="recapAmount"></span> Ar</b></p>
-            <p style="margin-top:8px;font-size:13px;">Puis envoyez la capture d'écran par WhatsApp ci-dessous ⬇️</p>
+            <p><b>Montant : <span id="recapAmt"></span> Ar</b></p>
+            <p style="margin-top:8px;font-size:13px;">Référence : <b id="recapRef"></b></p>
+            <p style="margin-top:4px;font-size:13px;">Puis envoyez la capture d'écran par WhatsApp ⬇️</p>
           </div>
-          <a id="recapWaLink" href="#" target="_blank" class="btn btn-primary" style="display:block;text-align:center;margin-top:16px;background:#25D366;">
+          <a id="recapWa" href="#" target="_blank" class="btn btn-wa btn-block btn-lg" style="margin-top:16px;">
             📤 Envoyer la preuve de paiement sur WhatsApp
           </a>
+          <p style="text-align:center;margin-top:12px;font-size:13px;color:var(--muted);">Votre fichier .rsc sera envoyé par WhatsApp après validation du paiement.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- TUTORIEL -->
-<section id="tutoriel">
+<!-- ============================================================
+     TUTORIEL
+     ============================================================ -->
+<section id="tutoriel" class="section">
   <div class="container">
-    <div class="section-title">
-      <h2>Comment installer votre configuration ?</h2>
+    <div class="section-header">
+      <h2>Comment <span class="hl">installer</span> votre configuration ?</h2>
       <p>3 étapes simples, moins de 5 secondes</p>
     </div>
-    <div class="tuto-steps">
-      <div class="tuto-card">
-        <div class="tuto-num">1</div>
-        <h3>Téléchargez votre fichier .rsc</h3>
-        <p>Après validation du paiement, vous recevez le fichier par WhatsApp.</p>
-      </div>
-      <div class="tuto-card">
-        <div class="tuto-num">2</div>
-        <h3>Importez dans Winbox</h3>
-        <p>Ouvrez Winbox, connectez-vous à votre routeur, et glissez le fichier dans la section <b>Files</b>.</p>
-      </div>
-      <div class="tuto-card">
-        <div class="tuto-num">3</div>
-        <h3>Exécutez la commande magique</h3>
-        <p>Ouvrez <b>New Terminal</b> et tapez :</p>
-        <div class="code-block">/import ketrika_setup.rsc</div>
-        <p style="margin-top:10px;">Attendez 5 secondes... C'est fait ! ✅</p>
-      </div>
+    <div class="grid-3">
+      <div class="tuto-card"><div class="tuto-num">1</div><h3>Téléchargez votre fichier .rsc</h3><p>Après validation du paiement, vous recevez le fichier par WhatsApp. Enregistrez-le sur votre PC.</p></div>
+      <div class="tuto-card"><div class="tuto-num">2</div><h3>Importez dans Winbox</h3><p>Ouvrez Winbox, connectez-vous à votre routeur MikroTik, et glissez le fichier .rsc dans la section <b>Files</b>.</p></div>
+      <div class="tuto-card"><div class="tuto-num">3</div><h3>Exécutez la commande</h3><p>Ouvrez <b>New Terminal</b> dans Winbox et tapez :</p><div class="code-box">/import ketrika_setup.rsc</div><p style="margin-top:10px;">Attendez 5 secondes... C'est fait ! ✅</p></div>
     </div>
     <div class="alt-box">
-      <h4>⚡ Alternative rapide</h4>
-      <p>Si votre routeur a accès à Internet, collez cette ligne :</p>
-      <div class="code-block">/tool fetch url="http://VOTRE_SERVEUR/api/download/VOTRE-CLE.rsc" dst-path=k.rsc; /import k.rsc; /file remove k.rsc</div>
+      <h4>⚡ Alternative rapide (si le routeur a Internet)</h4>
+      <p style="color:var(--muted);margin-bottom:10px;">Collez cette commande dans le Terminal Winbox :</p>
+      <div class="code-box">/tool fetch url="http://VOTRE_SERVEUR/api/download/VOTRE-CLE.rsc" dst-path=k.rsc; /import k.rsc; /file remove k.rsc</div>
     </div>
   </div>
 </section>
 
-<!-- FAQ -->
-<section id="faq" style="background:var(--bg-2);">
-  <div class="container" style="max-width:800px;">
-    <div class="section-title">
-      <h2>Questions fréquentes</h2>
-      <p>Tout ce que vous devez savoir</p>
+<!-- ============================================================
+     FAQ
+     ============================================================ -->
+<section id="faq" class="section" style="background:var(--bg2);">
+  <div class="container">
+    <div class="section-header">
+      <h2>Questions <span class="hl">fréquentes</span></h2>
+      <p>Tout ce que vous devez savoir avant de commander</p>
     </div>
-    <div id="faqList">
-      <div class="faq-item"><div class="faq-q">Est-ce compatible avec mon routeur MikroTik ?</div><div class="faq-a">Oui ! KETRIKA est compatible avec TOUS les routeurs MikroTik sous RouterOS v7 : hAP, RB, CCR, CHR, et tous les modèles Wi-Fi 4/5/6.</div></div>
+    <div class="faq">
+      <div class="faq-item"><div class="faq-q">Est-ce compatible avec mon routeur MikroTik ?</div><div class="faq-a">Oui ! KETRIKA est compatible avec TOUS les routeurs MikroTik sous RouterOS v7 : hAP, RB, CCR, CHR, et tous les modèles Wi-Fi 4 (N), Wi-Fi 5 (AC), et Wi-Fi 6 (AX).</div></div>
       <div class="faq-item"><div class="faq-q">Est-ce que la configuration est permanente ?</div><div class="faq-a">Oui, une fois importée, la configuration est sauvegardée dans la mémoire flash du routeur. Elle résiste aux redémarrages et aux coupures de courant.</div></div>
-      <div class="faq-item"><div class="faq-q">Puis-je modifier la configuration après ?</div><div class="faq-a">Absolument ! Vous gardez un accès total à votre routeur via Winbox. La configuration KETRIKA ne verrouille rien.</div></div>
-      <div class="faq-item"><div class="faq-q">Comment fonctionne le paiement ?</div><div class="faq-a">Vous payez via Mvola au {{ mvola_number }}, envoyez la capture d'écran par WhatsApp, et vous recevez votre fichier de configuration en quelques minutes.</div></div>
-      <div class="faq-item"><div class="faq-q">Que contient le Plan Performance ?</div><div class="faq-a">En plus de la configuration réseau complète, il inclut un tunnel VPN WireGuard vers Cloudflare pour sécuriser et optimiser toute votre connexion Internet.</div></div>
-      <div class="faq-item"><div class="faq-q">Le Hotspot fonctionne sans serveur externe ?</div><div class="faq-a">Oui ! Le portail captif est 100% intégré dans votre routeur MikroTik. Aucun serveur ni abonnement supplémentaire n'est nécessaire.</div></div>
-      <div class="faq-item"><div class="faq-q">Combien de temps prend la configuration ?</div><div class="faq-a">L'importation du fichier .rsc prend moins de 5 secondes. Votre routeur est opérationnel immédiatement, sans redémarrage.</div></div>
-      <div class="faq-item"><div class="faq-q">Y a-t-il un support après l'achat ?</div><div class="faq-a">Oui, nous offrons un support technique gratuit par WhatsApp pendant 30 jours après l'achat.</div></div>
+      <div class="faq-item"><div class="faq-q">Puis-je modifier la configuration après ?</div><div class="faq-a">Absolument ! Vous gardez un accès total à votre routeur via Winbox. La configuration KETRIKA ne verrouille rien. Vous pouvez modifier chaque paramètre librement.</div></div>
+      <div class="faq-item"><div class="faq-q">Comment fonctionne le paiement ?</div><div class="faq-a">Vous payez via Mvola au {{ mvola_number }}, envoyez la capture d'écran par WhatsApp, et vous recevez votre fichier de configuration en quelques minutes (généralement sous 15 minutes).</div></div>
+      <div class="faq-item"><div class="faq-q">Que contient le Plan Performance ?</div><div class="faq-a">En plus de la configuration réseau complète, il inclut un tunnel VPN WireGuard vers Cloudflare pour sécuriser et optimiser toute votre connexion Internet. Il comprend aussi l'optimisation TTL, le changement MAC et les limites de débit configurables.</div></div>
+      <div class="faq-item"><div class="faq-q">Le Hotspot fonctionne sans serveur externe ?</div><div class="faq-a">Oui ! Le portail captif est 100% intégré dans votre routeur MikroTik. Aucun serveur externe ni abonnement supplémentaire n'est nécessaire. Les tickets sont générés directement dans le fichier de configuration.</div></div>
+      <div class="faq-item"><div class="faq-q">Combien de temps prend la configuration ?</div><div class="faq-a">L'importation du fichier .rsc prend moins de 5 secondes. Votre routeur est opérationnel immédiatement, sans redémarrage nécessaire.</div></div>
+      <div class="faq-item"><div class="faq-q">Y a-t-il un support après l'achat ?</div><div class="faq-a">Oui, nous offrons un support technique gratuit par WhatsApp pendant 30 jours après l'achat. Vous pouvez nous contacter pour toute question ou ajustement.</div></div>
+      <div class="faq-item"><div class="faq-q">Le TTL pose-t-il problème entre les plans ?</div><div class="faq-a">Non ! Le TTL n'est activé que sur les plans Performance et Business qui incluent le tunnel VPN. Il fonctionne en synergie avec WireGuard/WARP pour une protection optimale. Le plan Essentiel n'utilise pas cette fonctionnalité.</div></div>
+      <div class="faq-item"><div class="faq-q">Quelle est la différence entre les 3 plans ?</div><div class="faq-a">Le plan <b>Essentiel</b> configure votre réseau de base (LAN, DHCP, Wi-Fi). Le plan <b>Performance</b> ajoute le tunnel VPN, le TTL et les optimisations avancées. Le plan <b>Business</b> ajoute un portail captif Hotspot avec tickets d'accès, idéal pour les professionnels.</div></div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="logo" style="justify-content:center;margin-bottom:12px;"><div class="logo-icon">⚡</div><span class="logo-text">KETRIKA MIKROTIK</span></div>
-  <p>Génie Réseau — Madagascar 🇲🇬</p>
-  <p style="margin-top:8px;">📱 WhatsApp : <a href="{{ whatsapp_link }}">{{ mvola_number }}</a></p>
-  <div class="foot-links">
-    <a href="#accueil">Accueil</a>|<a href="#plans">Plans</a>|<a href="#faq">FAQ</a>|<a href="{{ whatsapp_link }}">Contact</a>
+<!-- ============================================================
+     CONDITIONS GÉNÉRALES
+     ============================================================ -->
+<section id="conditions" class="section terms-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Conditions <span class="hl">Générales</span></h2>
+      <p>Termes et conditions d'utilisation du service KETRIKA MIKROTIK</p>
+    </div>
+    <div class="terms-content">
+      <h3>1. Objet du service</h3>
+      <p>KETRIKA MIKROTIK est un service de configuration automatique de routeurs MikroTik sous RouterOS v7. Le service génère un fichier de configuration (.rsc) personnalisé selon les paramètres choisis par le client.</p>
+
+      <h3>2. Fonctionnement</h3>
+      <ul>
+        <li>Le client choisit un plan tarifaire et remplit le formulaire de configuration.</li>
+        <li>Le client effectue le paiement via Mvola et envoie la preuve par WhatsApp.</li>
+        <li>Après vérification, KETRIKA fournit le fichier .rsc et le tutoriel d'installation.</li>
+        <li>Le client importe le fichier dans son routeur via Winbox.</li>
+      </ul>
+
+      <h3>3. Tarification</h3>
+      <p>Les prix sont affichés en Ariary malgache (Ar) et incluent :</p>
+      <ul>
+        <li><b>Plan Essentiel (30 000 Ar)</b> : Configuration réseau de base, Wi-Fi, DHCP.</li>
+        <li><b>Plan Performance (50 000 Ar)</b> : Tout le plan Essentiel + VPN WireGuard/WARP, optimisations avancées.</li>
+        <li><b>Plan Business (80 000 Ar)</b> : Tout le plan Performance + Portail captif Hotspot avec tickets.</li>
+      </ul>
+
+      <h3>4. Paiement</h3>
+      <p>Le paiement s'effectue exclusivement par Mvola au numéro {{ mvola_number }}. La preuve de paiement (capture d'écran) doit être envoyée par WhatsApp. La commande est traitée après vérification du paiement.</p>
+
+      <h3>5. Livraison</h3>
+      <p>Le fichier de configuration est livré par WhatsApp sous forme de fichier .rsc, généralement dans les 15 minutes suivant la validation du paiement. Un lien de téléchargement est également fourni.</p>
+
+      <h3>6. Support technique</h3>
+      <p>Un support technique gratuit par WhatsApp est inclus pendant 30 jours après l'achat. Ce support couvre l'assistance à l'installation et les ajustements de configuration.</p>
+
+      <h3>7. Responsabilité</h3>
+      <ul>
+        <li>Le client est responsable de la sauvegarde de sa configuration existante avant l'importation.</li>
+        <li>KETRIKA fournit un fichier de configuration fonctionnel mais ne peut être tenu responsable des modifications ultérieures effectuées par le client.</li>
+        <li>Le service est fourni « en l'état » pour les routeurs MikroTik sous RouterOS v7.</li>
+      </ul>
+
+      <h3>8. Compatibilité</h3>
+      <p>Le service est compatible avec tous les routeurs MikroTik fonctionnant sous RouterOS v7 ou supérieur. La compatibilité avec les versions antérieures n'est pas garantie.</p>
+
+      <h3>9. Confidentialité</h3>
+      <ul>
+        <li>Les informations personnelles (nom, numéro WhatsApp) sont utilisées uniquement pour le traitement de la commande.</li>
+        <li>Les paramètres de configuration sont stockés de manière sécurisée et ne sont jamais partagés avec des tiers.</li>
+        <li>Le client peut demander la suppression de ses données à tout moment en contactant le support.</li>
+      </ul>
+
+      <h3>10. Remboursement</h3>
+      <p>Aucun remboursement n'est possible après la livraison du fichier de configuration. En cas de problème technique lié au fichier fourni, KETRIKA s'engage à fournir une correction gratuite.</p>
+
+      <h3>11. Modification des conditions</h3>
+      <p>KETRIKA se réserve le droit de modifier ces conditions à tout moment. Les modifications s'appliquent aux nouvelles commandes uniquement.</p>
+
+      <p style="margin-top:24px;color:var(--text);font-weight:600;">En passant commande, vous acceptez l'ensemble de ces conditions générales.</p>
+      <p style="color:var(--dim);font-size:13px;margin-top:8px;">Dernière mise à jour : Janvier 2025 — KETRIKA MIKROTIK v{{ version }}</p>
+    </div>
   </div>
-  <p style="margin-top:14px;">© 2024 KETRIKA MIKROTIK — Tous droits réservés</p>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="logo" style="justify-content:center;margin-bottom:16px;">
+    <div class="logo-icon">⚡</div>
+    <div class="logo-text">
+      <span class="logo-name">KETRIKA</span>
+      <span class="logo-sub">MIKROTIK v{{ version }}</span>
+    </div>
+  </div>
+  <p>Génie Réseau — Madagascar 🇲🇬</p>
+  <p>📱 WhatsApp : <a href="{{ whatsapp_link }}" target="_blank">{{ mvola_number }}</a></p>
+  <div class="foot-links">
+    <a href="#accueil">Accueil</a>
+    <span style="color:var(--border);">|</span>
+    <a href="#plans">Plans</a>
+    <span style="color:var(--border);">|</span>
+    <a href="#tutoriel">Tutoriel</a>
+    <span style="color:var(--border);">|</span>
+    <a href="#faq">FAQ</a>
+    <span style="color:var(--border);">|</span>
+    <a href="#conditions">Conditions</a>
+    <span style="color:var(--border);">|</span>
+    <a href="{{ whatsapp_link }}" target="_blank">Contact</a>
+  </div>
+  <p style="margin-top:16px;">© 2024-2025 KETRIKA MIKROTIK — Tous droits réservés</p>
 </footer>
 
-<!-- WhatsApp float -->
-<a class="wa-float" href="{{ whatsapp_link }}?text=Bonjour%20KETRIKA%20!%20J%27ai%20une%20question%20sur%20vos%20offres.">💬 WhatsApp</a>
+<!-- WhatsApp flottant -->
+<a class="wa-float" href="{{ whatsapp_link }}?text=Bonjour%20KETRIKA%20!%20J%27ai%20une%20question%20sur%20vos%20offres." target="_blank">💬 WhatsApp</a>
 
+<!-- ============================================================
+     JAVASCRIPT COMPLET
+     ============================================================ -->
 <script>
-// ============ DONNEES MODELES (injectees depuis Flask) ============
+// ============ DONNÉES MODÈLES ============
 const MODELS = {{ models|tojson }};
-const PRICES = { essentiel:30000, performance:50000, business:80000 };
+const PRICES = {essentiel:30000, performance:50000, business:80000};
+const PLAN_NAMES = {essentiel:'⭐ Plan Essentiel', performance:'🚀 Plan Performance', business:'🏢 Plan Business'};
 
-// ============ SELECTION DU PLAN ============
+// ============ VÉRIFICATION DE LICENCE ============
+async function checkLicense() {
+  const input = document.getElementById('licenseInput');
+  const resultBox = document.getElementById('licenseResult');
+  const btn = document.getElementById('licenseBtn');
+  let key = input.value.trim().toUpperCase();
+
+  if (!key) {
+    resultBox.className = 'license-result error';
+    resultBox.innerHTML = '❌ Veuillez saisir une clé de licence.';
+    return;
+  }
+
+  // Ajouter le préfixe si absent
+  if (!key.startsWith('LIC-')) key = 'LIC-' + key;
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Vérification...';
+
+  try {
+    const res = await fetch('/api/check-license', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({license_key: key})
+    });
+    const data = await res.json();
+
+    if (!data.success) {
+      resultBox.className = 'license-result error';
+      resultBox.innerHTML = '❌ ' + (data.error || 'Licence introuvable.');
+    } else if (data.payment_status === 'validated') {
+      resultBox.className = 'license-result validated';
+      resultBox.innerHTML = `
+        <b>✅ Licence activée !</b><br>
+        👤 Client : <b>${data.client_name}</b><br>
+        📦 Plan : <b>${data.plan_type.toUpperCase()}</b><br>
+        🔧 Routeur : <b>${data.router_name}</b><br>
+        📅 Validée le : ${data.validated_at || '-'}<br>
+        <a href="${data.download_url}" class="btn btn-success" style="margin-top:12px;display:inline-block;">📥 Télécharger le fichier .rsc</a>
+      `;
+    } else if (data.payment_status === 'pending') {
+      resultBox.className = 'license-result pending';
+      resultBox.innerHTML = `
+        <b>⏳ Paiement en attente</b><br>
+        👤 Client : <b>${data.client_name}</b><br>
+        💰 Montant : <b>${data.amount.toLocaleString()} Ar</b><br>
+        📱 Mvola : <b>${data.mvola_number}</b><br>
+        <a href="${data.whatsapp_link}" target="_blank" class="btn btn-wa" style="margin-top:12px;display:inline-block;">📤 Envoyer la preuve de paiement</a>
+      `;
+    } else {
+      resultBox.className = 'license-result error';
+      resultBox.innerHTML = '❌ Cette commande a été annulée ou expirée. Contactez le support.';
+    }
+  } catch(err) {
+    resultBox.className = 'license-result error';
+    resultBox.innerHTML = '❌ Erreur de connexion. Réessayez.';
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🔍 Vérifier';
+}
+
+// Permettre la validation avec Entrée
+document.getElementById('licenseInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') { e.preventDefault(); checkLicense(); }
+});
+
+// ============ SÉLECTION DU PLAN ============
 function selectPlan(plan) {
   document.getElementById('planType').value = plan;
   updatePlanUI(plan);
@@ -587,56 +913,75 @@ function selectPlan(plan) {
 }
 
 function updatePlanUI(plan) {
-  const p2 = document.getElementById('plan2Options');
-  const p3 = document.getElementById('plan3Options');
-  if (plan === 'essentiel') { p2.classList.add('hidden'); p3.classList.add('hidden'); }
-  else if (plan === 'performance') { p2.classList.remove('hidden'); p3.classList.add('hidden'); }
-  else if (plan === 'business') { p2.classList.remove('hidden'); p3.classList.remove('hidden'); }
-  document.getElementById('submitBtn').textContent = 'Valider ma commande — ' + PRICES[plan].toLocaleString() + ' Ar';
+  const tag = document.getElementById('planTag');
+  tag.className = 'form-plan-tag tag-' + plan;
+  tag.textContent = PLAN_NAMES[plan] + ' — ' + PRICES[plan].toLocaleString() + ' Ar';
+
+  const o2 = document.getElementById('opts2');
+  const o3 = document.getElementById('opts3');
+  if (plan === 'essentiel')    { o2.classList.add('hidden'); o3.classList.add('hidden'); }
+  else if (plan === 'performance') { o2.classList.remove('hidden'); o3.classList.add('hidden'); }
+  else if (plan === 'business')    { o2.classList.remove('hidden'); o3.classList.remove('hidden'); }
+
+  document.getElementById('submitBtn').textContent = '✅ Valider ma commande — ' + PRICES[plan].toLocaleString() + ' Ar';
 }
 
-// ============ NAVIGATION ETAPES ============
+// ============ NAVIGATION ÉTAPES ============
 function goStep(n) {
+  // Validation étape 1
+  if (n === 2) {
+    const name = document.querySelector('[name="client_name"]');
+    const wa = document.querySelector('[name="whatsapp_number"]');
+    if (!name.value.trim()) { name.focus(); alert('Veuillez saisir votre nom.'); return; }
+    if (!wa.value.trim() || wa.value.trim().length < 9) { wa.focus(); alert('Veuillez saisir un numéro WhatsApp valide.'); return; }
+  }
+  // Validation étape 2
+  if (n === 3) {
+    const model = document.getElementById('modelSelect');
+    if (!model.value) { model.focus(); alert('Veuillez choisir votre modèle MikroTik.'); return; }
+  }
+
   document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
   document.querySelector('.form-step[data-step="'+n+'"]').classList.add('active');
+
   [1,2,3].forEach(i => {
     const el = document.getElementById('ps'+i);
     el.classList.remove('active','done');
     if (i < n) el.classList.add('done');
     else if (i === n) el.classList.add('active');
   });
-  window.scrollTo({top:document.getElementById('commander').offsetTop-80, behavior:'smooth'});
+
+  document.getElementById('orderFormBox').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-// ============ SELECTION MODELE ============
+// ============ SÉLECTION MODÈLE ============
 document.getElementById('modelSelect').addEventListener('change', function() {
   const key = this.value;
-  const infoBox = document.getElementById('modelInfo');
-  const ssid2 = document.getElementById('ssid2gGroup');
-  const ssid5 = document.getElementById('ssid5gGroup');
-  const wpwd = document.getElementById('wifiPwdGroup');
-  if (!key || !MODELS[key]) { infoBox.classList.add('hidden'); return; }
+  const specs = document.getElementById('modelSpecs');
+  const g2g = document.getElementById('grpSsid2g');
+  const g5g = document.getElementById('grpSsid5g');
+  const gpwd = document.getElementById('grpWifiPwd');
+
+  if (!key || !MODELS[key]) { specs.classList.add('hidden'); return; }
   const m = MODELS[key];
-  let txt = '<b>📊 Spécifications :</b><br>';
-  txt += '• Ports Ethernet : <b>' + m.ports + '</b><br>';
-  txt += '• Wi-Fi 2.4 GHz : ' + (m.wifi_24ghz ? '<b style="color:#10b981;">✓ Oui</b>' : '<b style="color:#ef4444;">✗ Non</b>') + '<br>';
-  txt += '• Wi-Fi 5 GHz : ' + (m.wifi_5ghz ? '<b style="color:#10b981;">✓ Oui</b>' : '<b style="color:#ef4444;">✗ Non</b>') + '<br>';
+
+  let html = '<b>📊 Spécifications détectées :</b><br>';
+  html += '• Ports Ethernet : <b>' + m.ports + '</b><br>';
+  html += '• Wi-Fi 2.4 GHz : ' + (m.wifi_24ghz ? '<b style="color:var(--success);">✓ Disponible</b>' : '<b style="color:var(--danger);">✗ Non disponible</b>') + '<br>';
+  html += '• Wi-Fi 5 GHz : ' + (m.wifi_5ghz ? '<b style="color:var(--success);">✓ Disponible</b>' : '<b style="color:var(--danger);">✗ Non disponible</b>') + '<br>';
   if (m.wifi_type) {
-    const map = { ax:'Wi-Fi 6 (AX)', ac:'Wi-Fi 5 (AC)', n:'Wi-Fi 4 (N)' };
-    txt += '• Technologie : <b>' + map[m.wifi_type] + '</b>';
-  }
-  infoBox.innerHTML = txt;
-  infoBox.classList.remove('hidden');
-  // Adapter les champs Wi-Fi
-  if (m.wifi_24ghz || m.wifi_5ghz) {
-    ssid2.classList.toggle('hidden', !m.wifi_24ghz);
-    ssid5.classList.toggle('hidden', !m.wifi_5ghz);
-    wpwd.classList.remove('hidden');
+    const wt = {ax:'Wi-Fi 6 (AX) 🟢', ac:'Wi-Fi 5 (AC) 🔵', n:'Wi-Fi 4 (N) 🟡'};
+    html += '• Technologie : <b>' + (wt[m.wifi_type] || m.wifi_type) + '</b>';
   } else {
-    ssid2.classList.add('hidden');
-    ssid5.classList.add('hidden');
-    wpwd.classList.add('hidden');
+    html += '• <span style="color:var(--amber);">⚠️ Ce modèle n\'a pas de Wi-Fi intégré</span>';
   }
+  specs.innerHTML = html;
+  specs.classList.remove('hidden');
+
+  // Afficher/masquer les champs Wi-Fi
+  g2g.classList.toggle('hidden', !m.wifi_24ghz);
+  g5g.classList.toggle('hidden', !m.wifi_5ghz);
+  gpwd.classList.toggle('hidden', !m.wifi_24ghz && !m.wifi_5ghz);
 });
 
 // ============ TOGGLE MOT DE PASSE ============
@@ -645,74 +990,131 @@ function togglePwd() {
   p.type = p.type === 'password' ? 'text' : 'password';
 }
 
+// Indicateur de force du mot de passe
+document.getElementById('wifiPwd').addEventListener('input', function() {
+  const s = document.getElementById('pwdStrength');
+  const v = this.value;
+  if (!v) { s.textContent = ''; return; }
+  let score = 0;
+  if (v.length >= 8) score++;
+  if (v.length >= 12) score++;
+  if (/[A-Z]/.test(v)) score++;
+  if (/[0-9]/.test(v)) score++;
+  if (/[^A-Za-z0-9]/.test(v)) score++;
+  const levels = ['🔴 Très faible','🟠 Faible','🟡 Moyen','🟢 Fort','💪 Excellent'];
+  s.innerHTML = (levels[Math.min(score,4)] || levels[0]) + ' (' + v.length + ' caractères)';
+});
+
 // ============ MAC SPOOFING ============
 function toggleMac() {
-  document.getElementById('macChoice').classList.toggle('hidden', !document.getElementById('macSpoof').checked);
+  const checked = document.getElementById('macSpoof').checked;
+  document.getElementById('macOpts').classList.toggle('hidden', !checked);
 }
+
 function toggleMacManual() {
-  document.getElementById('macManualInput').classList.toggle('hidden', document.getElementById('macMode').value !== 'manual');
+  const manual = document.getElementById('macMode').value === 'manual';
+  document.getElementById('macManualInput').classList.toggle('hidden', !manual);
 }
 
 // ============ VEILLE WI-FI ============
-function toggleSleepCustom() {
+function toggleSleep() {
   document.getElementById('sleepCustom').classList.toggle('hidden', document.getElementById('sleepMode').value !== 'custom');
 }
 
 // ============ FAQ ACCORDION ============
 document.querySelectorAll('.faq-item').forEach(item => {
-  item.querySelector('.faq-q').addEventListener('click', () => item.classList.toggle('open'));
+  item.querySelector('.faq-q').addEventListener('click', () => {
+    document.querySelectorAll('.faq-item').forEach(i => { if (i !== item) i.classList.remove('open'); });
+    item.classList.toggle('open');
+  });
 });
 
-// ============ SOUMISSION FORMULAIRE ============
+// ============ SOUMISSION DU FORMULAIRE ============
 document.getElementById('orderForm').addEventListener('submit', async function(e) {
   e.preventDefault();
+
+  // Vérifier les conditions
+  if (!document.getElementById('termsCheck').checked) {
+    alert('Veuillez accepter les conditions générales d\'utilisation.');
+    return;
+  }
+
   const fd = new FormData(this);
   const data = Object.fromEntries(fd.entries());
-  // Sleep mode
-  if (data.sleep_mode && data.sleep_mode !== 'off' && data.sleep_mode !== 'custom') {
-    const [a,b] = data.sleep_mode.split('-');
-    data.sleep_start = a.padStart(2,'0') + ':00';
-    data.sleep_end   = b.padStart(2,'0') + ':00';
-  } else if (data.sleep_mode === 'custom') {
-    data.sleep_start = document.getElementById('sleepStartCustom').value;
-    data.sleep_end   = document.getElementById('sleepEndCustom').value;
+
+  // Traitement sleep mode
+  const sm = data.sleep_mode || 'off';
+  if (sm !== 'off' && sm !== 'custom') {
+    const parts = sm.split('-');
+    data.sleep_start = parts[0].padStart(2,'0') + ':00';
+    data.sleep_end = parts[1].padStart(2,'0') + ':00';
+  } else if (sm === 'custom') {
+    data.sleep_start = document.getElementById('sleepStartC').value || '';
+    data.sleep_end = document.getElementById('sleepEndC').value || '';
   }
-  data.mac_spoof = document.getElementById('macSpoof').checked;
-  if (data.mac_spoof && document.getElementById('macMode').value === 'auto') {
+
+  // MAC
+  data.mac_spoof = document.getElementById('macSpoof') ? document.getElementById('macSpoof').checked : false;
+  if (data.mac_spoof && document.getElementById('macMode') && document.getElementById('macMode').value === 'auto') {
     data.mac_address = '';
   }
 
+  data.terms_accepted = document.getElementById('termsCheck').checked;
+
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true; btn.textContent = 'Envoi en cours...';
+  btn.disabled = true;
+  btn.textContent = '⏳ Envoi en cours...';
+
   try {
     const r = await fetch('/api/order', {
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
     });
     const res = await r.json();
-    if (!res.success) throw new Error(res.error || 'Erreur');
-    // Recap
+
+    if (!res.success) {
+      throw new Error(res.error || 'Une erreur est survenue.');
+    }
+
+    // Masquer le formulaire, afficher le récapitulatif
     document.getElementById('orderForm').classList.add('hidden');
+    document.querySelector('.progress').classList.add('hidden');
+    document.getElementById('planTag').classList.add('hidden');
     document.getElementById('recapBox').classList.remove('hidden');
-    document.getElementById('recapAmount').textContent = res.amount.toLocaleString();
-    document.getElementById('recapWaLink').href = res.whatsapp_link;
-    let html = '';
-    html += '<div class="recap-item"><span>Commande N°</span><b>#' + res.order_id + '</b></div>';
-    html += '<div class="recap-item"><span>Client</span><b>' + data.client_name + '</b></div>';
-    html += '<div class="recap-item"><span>Plan</span><b>' + data.plan_type.toUpperCase() + '</b></div>';
-    html += '<div class="recap-item"><span>Modèle</span><b>' + data.mikrotik_model + '</b></div>';
-    html += '<div class="recap-item"><span>Routeur</span><b>' + res.router_name + '</b></div>';
-    html += '<div class="recap-item"><span>Licence</span><b style="font-family:monospace;font-size:11px;">' + res.license_key + '</b></div>';
-    document.getElementById('recapContent').innerHTML = html;
+
+    // Remplir le récap
+    document.getElementById('recapAmt').textContent = res.amount.toLocaleString();
+    document.getElementById('recapRef').textContent = '#' + res.order_id + ' — ' + res.license_key;
+    document.getElementById('recapWa').href = res.whatsapp_link;
+
+    let rows = '';
+    rows += `<div class="recap-row"><span class="recap-label">N° Commande</span><span class="recap-val">#${res.order_id}</span></div>`;
+    rows += `<div class="recap-row"><span class="recap-label">Client</span><span class="recap-val">${data.client_name}</span></div>`;
+    rows += `<div class="recap-row"><span class="recap-label">WhatsApp</span><span class="recap-val">${data.whatsapp_number}</span></div>`;
+    rows += `<div class="recap-row"><span class="recap-label">Plan</span><span class="recap-val">${res.plan_type.toUpperCase()}</span></div>`;
+    rows += `<div class="recap-row"><span class="recap-label">Modèle</span><span class="recap-val">${data.mikrotik_model}</span></div>`;
+    rows += `<div class="recap-row"><span class="recap-label">Routeur</span><span class="recap-val">${res.router_name}</span></div>`;
+    rows += `<div class="recap-row"><span class="recap-label">Clé de licence</span><span class="recap-val" style="font-family:var(--mono);font-size:12px;">${res.license_key}</span></div>`;
+    rows += `<div class="recap-row"><span class="recap-label">Montant</span><span class="recap-val" style="color:var(--success);font-size:18px;">${res.amount.toLocaleString()} Ar</span></div>`;
+    document.getElementById('recapRows').innerHTML = rows;
+
     document.getElementById('recapBox').scrollIntoView({behavior:'smooth'});
+
   } catch(err) {
-    alert('Erreur : ' + err.message);
+    alert('❌ Erreur : ' + err.message);
     btn.disabled = false;
+    btn.textContent = '✅ Valider ma commande — ' + PRICES[data.plan_type].toLocaleString() + ' Ar';
   }
 });
 
-// Init
+// ============ INIT ============
 updatePlanUI('essentiel');
+
+// Fermer le menu mobile au clic sur un lien
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => document.querySelector('.nav-links').classList.remove('open'));
+});
 </script>
 </body>
 </html>
