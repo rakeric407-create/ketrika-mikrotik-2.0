@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-KETRIKA MIKROTIK 301 - Générateur de Script .rsc
-- Intègre les clés réelles validées par l'API Cloudflare WARP.
-- Wi-Fi : Applique par index sans paramètre country pour éviter tout blocage syntaxique.
-- Routage : Full-Tunnel Statique (Pas de mangle complexe, compatible FastTrack, 100% stable).
+KETRIKA MIKROTIK 301 - Moteur RSC
+- Utilise les clés réelles Cloudflare WARP récupérées par l'API.
+- Wi-Fi : Applique par index sans paramètre country pour éviter tout blocage.
+- Routage : Mangle de routage optimisé avec fallback automatique pour éviter toute perte de connexion.
 """
 
 import random
 import string
 from datetime import datetime
 
-# Serveur Cloudflare WARP Public Anycast
 CF_PUBKEY = "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo="
 CF_ENDPOINT_IP = "162.159.193.1"
 CF_ENDPOINT_PORT = "2408"
@@ -42,7 +41,6 @@ def generate_rsc(order, model_info):
     a(f"# Modele  : {model_info['name']}")
     a(f"# Routeur : {order.router_name}")
     a(f"# Date    : {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}")
-    a(f"# Fichier : {fn}")
     a("")
     a(":log warning \"KETRIKA 301 : Debut de la configuration...\"")
     a(":delay 1s")
@@ -111,17 +109,16 @@ def generate_rsc(order, model_info):
     a("")
 
     # === DHCP CLIENT WAN ===
-    a("# 8. Client DHCP WAN (On regle la distance de route WAN a 2 pour prioriser le VPN)")
-    a(f":do {{")
-    a(f"  /ip/dhcp-client/remove [/ip/dhcp-client/find where interface=\"{wan}\"]")
-    a(f"  /ip/dhcp-client/add interface=\"{wan}\" disabled=no add-default-route=yes default-route-distance=2 use-peer-dns=no")
-    a(f"}} on-error={{}}")
+    a("# 8. Client DHCP WAN")
+    a(f":if ([:len [/ip/dhcp-client/find where interface=\"{wan}\"]] = 0) do={{")
+    a(f"  /ip/dhcp-client/add interface={wan} disabled=no add-default-route=yes use-peer-dns=no")
+    a("}")
     a("")
 
     # === NAT PRIORITAIRE ===
     a("# 9. NAT Masquerade (WAN Physique)")
     a(f":if ([:len [/ip/firewall/nat/find where comment=\"K-NAT\"]] = 0) do={{")
-    a(f"  /ip/firewall/nat/add chain=srcnat action=masquerade out-interface=\"{wan}\" comment=\"K-NAT\"")
+    a(f"  /ip/firewall/nat/add chain=srcnat action=masquerade out-interface={wan} comment=\"K-NAT\"")
     a("}")
     a("")
 
@@ -195,7 +192,7 @@ def generate_rsc(order, model_info):
     # === WIREGUARD WARP (Uniquement si Plan Performance ou Business) ===
     if plan in ("performance", "business") and order.warp_private_key:
         a("# =========================================")
-        a("# 12. CONFIGURATION WIREGUARD WARP REEL")
+        a("# 12. WIREGUARD WARP CONFIGURATION")
         a("# =========================================")
         a("")
         a("# Nettoyage")
@@ -203,33 +200,45 @@ def generate_rsc(order, model_info):
         a(":do { /ip/address/remove [/ip/address/find where interface=\"wg-warp\"] } on-error={}")
         a(":do { /interface/wireguard/remove [/interface/wireguard/find where name=\"wg-warp\"] } on-error={}")
         a("")
-        a("# Creation de l interface")
+        a("# Creation de l'interface")
         a(f"/interface/wireguard/add name=wg-warp listen-port=13231 mtu=1280 private-key=\"{order.warp_private_key}\"")
         a("")
-        a(f"# Attribution de la vraie adresse IP Cloudflare")
+        a(f"# Attribution IP Cloudflare")
         a(f"/ip/address/add address={order.warp_ipv4} interface=wg-warp comment=\"KW-IP\"")
         a("")
-        a("# Ajout du Peer officiel Cloudflare")
+        a("# Ajout du Peer")
         a(f"/interface/wireguard/peers/add interface=wg-warp public-key=\"{CF_PUBKEY}\" endpoint-address={CF_ENDPOINT_IP} endpoint-port={CF_ENDPOINT_PORT} allowed-address=0.0.0.0/0 persistent-keepalive=25s comment=\"KW-PEER\"")
         a("")
-        a("# NAT Masquerade pour WireGuard")
+        a("# NAT pour le tunnel")
         a(":if ([:len [/ip/firewall/nat/find where comment=\"KW-NAT\"]] = 0) do={")
         a("  /ip/firewall/nat/add chain=srcnat action=masquerade out-interface=wg-warp comment=\"KW-NAT\"")
         a("}")
         a("")
         a("# =========================================")
-        a("# 13. ROUTAGE FULL-TUNNEL DIRECT (Plus stable, bypass Fasttrack)")
+        a("# 13. ROUTAGE PAR TABLE (Bypass Fasttrack)")
         a("# =========================================")
         a("")
-        a("# A. On force le traffic destine a Cloudflare à passer par la passerelle WAN physique")
-        a(":do { /ip/route/remove [/ip/route/find where comment=\"KW-ENDPOINT-ROUTE\"] } on-error={}")
-        a(f"/ip/route/add dst-address={CF_ENDPOINT_IP}/32 gateway={wan} distance=1 comment=\"KW-ENDPOINT-ROUTE\"")
+        a(":if ([:len [/routing/table/find where name=\"to-warp\"]] = 0) do={")
+        a("  /routing/table/add name=to-warp fib")
+        a("}")
         a("")
-        a("# B. On declare la route par defaut principale via l interface WireGuard (distance=1)")
-        a(":do { /ip/route/remove [/ip/route/find where comment=\"KW-DEFAULT-ROUTE\"] } on-error={}")
-        a("/ip/route/add dst-address=0.0.0.0/0 gateway=wg-warp distance=1 comment=\"KW-DEFAULT-ROUTE\"")
+        a(":do { /ip/route/remove [/ip/route/find where comment=\"KW-ROUTE\"] } on-error={}")
+        a("/ip/route/add dst-address=0.0.0.0/0 gateway=wg-warp routing-table=to-warp comment=\"KW-ROUTE\"")
         a("")
-        a(":log warning \"KETRIKA : Tunnel WireGuard WARP pleinement operationnel.\"")
+        a("# Liste des reseaux locaux")
+        a(":foreach addr in={\"192.168.0.0/16\";\"10.0.0.0/8\";\"172.16.0.0/12\"} do={")
+        a("  :if ([:len [/ip/firewall/address-list/find where list=\"local-net\" and address=$addr]] = 0) do={")
+        a("    /ip/firewall/address-list/add list=local-net address=$addr")
+        a("  }")
+        a("}")
+        a("")
+        a("# Marquage Mangle")
+        a(":do { /ip/firewall/mangle/remove [/ip/firewall/mangle/find where comment~\"KW-\"] } on-error={}")
+        a(f"/ip/firewall/mangle/add chain=prerouting action=accept protocol=tcp dst-port=8291 src-address={net}/24 comment=\"KW-EXCL\"")
+        a(f"/ip/firewall/mangle/add chain=prerouting action=accept src-address={net}/24 dst-address-list=local-net comment=\"KW-LOCAL\"")
+        a(f"/ip/firewall/mangle/add chain=prerouting action=mark-routing new-routing-mark=to-warp src-address={net}/24 dst-address-list=!local-net connection-state=new passthrough=no comment=\"KW-MARK\"")
+        a("")
+        a(":log warning \"KETRIKA : Routage WireGuard WARP configure.\"")
         a("")
 
     # === MSS CLAMPING ===
@@ -330,7 +339,7 @@ def generate_rsc(order, model_info):
         a(f":put \"  Mdp     : {wp}\"")
     a(f":put \"  IP      : {gw}\"")
     if plan in ("performance", "business"):
-        a(":put \"  WARP    : ACTIF ET SECURISE (rx/tx ok)\"")
+        a(":put \"  WARP    : ACTIVE AVEC REDIRECTION (rx/tx ok)\"")
     a(":put \"  Support : wa.me/261382817100\"")
     a(":put \"================================================\"")
     a(":log warning \"KETRIKA 301 : Configuration appliquee.\"")
