@@ -1,75 +1,123 @@
+"""
+WireGuard WARP - Pur Python (RFC 7748 Curve25519) + API Cloudflare.
+Aucune dépendance externe cryptographique.
+"""
 import os
-from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
+import base64
+import requests
 
-db = SQLAlchemy()
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(basedir, "ketrika.db")
+P = 2**255 - 19
+A24 = 121665
 
 
-class Order(db.Model):
-    __tablename__ = "orders"
-
-    id = db.Column(db.Integer, primary_key=True)
-    license_key = db.Column(db.String(32), unique=True, nullable=False, index=True)
-
-    # Identité
-    customer_name = db.Column(db.String(120), nullable=False)
-    whatsapp = db.Column(db.String(40), nullable=False)
-
-    # Plan
-    plan = db.Column(db.String(20), nullable=False)  # essentiel|performance|business
-    price = db.Column(db.Integer, nullable=False)
-
-    # Matériel
-    model = db.Column(db.String(60), nullable=False)
-    router_name = db.Column(db.String(60), default="KETRIKA-RB")
-    wan_port = db.Column(db.String(20), default="ether1")
-
-    # Réseau
-    lan_ip = db.Column(db.String(20), default="192.168.10.1")
-    lan_mask = db.Column(db.String(20), default="24")
-    dhcp_start = db.Column(db.String(20), default="192.168.10.100")
-    dhcp_end = db.Column(db.String(20), default="192.168.10.250")
-
-    # Wi-Fi
-    wifi_enabled = db.Column(db.Boolean, default=True)
-    ssid_24 = db.Column(db.String(60), default="KETRIKA_2G")
-    ssid_5 = db.Column(db.String(60), default="KETRIKA_5G")
-    wifi_password = db.Column(db.String(60), default="ketrika2024")
-
-    # Veille Wi-Fi
-    sleep_enabled = db.Column(db.Boolean, default=False)
-    sleep_start = db.Column(db.String(10), default="23:00:00")
-    sleep_stop = db.Column(db.String(10), default="06:00:00")
-
-    # Plan 2+
-    ttl_value = db.Column(db.Integer, default=0)  # 0=off, 64, 65, 128
-    mac_spoof = db.Column(db.String(20), default="off")  # off|auto|manuel
-    mac_manual = db.Column(db.String(40), default="")
-    limit_down = db.Column(db.Integer, default=0)  # kbps
-    limit_up = db.Column(db.Integer, default=0)
-    limit_per_client = db.Column(db.Integer, default=0)
-
-    # WARP réel
-    warp_private_key = db.Column(db.String(120), default="")
-    warp_public_key = db.Column(db.String(120), default="")
-    warp_ipv4 = db.Column(db.String(40), default="")
-
-    # Hotspot (plan 3)
-    hotspot_tickets = db.Column(db.Integer, default=0)
-    hotspot_profile = db.Column(db.String(20), default="1h")
-
-    # Statut
-    status = db.Column(db.String(20), default="pending")  # pending|validated|rejected
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    validated_at = db.Column(db.DateTime, nullable=True)
+def _cswap(swap, x2, x3):
+    dummy = swap * (x2 - x3)
+    return x2 - dummy, x3 + dummy
 
 
-def init_db(app):
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
+def _x25519(k_int, u_int):
+    x1 = u_int
+    x2, z2 = 1, 0
+    x3, z3 = u_int, 1
+    swap = 0
+    for t in range(254, -1, -1):
+        k_t = (k_int >> t) & 1
+        swap ^= k_t
+        x2, x3 = _cswap(swap, x2, x3)
+        z2, z3 = _cswap(swap, z2, z3)
+        swap = k_t
+        A = (x2 + z2) % P
+        AA = (A * A) % P
+        B = (x2 - z2) % P
+        BB = (B * B) % P
+        E = (AA - BB) % P
+        C = (x3 + z3) % P
+        D = (x3 - z3) % P
+        DA = (D * A) % P
+        CB = (C * B) % P
+        x3 = pow((DA + CB) % P, 2, P)
+        z3 = (x1 * pow((DA - CB) % P, 2, P)) % P
+        x2 = (AA * BB) % P
+        z2 = (E * ((AA + A24 * E) % P)) % P
+    x2, x3 = _cswap(swap, x2, x3)
+    z2, z3 = _cswap(swap, z2, z3)
+    return (x2 * pow(z2, P - 2, P)) % P
+
+
+def _decode_scalar(k):
+    k = bytearray(k)
+    k[0] &= 248
+    k[31] &= 127
+    k[31] |= 64
+    return int.from_bytes(k, "little")
+
+
+def _decode_u(u):
+    return int.from_bytes(u, "little") % P
+
+
+def _encode(n):
+    return n.to_bytes(32, "little")
+
+
+def curve25519_scalarmult(scalar_bytes, u_bytes):
+    return _encode(_x25519(_decode_scalar(scalar_bytes), _decode_u(u_bytes)))
+
+
+BASE_POINT = b"\x09" + b"\x00" * 31
+
+
+def generate_wireguard_keypair():
+    priv = bytearray(os.urandom(32))
+    priv[0] &= 248
+    priv[31] &= 127
+    priv[31] |= 64
+    priv = bytes(priv)
+    pub = curve25519_scalarmult(priv, BASE_POINT)
+    return (
+        base64.b64encode(priv).decode(),
+        base64.b64encode(pub).decode()
+    )
+
+
+WARP_API = "https://api.cloudflareclient.com/v0a2158/reg"
+WARP_HEADERS = {
+    "CF-Client-Version": "a-6.11-2223",
+    "User-Agent": "okhttp/3.12.1",
+    "Content-Type": "application/json"
+}
+
+
+def register_warp():
+    """
+    Contacte Cloudflare pour enregistrer une cle publique reelle.
+    Retourne {private_key, public_key, ipv4} ou None en cas derreur.
+    """
+    try:
+        priv_b64, pub_b64 = generate_wireguard_keypair()
+        payload = {
+            "install_id": "",
+            "tos": "2023-01-01T00:00:00.000Z",
+            "key": pub_b64,
+            "fcm_token": "",
+            "type": "Android",
+            "locale": "fr_FR"
+        }
+        r = requests.post(WARP_API, headers=WARP_HEADERS, json=payload, timeout=12)
+        if r.status_code not in (200, 201):
+            return None
+        data = r.json()
+        cfg = data.get("config", {})
+        ipv4 = ""
+        v4_list = cfg.get("interface", {}).get("addresses", {}).get("v4", [])
+        if isinstance(v4_list, list) and len(v4_list) > 0:
+            ipv4 = v4_list[0]
+        elif isinstance(v4_list, str):
+            ipv4 = v4_list
+        return {
+            "private_key": priv_b64,
+            "public_key": pub_b64,
+            "ipv4": ipv4 or "172.16.0.2"
+        }
+    except Exception:
+        return None
