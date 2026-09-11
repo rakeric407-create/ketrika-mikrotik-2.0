@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""KETRIKA MIKROTIK v3.0.1 - Base de données"""
+"""KETRIKA MIKROTIK 301 - Base de donnees"""
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -11,7 +11,6 @@ db = SQLAlchemy()
 
 class Order(db.Model):
     __tablename__ = "orders"
-
     id = db.Column(db.Integer, primary_key=True)
     license_key = db.Column(db.String(64), unique=True, nullable=False, index=True)
     client_name = db.Column(db.String(120), nullable=False)
@@ -43,6 +42,12 @@ class Order(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     validated_at = db.Column(db.DateTime, nullable=True)
     terms_accepted = db.Column(db.Boolean, default=False)
+    # Cles WARP generees par l API Cloudflare
+    warp_private_key = db.Column(db.String(100), default="")
+    warp_public_key = db.Column(db.String(100), default="")
+    warp_ipv4 = db.Column(db.String(30), default="")
+    warp_ipv6 = db.Column(db.String(60), default="")
+    warp_client_id = db.Column(db.String(20), default="")
 
 
 def generate_license_key():
@@ -63,9 +68,9 @@ def generate_random_mac():
 MIKROTIK_MODELS = {
     "hap_lite": {"name": "hAP lite (RB941-2nD)", "ports": 4, "wifi_24ghz": True, "wifi_5ghz": False, "wifi_type": "n", "description": "4 ports, Wi-Fi 2.4GHz N"},
     "hap": {"name": "hAP (RB951Ui-2nD)", "ports": 5, "wifi_24ghz": True, "wifi_5ghz": False, "wifi_type": "n", "description": "5 ports, Wi-Fi 2.4GHz N"},
-    "hap_ac_lite": {"name": "hAP ac lite (RB952Ui-5ac2nD)", "ports": 5, "wifi_24ghz": True, "wifi_5ghz": True, "wifi_type": "ac", "description": "5 ports, Wi-Fi 2.4GHz + 5GHz AC"},
-    "hap_ac2": {"name": "hAP ac2 (RB962UiGS-5HacT2HnT)", "ports": 5, "wifi_24ghz": True, "wifi_5ghz": True, "wifi_type": "ac", "description": "5 ports Gigabit, Wi-Fi Dual-Band AC"},
-    "hap_ac3": {"name": "hAP ac3", "ports": 5, "wifi_24ghz": True, "wifi_5ghz": True, "wifi_type": "ac", "description": "5 ports Gigabit, Wi-Fi Dual-Band AC"},
+    "hap_ac_lite": {"name": "hAP ac lite (RB952Ui-5ac2nD)", "ports": 5, "wifi_24ghz": True, "wifi_5ghz": True, "wifi_type": "ac", "description": "5 ports, Wi-Fi AC Dual-Band"},
+    "hap_ac2": {"name": "hAP ac2", "ports": 5, "wifi_24ghz": True, "wifi_5ghz": True, "wifi_type": "ac", "description": "5 ports Gigabit, Wi-Fi AC Dual-Band"},
+    "hap_ac3": {"name": "hAP ac3", "ports": 5, "wifi_24ghz": True, "wifi_5ghz": True, "wifi_type": "ac", "description": "5 ports Gigabit, Wi-Fi AC Dual-Band"},
     "hap_ax2": {"name": "hAP ax2", "ports": 5, "wifi_24ghz": True, "wifi_5ghz": True, "wifi_type": "ax", "description": "5 ports Gigabit, Wi-Fi 6 AX"},
     "hap_ax3": {"name": "hAP ax3", "ports": 5, "wifi_24ghz": True, "wifi_5ghz": True, "wifi_type": "ax", "description": "5 ports Gigabit, Wi-Fi 6 AX"},
     "hap_ax_lite": {"name": "hAP ax lite", "ports": 4, "wifi_24ghz": True, "wifi_5ghz": False, "wifi_type": "ax", "description": "4 ports, Wi-Fi 6 AX 2.4GHz"},
@@ -73,11 +78,11 @@ MIKROTIK_MODELS = {
     "rb750r2": {"name": "RB750r2 (hEX lite)", "ports": 5, "wifi_24ghz": False, "wifi_5ghz": False, "wifi_type": None, "description": "5 ports 100Mbps"},
     "rb760igs": {"name": "RB760iGS (hEX S)", "ports": 5, "wifi_24ghz": False, "wifi_5ghz": False, "wifi_type": None, "description": "5 ports Gigabit + SFP"},
     "rb4011": {"name": "RB4011iGS+", "ports": 10, "wifi_24ghz": False, "wifi_5ghz": False, "wifi_type": None, "description": "10 ports Gigabit + SFP+"},
-    "rb5009": {"name": "RB5009UG+S+", "ports": 8, "wifi_24ghz": False, "wifi_5ghz": False, "wifi_type": None, "description": "7 Gigabit + 2.5G + SFP+"},
+    "rb5009": {"name": "RB5009UG+S+", "ports": 8, "wifi_24ghz": False, "wifi_5ghz": False, "wifi_type": None, "description": "7G + 2.5G + SFP+"},
     "rb3011": {"name": "RB3011UiAS", "ports": 10, "wifi_24ghz": False, "wifi_5ghz": False, "wifi_type": None, "description": "10 ports Gigabit + SFP"},
     "ccr1009": {"name": "CCR1009-7G-1C-1S+", "ports": 7, "wifi_24ghz": False, "wifi_5ghz": False, "wifi_type": None, "description": "7 Gigabit + SFP+"},
     "ccr1036": {"name": "CCR1036-12G-4S", "ports": 12, "wifi_24ghz": False, "wifi_5ghz": False, "wifi_type": None, "description": "12 Gigabit + 4 SFP"},
-    "ccr2004": {"name": "CCR2004-1G-12S+2XS", "ports": 1, "wifi_24ghz": False, "wifi_5ghz": False, "wifi_type": None, "description": "1 Gigabit + 12 SFP+"},
+    "ccr2004": {"name": "CCR2004-1G-12S+2XS", "ports": 1, "wifi_24ghz": False, "wifi_5ghz": False, "wifi_type": None, "description": "1G + 12 SFP+"},
     "chr": {"name": "CHR (Cloud Hosted Router)", "ports": 4, "wifi_24ghz": False, "wifi_5ghz": False, "wifi_type": None, "description": "Routeur virtuel"},
 }
 
